@@ -454,6 +454,12 @@ correction (they call this `rec709luma`). Annoyingly, that is the formula used
 by their default "gray" colorspace, and it's also the one recommended in their
 documentation.
 
+## Annoying exceptions ##
+
+TODO color inversion
+
+TODO antialiasing
+
 ## Further reading ##
 
 ## For the pedants ##
