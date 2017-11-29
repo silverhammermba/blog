@@ -20,7 +20,7 @@ This boring gray square is much more interesting than it first appears.
 
 In fact it isn't gray at all; it's a checkerboard of black and white
 pixels. Depending on the sharpness of your eyes and screen you might
-actually be able to easily pick out the individual squares of the
+be able to easily pick out the individual squares of the
 checkerboard. If that's the case, do me a favor and move your head away
 from the screen or squint a bit. Because we'll be using this image to
 strike at the heart of a seriously tricky issue related to how
@@ -113,20 +113,20 @@ but in general this process of switching between perceived brightness
 and light intensity is called gamma correction, and thus the function
 is often called a gamma curve.
 
-What complicates the issue somewhat is that there are actually many
+What complicates the issue somewhat is that there are many
 different gamma curves out there. Because in general gamma is a way of
 converting between how a color is _stored_ and how a color is
 _displayed_. However for the purposes of this article we're only
 looking at images stored and displayed on computers, and on computers
-there's one ubiquitious standard: sRGB. You see, I actually fudged
-things earlier when I talked about "24-bit RGB". As we've just learned,
+there's one ubiquitious standard: sRGB. I fudged
+things earlier when I was talking about "24-bit RGB". As we've just learned,
 there's a difference between perceived brightness and light intensity.
 We humans obviously care about the former, but your screen (which has
 to show you color by controlling sub-pixel intensities) only cares
 about the latter. Since we've already established that 127-gray
 corresponds to perceived color, the _only way_ that your screen
 can display that color is if your computer can convert from perceived
-brightness to light intensity. So really I should have said "24-bit
+brightness to light intensity. So I should have said "24-bit
 **s**RGB" i.e. RGB in terms of perceived brightness plus a
 gamma curve for converting to light intensity.
 
@@ -173,13 +173,13 @@ square with _light intensity_ halfway between black and white:
 (X+Y)/2. But your browser instead says black=0, white=255, so we get
 (0+255)/2=127. It's mixing up percieved brightness and light intensity!
 
-To really understand why this is incorrect, think about this: when
+To understand why this is incorrect, think about this: when
 colors blend together, they blend together _physically_ i.e.
 with groups of photons mixing together in the real world. The
 checkerboard looks gray because the tiny groups of black photons from
 the black pixels mix with the tiny groups of white photons from white
 pixels. When you "shrink" the square by backing away from your screen,
-you aren't changing the way those photons are mixing, you're just
+you aren't changing the way those photons are mixing, you're only
 changing the area of the eyeball they are hitting: same mixture, same
 light intensity, less area. Or to put it more philosophically, colors exist
 whether we perceive them or not, so the process of mixing colors should
@@ -212,7 +212,7 @@ pattern when mishandling brightness: colors end up too dark.
 In this article, I'm picking examples that clearly point out the error.
 In real applications, with real digital images, the difference is
 usually more subtle. And when you start getting into photo
-manipulation where color distortion is actually intended for a certain
+manipulation where color distortion is _intended_ in order to achieve a certain
 look, it can be even harder to tell what is "correct". But the simple
 fact is still that your web browser, which was made by hundreds of
 highly trained software developers, and is used by billions of people
@@ -246,46 +246,46 @@ from 0 to 255 so we can represent the brightest red, green, or blue by
 drawing a color that has 255 in one channel and 0 in the other two.
 We do that below, but pay attention to how you perceive its brightness:
 
-<canvas id="rgb" width="200" height="200"></canvas>
+<canvas id="rgb" width="100" height="100"></canvas>
 
-The green area appears brighter than both the blue and red and the red
-area appears brighter than the blue one! Even though they all have the
-same sRGB value of 255. It's our human eyes playing tricks on us again:
-we perceive the brightness of light differently depending on its color.
-In order from brightest to darkest: green, red, blue.
+Which of the three appears brightest? Which appears darkest? If your eyes work
+like most people's, you perceive green as the brightest and blue as the darkest.
+But this is despite them all having the same sRGB value of 255 and thus the same
+light intensity! It's our human eyes playing tricks on us again: we perceive the
+brightness of light differently depending on its color.
 
-It gets a bit subjective here regarding exactly how different these
-perceptions are, but one common accepted standard (on which sRGB is
-based) is ITU-R Recommandation BT.709, which defines a formula for how
-bright a color is based on its RGB light intensities:
+One commonly accepted standard (on which sRGB is based) which quantifies this is
+ITU-R Recommandation BT.709, which defines a formula for how bright a color is
+based on its RGB light intensities:
 
 L = 0.2126R + 0.7152G + 0.0722B
 
-Notice how the green component is multiplied by a much larger number
-than the other two. According to this standard, a pure green color
-is about 10 times brighter than a pure blue one! But wait... what does
-that value L represent? Is it brightness as in measurable light
-intensity or as in perceived brightness? Well, notice also that I
-said "based on its RGB _light intensities_" above. It's the
-former. So this is a formula that takes light intensities for red,
-green, and blue and gives us an overall light intensity.
+Notice how the green component is multiplied by a much larger number than the
+other two. According to this standard, a pure green color is about 10 times
+brighter than a pure blue one! But wait... what does that value L represent? Is
+it measurable light intensity or perceived brightness? Confusingly, it's kind of
+a mix of both. First of all, this formula is pretty subjective: it's supposed to
+reflect the "average" human eye's receptiveness to various colors of light. So
+it will certainly be wrong for some observers (think color blindness or
+tetrachromacy). So in that sense it's perceived brightness. But notice that I
+said it's based on "RGB light intensities", so its output is also in terms of
+light intensity. Think about it this way: this formula takes an RGB color in
+terms of light intensities and gives you the light intensity of the shade of
+gray that has the same perceived brightness as that color.
 
-Another way to think about this is that it's a method of converting to
-black-and-white. When you make an image black-and-white, intuitively
-you want to set R=G=B for every pixel (so they are all shades of gray)
-while keeping the brightness of each pixel intact. Notice that if
-R=G=B, then plugging into the formula you get also L=R=G=B. So if you
-set red, green, and blue to L you get the desired brightness-preserving
-black-and-white image. But this is in terms of light intensity, so we
-have to convert back to perceived brightness if we want to save the
-result in the expected sRGB format. So the steps should be:
+It's essentially a method of converting a color to black-and-white. When you
+make an image black-and-white, intuitively you want to set R=G=B for every pixel
+(so they are all shades of gray) while keeping the brightness of each pixel
+intact. Notice that if R=G=B, then plugging into the formula you get also
+L=R=G=B. So if you set red, green, and blue to L you get the desired
+brightness-preserving black-and-white image. But this is in terms of light
+intensity, so we have to convert from and to sRGB if we want to use this formula
+with digital images. So the steps should be:
 
-<ol>
-    <li>Convert from perceived brightness sRGB to light intensity RGB</li>
-    <li>Plug that into the BT.709 formula</li>
-    <li>Convert the resulting light intensity back to perceived brightness</li>
-    <li>Use that one value for red, green, and blue in sRGB</li>
-</ol>
+1. Convert from perceived brightness sRGB to light intensity RGB
+2. Plug that into the BT.709 formula
+3. Convert the resulting light intensity back to perceived brightness
+4. Use that one value for red, green, and blue in sRGB
 
 And guess what, again most software does not do this correctly. Many
 naively average the sRGB red, green, and blue values (ignoring that
@@ -299,7 +299,7 @@ the results below:
 The three bottom squares show the green color converted to gray using,
 from left to right: naive average, correct BT.709, incorrect BT.709
 using sRGB. As expected, the naive result is far too dark since it
-doesn't account for green appearing bright. The incorrect BT.709
+doesn't account for green being perceived as bright. The incorrect BT.709
 formula is almost right, but again is a little too dark. If you focus
 on the border between the green and the gray, the middle (correct
 method) square is the least distinguishable from the color in terms of
@@ -308,33 +308,96 @@ conversion.
 
 With all of these exampels of sRGB going bad, you might be thinking
 that it's no-brainer to always gamma correct your colors first. But
-there are other complications. For example, here is the image from the
-beginning of the article again, but now with black/white replaced with
-red/yellow:
+there are other complications. For example, let's repeat the image from the
+beginning of the article comparing the light intensity method with perceived
+brightness method but now with black/white replaced with red/blue on the left
+and with red/yellow on the right.
 
-<canvas id="compare-rgb" width="256" height="256"></canvas>
+<canvas id="compare-rgbrb" width="256" height="256"></canvas>
+<canvas id="compare-rgbry" width="256" height="256"></canvas>
 
-On the left we have a red/yellow checkerboard, which shows us the
-result of mixing bright red and yellow light intensities, as well as
-a gradient of light intensities showing how this color falls in
-the middle. On the right we have a simple sRGB average of red and
-yellow and a gradient based on the sRGB perceived brightness. Now, even
-with everything I've talked about in this article, my gut still tells me
-that the right side is the "correct" one. But why? When I did the
-example earlier with the red/blue gradient, the light intensity-based
-gradient gave us the right answer! Why does it suddenly look odd?
+Recall how both of these images were made: the left side is a checkerboard
+showing a mix of light intensities, then a gradient based on light intensities,
+then a naive sRGB-based gradient, then a solid color resulting from a naive sRGB
+average. Focus on the left image first: this is just like the red/blue gradient
+comparison I did earlier. Again, the left side looks correct since it gives us
+the intuitive bright red + bright blue = bright purple result. But now look at the
+red/yellow image on the right.
 
-The difference is in the colors. Red and blue are separate color
-channels, so when you do a gradient between them the red and blue
-channels are both changing inversely with each other. However yellow is
-represented by RGB as a mixture of red and green, so a gradient from red
-to yellow holds red constant while green varies from 0 to 255. So even
-though this is also a gradient between two colors, we perceive it almost
-exactly like the original example of a gradient between black and white:
-a _single_ channel increasing from its minimum to its maximum.
+Even with everything I've talked about in this article, my gut still tells me
+that the right side of the red/yellow image using incorrect sRGB averaging looks
+"correct". But why? Why does the left side of the left image look correct while
+the right side of the right image looks correct? Why doesn't a single method of
+color mixing always give us the right answer?
+
+The difference is in the colors. Red and blue are separate color channels, so
+when you do a gradient between them the red and blue channels are both changing
+inversely with each other. The result is a mixture of different amounts of
+red and blue together. However yellow is represented by RGB as a mixture of red and
+green, so a gradient from red to yellow is a gradient from [255, 0, 0] to [255,
+255, 0]: red stays constant while green varies from 0 to 255. When we perceive
+the left image from top to bottom, the brightness is affected both by red
+becoming less intense and blue becoming more intense. However when we perceive
+the right image from top to bottom, we perceive _no_ change in redness so the
+_only_ brightness change is as a result from green. And we're back to where we
+started: the human eye perceives darker differences better than brighter ones,
+so the sRGB gradient spreads out those dark differences more and ends up giving
+a color that really is **perceptually halfway** between red and yellow.
+
+This problem existed right from the beginning. Go back and look at the
+black/white image from the start of the article. Sure, the left side illustrates
+what color is halfway between black and white in terms of light intensities, but
+which color actually **looks** like its halfway between black and white? The
+right side. It **has** to be the right side because the whole point of sRGB is
+to smooth out changes in perceived brightness.
+
+The problem is that sRGB is working double duty. On the one hand, the real
+purpose of sRGB is a kind of compression. There are infinitely many different
+levels of brightness in the analog real world and we obviously can't store them
+all digitally. We have to choose some finite number of light levels: either 256
+(per channel, as it is for 24-bit sRGB) or some other finite number.
+We could choose those finite levels to be evenly spread out from the darkest
+light intensity to the brightest but this would largely be a waste: we know that
+our eyes are really bad at distinguishing between similar bright intensities.
+sRGB fixes this by devoting more of those levels to the darks than the
+brights meaning we can store the maximum amount of _discernable differences in
+brightness_ within the limited number of levels we have available.
+
+On the other hand, sRGB has also been coopted as a user-friendly way of picking
+and working with colors. Because sRGB smooths out perceptual differences in
+light intensities, an sRGB gradient from dark to light matches our (naive)
+expectations of what the dark to light transition should look like: halfway
+through the gradient _looks_ halfway between darkest and lightest even though
+it's more like 21% brightness in terms of light intensity. This works great as
+long as you're working with only a single color channel at a time (or all of
+them at once) because then the change in appearance as you tweak the numerical
+values matches exactly with your (again, naive) expectation. Want to make a shade
+of gray look half as bright? Halve its RGB values! Want to make a shade of
+orange look three times as bright? Triple its green channel! In some limited
+situations, the wrong behavior is actually intuitive. But if you're
+working with different colors where the two have little to no difference in
+brightness (like the previous red/blue example), sRGB no longer matches our
+intuition and we're forced to face reality: perceived brightness &ne;
+light intensity.
+
+So why does mishandling of sRGB color persist? In my opinion, it's a perfect mix
+of ignorant programmers, uneducated users, and the status quo. Many
+programmers don't know all of this stuff about sRGB and still think
+that perceived brightness and light intensity are the same. They write image
+editing software and web browsers that mishandle sRGB values. Users of this
+software also don't understand this distinction and thus think the software is
+working correctly when it draws gradients or mixes colors together. They are
+incorrectly unsurprised when simple operations that should be only mixing
+together colors end up making their images darker. And lastly, these errors are
+so common in essentially all color-handling software out there that we're used
+to them. Designers rely on them when picking colors and they expect them when
+manipulating images. I'm sure that many developers would consider correct sRGB
+handling to be a regression at this point, due to how it would upset their
+users' expectations.
 
     convert in -grayscale rec709luminance -colorspace sRGB out
     convert in -colorspace RGB -resize whatever -colorspace sRGB out
+    convert -size somesize gradient:somegradient -set colorspace RGB -colorspace sRGB out
 
 <script>
 // fill canvases pixel-by-pixel
@@ -380,7 +443,6 @@ function to8bit(x) {
 	return clamp(0, Math.round(x * 255), 255);
 }
 
-document.getElementById('scaled').getContext('2d').scale(0.5, 0.5);
 procedural_canvas('.checkers', function(i, j) {
 	var color = (i + j) % 2 ? 0 : 255;
 	return [color, color, color, 255];
@@ -388,16 +450,17 @@ procedural_canvas('.checkers', function(i, j) {
 procedural_canvas('#solid', function() {
 	return [127, 127, 127, 255];
 });
-procedural_canvas('#compare', function(i, j) {
-	if (j <= 80) {
+procedural_canvas('#compare', function(i, j, h, w) {
+    var edgesize = 80;
+	if (j <= edgesize) {
 		var color = (i + j) % 2 ? 0 : 255;
 		return [color, color, color, 255];
 	}
-	if (j > 80 && j <= 126) {
+	if (j > edgesize && j <= w / 2) {
 		var color = to8bit(linear2gamma(i / 255));
 		return [color, color, color, 255];
 	}
-	if (j > 126 && j < 176) return [i, i, i, 255];
+	if (j > w / 2 && j < w - edgesize) return [i, i, i, 255];
 	return [127, 127, 127, 255];
 });
 
@@ -431,19 +494,6 @@ procedural_canvas('#rgb', function(i, j, h, w) {
 	if (theta < Math.PI/3) return [0, 255, 0, 255];
 	return [0, 0, 255, 255];
 });
-procedural_canvas('#compare-rgb', function(i, j) {
-	if (j <= 80) {
-		var color = (i + j) % 2 ? 0 : 255;
-		return [255, color, 0, 255];
-	}
-	if (j > 80 && j <= 126) {
-		var color = to8bit(linear2gamma(i / 255));
-		return [255, color, 0, 255];
-	}
-	if (j > 126 && j < 176) return [255, i, 0, 255];
-	return [255, 127, 0, 255];
-});
-
 procedural_canvas("#baw", function(i, j, h, w) {
 	var color = [28, 130, 60];
 	if (i < h / 2) return [color[0], color[1], color[2], 255];
@@ -459,4 +509,32 @@ procedural_canvas("#baw", function(i, j, h, w) {
 	}
 	return [l, l, l, 255];
 });
+procedural_canvas('#compare-rgbry', function(i, j, h, w) {
+    var edgesize = 80;
+	if (j <= edgesize) {
+		var color = (i + j) % 2 ? 0 : 255;
+		return [255, color, 0, 255];
+	}
+	if (j > edgesize && j <= w / 2) {
+		var color = to8bit(linear2gamma(i / 255));
+		return [255, color, 0, 255];
+	}
+	if (j > w / 2 && j < w - edgesize) return [255, i, 0, 255];
+	return [255, 127, 0, 255];
+});
+procedural_canvas('#compare-rgbrb', function(i, j, h, w) {
+    var edgesize = 80;
+	if (j <= edgesize) {
+		var color = (i + j) % 2 ? 0 : 255;
+		return [255 - color, 0, color, 255];
+	}
+	if (j > edgesize && j <= w / 2) {
+		var c1 = to8bit(linear2gamma(i / 255));
+		var c2 = to8bit(linear2gamma(1 - i / 255));
+		return [c2, 0, c1, 255];
+	}
+	if (j > w / 2 && j < w - edgesize) return [255 - i, 0, i, 255];
+	return [127, 0, 127, 255];
+});
+
 </script>
