@@ -463,7 +463,7 @@ weird, uncommon operation but it's actually what led me down this rabbit hole in
 the first place. Obviously when we invert an image we want the colors to...
 invert. Things that were very red before should be very not red after. Black
 should become white, etc. But with what we know about sRGB, gamma correction
-will actually hurt us here. Let's do an example. We take a black/white
+will actually hurt us here. Let's do an example. We start with a black/white
 sRGB gradient which gives us a smooth transition between black and white where
 the halfway point is perceptually halfway between black and white. What will
 happen if we gamma correct this gradient, do the inversion in terms of light
@@ -474,19 +474,42 @@ intensity and then convert back to sRGB? Look at the result below:
 It looks like a light intensity-based gradient! Why is this bad? Well remember
 that the dark colors are where the human eye best perceives details. We've taken
 a gradient that had a perceptually smooth transition and&mdash;by inverting
-it&mdash;crammed all of the details into what were the very brightest colors
-before. And all of the darker shades in the lower half which used to be easily
-distinguishable are now nearly-identical white!
+it in terms of light intensity&mdash;crammed all of the details into what were
+the very brightest and least-distinguishable colors before. And all of the
+darker shades in the lower half which used to be easily distinguishable are now
+nearly-identical white! We intended to just invert the colors, but we ended up
+inverting the details as well!
 
-There is no real-world way to invert a color, so using a light intensity-based
-calculation makes no sense. The only way to judge the quality of an inversion is
-by how we perceive it! So in that sense, naively inverting the sRGB values is
-right on!
+The trouble is that unlike color mixing, bluring, or image resizing, color
+inversion doesn't really have a real-world analogue so there's no ground truth to
+compare to. The most reasonable result I can think of is one that inverts colors
+while maintaining perceptual differences between them so that details don't get
+lost/added as a side-effect. Since sRGB is perception-based, the naive inversion
+of the sRGB channels actually does a pretty good job. The gradient gets flipped,
+so the perceptual differences are maintained:
 
-TODO color inversion
+<canvas id="invertrgb" width="256" height="80"></canvas>
 
-TODO antialiasing
+The only improvement I can think to make is that this naive inversion doesn't
+take into account the BT.709 formula. I can imagine it being desirable that
+inverting a color also inverts its perceived brightness; the simple sRGB
+inversion can't do this because it treats each color channel equally (it works
+for this simple black/white gradient, but not in general). But off
+the top of my head I can't think of any easy way to do this, and I imagine it
+could actually be pretty expensive so the sRGB approach is a good compromise for
+now.
 
+The other, more tricky exception is font rendering. Fonts employ a number
+of tricks to maintain readability at small sizes. The simplest trick is
+anti-aliasing, which the font rendering engine applies to edges at small sizes
+to keep them looking smooth. The engine might also mess with pixel and sub-pixel
+alignment so that the edges of letters align with the pixel grid and are thus clearer. Font designers can
+also design their glyphs to actually change shape at smaller sizes, for example
+removing artistic flourishes that would hamper readability.
+
+In one sense this does have a real world ananlogue. A small font is kind of like
+a shrunken font, so in that sense it should use gamma correction just like image
+resizing.
 
 ## Further reading ##
 
@@ -694,6 +717,12 @@ procedural_canvas('#invert', function(i, j, h, w) {
 
     var c = to8bit(linear2gamma(1 - gamma2linear(j / (w - 1))));
     return [c, c, c, 255];
+});
+procedural_canvas('#invertrgb', function(i, j, h, w) {
+    if (i < h / 2) {
+        return [j, j, j, 255];
+    }
+    return [255 - j, 255 - j, 255 - j, 255];
 });
 
 </script>
