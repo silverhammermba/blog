@@ -454,13 +454,61 @@ correction (they call this `rec709luma`). Annoyingly, that is the formula used
 by their default "gray" colorspace, and it's also the one recommended in their
 documentation.
 
-## Annoying exceptions ##
+## Exceptions ##
+
+Annoyingly, there are exceptional cases.
+
+The first and probably less important one is color inversion. This is a pretty
+weird, uncommon operation but it's actually what led me down this rabbit hole in
+the first place. Obviously when we invert an image we want the colors to...
+invert. Things that were very red before should be very not red after. Black
+should become white, etc. But with what we know about sRGB, gamma correction
+will actually hurt us here. Let's do an example. We take a black/white
+sRGB gradient which gives us a smooth transition between black and white where
+the halfway point is perceptually halfway between black and white. What will
+happen if we gamma correct this gradient, do the inversion in terms of light
+intensity and then convert back to sRGB? Look at the result below:
+
+<canvas id="invert" width="256" height="80"></canvas>
+
+It looks like a light intensity-based gradient! Why is this bad? Well remember
+that the dark colors are where the human eye best perceives details. We've taken
+a gradient that had a perceptually smooth transition and&mdash;by inverting
+it&mdash;crammed all of the details into what were the very brightest colors
+before. And all of the darker shades in the lower half which used to be easily
+distinguishable are now nearly-identical white!
+
+There is no real-world way to invert a color, so using a light intensity-based
+calculation makes no sense. The only way to judge the quality of an inversion is
+by how we perceive it! So in that sense, naively inverting the sRGB values is
+right on!
 
 TODO color inversion
 
 TODO antialiasing
 
+
 ## Further reading ##
+
+Here are links to where I did most of my research:
+
+[Gamma error in picture scaling](http://www.ericbrasseur.org/gamma.html)
+
+A very extensive article with a focus on image resizing. Good examples of real
+world images with noticable distortion due to incorrect color space handling.
+
+[Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw)
+
+A nicely animated explanation with a focus on image bluring.
+
+[What every coder should know about gamma](http://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/)
+
+Really thorough article with even more examples than I have here.
+
+[Resizing with Colorspace Correction](http://www.imagemagick.org/Usage/resize/#resize_colorspace)
+
+The ImageMagick manual's section on correctly resizing images, with some notes
+about other linear color spaces.
 
 ## For the pedants ##
 
@@ -638,6 +686,14 @@ procedural_canvas('#compare-rgbrb', function(i, j, h, w) {
 	}
 	if (j > w / 2 && j < w - edgesize) return [255 - i, 0, i, 255];
 	return [127, 0, 127, 255];
+});
+procedural_canvas('#invert', function(i, j, h, w) {
+    if (i < h / 2) {
+        return [j, j, j, 255];
+    }
+
+    var c = to8bit(linear2gamma(1 - gamma2linear(j / (w - 1))));
+    return [c, c, c, 255];
 });
 
 </script>
