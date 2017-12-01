@@ -35,14 +35,13 @@ half of the pixels are white and half are black the overall light
 emitted by the square will average out to be halfway between those two extremes:
 (X+Y)/2.
 
-But we can also think about this square in another way. It is pretty
-common knowledge that pixels store colors as [red, green, blue] triples
-where each color is an integer ranging from 0 to 255, often referred to
-as 24-bit RGB. So our white pixels are [255, 255, 255] triples and our black
-pixels are [0, 0, 0] triples. Again, half are white and half are black
-so overall it averages out to look like a square full of a single
-color. X=0, Y=255, (X+Y)/2=127 with rounding. So that single color
-should be [127, 127, 127]. Right?
+But we can also think about this square in another way. It is common knowledge
+that pixels store colors as [red, green, blue] triples where each color is an
+integer ranging from 0 to 255, often referred to as 24-bit RGB. So our white
+pixels are [255, 255, 255] triples and our black pixels are [0, 0, 0] triples.
+Again, half are white and half are black so overall it averages out to look like
+a square full of a single color. X=0, Y=255, (X+Y)/2=127 with rounding. So that
+single color should be [127, 127, 127]. Right?
 
 Well let's put those two side-by-side. The checkerboard from above on
 the left, and that solid [127, 127, 127] on the right. By the above
@@ -188,7 +187,7 @@ This problem occurs because the smallest color your screen can display
 is a single pixel, and the checkerboard is made of individual black and
 white pixels. When I ask your browser to display those same pixels in a
 quarter of the area, it's forced to mix them together, thus I'm forcing
-it to demonstrate it's understanding of light intensity.
+it to demonstrate its understanding of light intensity.
 
 This problem crops up any time you ask your computer to blend
 together colors stored in sRGB. For example, it's well-known that
@@ -293,17 +292,17 @@ smart by using BT.709, but they plug in the sRGB values directly even
 though the formula is not designed for that color space. You can see
 the results below:
 
-<canvas id="baw" width="300" height="200"></canvas>
+<canvas id="baw" width="400" height="200"></canvas>
 
-The three bottom squares show the green color converted to gray using,
-from left to right: naive average, correct BT.709, incorrect BT.709
-using sRGB. As expected, the naive result is far too dark since it
-doesn't account for green being perceived as bright. The incorrect BT.709
-formula is almost right, but again is a little too dark. If you focus
-on the border between the green and the gray, the middle (correct
-method) square is the least distinguishable from the color in terms of
-brightness, indicating that it is a good match for a black-and-white
-conversion.
+The four bottom squares show the green color converted to gray using, from left
+to right: sRGB average, sRGB "lightness" (another naive average of channels),
+incorrect BT.709 using sRGB, and correct BT.709. As expected, the two sRGB
+averaged-based results are far too dark since they don't account for green being
+perceived more brightly. The incorrect BT.709 formula is almost right, but again
+is a little too dark because sRGB emphasizes darker shades. If you focus on the
+border between the green and the gray, the last (correct) square is the least
+distinguishable from the color in terms of brightness, indicating that it is a
+good match for a black-and-white conversion.
 
 With all of these exampels of sRGB going bad, you might be thinking
 that it's no-brainer to always gamma correct your colors first. But
@@ -377,10 +376,10 @@ actually intuitive. The more channels change independently of each other, the
 less we get this intuitive matchup and the more strange the sRGB result looks.
 The best case for sRGB is all channels changing together (the original
 black/white gradient) while the worst case is two channels inverting (our
-red/blue example). I must emphasize that this isn't a case of sRGB being more or
-less **correct**; mixing colors in the sRGB space is **always incorrect**. This
-is about sRGB being more or less **intuitive** when it comes to the naive
-assumption that perceived brightness and light intensity are the same.
+red/blue example). I must emphasize that this isn't a case of sRGB being more
+**correct** in some cases; mixing colors in the sRGB space is **always incorrect**. This
+is about sRGB being more **intuitive** in situations where the naive
+assumption that perceived brightness and light intensity are the same holds.
 
 Go back and read the beginning of the article if you have to. Perceived
 brightness &ne; light intensity.
@@ -450,7 +449,7 @@ light intensity so you still need the sRGB conversion at the end:
 
 **Note:** ImageMagick also provides the **incorrect** implementation of the
 formula, which directly plugs in the sRGB values without gamma
-correction (they call this `rec709luma`). Annoyingly, that is the formula used
+correction (they call this `rec709luma`). Unfortunately, that is the formula used
 by their default "gray" colorspace, and it's also the one recommended in their
 documentation.
 
@@ -507,9 +506,17 @@ alignment so that the edges of letters align with the pixel grid and are thus cl
 also design their glyphs to actually change shape at smaller sizes, for example
 removing artistic flourishes that would hamper readability.
 
-In one sense this does have a real world ananlogue. A small font is kind of like
+In one sense this does have a real world analogue. A small font is kind of like
 a shrunken font, so in that sense it should use gamma correction just like image
-resizing.
+resizing. But the goal of font rendering is to get a readable result, not a
+real-world light-accurate one. If the inaccurate result is more readable it's
+the right result. What complicates this is that some font rendering engines
+do perform gamma correction when doing anti-aliasing even at large font sizes
+where readability is not an issue. But if font designers design their fonts
+around these incorrect engines, they might be relying on that incorrect color
+blending at the small sizes to improve readability. So you can't fix the larger
+case (which would make edges look smoother and more realistic) without breaking
+the smaller case (making small fonts less readable).
 
 ## Further reading ##
 
@@ -533,7 +540,43 @@ Really thorough article with even more examples than I have here.
 The ImageMagick manual's section on correctly resizing images, with some notes
 about other linear color spaces.
 
+Lastly, if you're interested in how the math works, you can read the source for
+this page in your browser. All of the images in this article are procedurally
+generated in javascript so you can see how I do the gamma-correct gradients and
+such.
+
 ## For the pedants ##
+
+I fudged a lot of stuff in this article. It kind of drives me crazy how
+widespread this issue is and yet how little attention it gets, so I simplified
+things a bit to get the point across quicker. But if you really care about
+technical details, read on.
+
+"Light intensity" and "perceived brightness" are not the correct terms for this
+stuff. Usually people described sRGB as "nonlinear RGB" color space. And when
+you gamma correct sRGB to get light intensities, that's "linear RGB". I find
+these terms a little vague because they are implicitly referring to light
+intensities: sRGB has nonlinear light intensity and when you gamma correct it
+you (obviously) get linear light intensity because that's what gamma correction
+is. But if you think about it in terms of perceived brightness then sRGB is the
+linear one and the "linear RGB" is now nonlinear! See, it's confusing. The point
+is that humans like to think in terms of linear spaces. sRGB is linear in the
+perceptual space and "linear RGB" is linear in the light intensity space and
+both of them are nonlinear when viewed from the perspective of the other space.
+
+There is a large class of software that does color blending right: graphics
+drivers. The code that runs on graphics processors to compute colors all runs in
+a linear RGB color space so that they blend correctly. Though it's still
+possible to mess it up: when loading an sRGB image onto the graphics card you
+still need to tell the driver to do the gamma correction. Otherwise it will load
+the sRGB values directly and will end up doing linear operations on nonlinear
+values!
+
+You could argue that sRGB wasn't designed as a compression scheme, it actually
+has to do with CRT voltages and the whole perceived brightness thing was a happy
+accident. But I believe that coincidence is why it has stuck around so long and
+why this gamma correction issue is so hard to teach people about. So it might as
+well be the reason for its existence.
 
 <script>
 // fill canvases pixel-by-pixel
@@ -546,10 +589,10 @@ function procedural_canvas(selector, callback) {
 		var ctx = canvases[k].getContext('2d');
 
 		var image = new ImageData(width, height);
-		for (var i = 0; i < height; ++i) {
-			for (var j = 0; j < width; ++j) {
-				var color = callback(i, j, height, width);
-				for (var c = 0; c < 4; ++c) image.data[(i * width + j) * 4 + c] = color[c];
+		for (var y = 0; y < height; ++y) {
+			for (var x = 0; x < width; ++x) {
+				var color = callback(y, x, height, width);
+				for (var c = 0; c < 4; ++c) image.data[(y * width + x) * 4 + c] = color[c];
 			}
 		}
 		ctx.putImageData(image, 0, 0);
@@ -590,13 +633,13 @@ function update_interactive() {
     var grad1l = grad1.map(gamma2linear);
     var grad2l = grad2.map(gamma2linear);
 
-    procedural_canvas('#interactive', function(i, j, h, w) {
-        var p = j / w;
+    procedural_canvas('#interactive', function(y, x, h, w) {
+        var p = x / w;
 
         var g1 = grad1;
         var g2 = grad2;
 
-        if (i < h / 2) {
+        if (y < h / 2) {
             g1 = grad1l;
             g2 = grad2l;
         }
@@ -606,7 +649,7 @@ function update_interactive() {
             color[c] = g1[c] * (1 - p) + g2[c] * p;
         }
 
-        if (i < h / 2) {
+        if (y < h / 2) {
             for (var c = 0; c < 3; ++c) {
                 color[c] = linear2gamma(color[c]);
             }
@@ -617,34 +660,34 @@ function update_interactive() {
 }
 update_interactive();
 
-procedural_canvas('.checkers', function(i, j) {
-	var color = (i + j) % 2 ? 0 : 255;
+procedural_canvas('.checkers', function(y, x) {
+	var color = (y + x) % 2 ? 0 : 255;
 	return [color, color, color, 255];
 });
 procedural_canvas('#solid', function() {
 	return [127, 127, 127, 255];
 });
-procedural_canvas('#compare', function(i, j, h, w) {
+procedural_canvas('#compare', function(y, x, h, w) {
     var edgesize = 80;
-	if (j <= edgesize) {
-		var color = (i + j) % 2 ? 0 : 255;
+	if (x <= edgesize) {
+		var color = (y + x) % 2 ? 0 : 255;
 		return [color, color, color, 255];
 	}
-	if (j > edgesize && j <= w / 2) {
-		var color = to8bit(linear2gamma(i / 255));
+	if (x > edgesize && x <= w / 2) {
+		var color = to8bit(linear2gamma(y / 255));
 		return [color, color, color, 255];
 	}
-	if (j > w / 2 && j < w - edgesize) return [i, i, i, 255];
+	if (x > w / 2 && x < w - edgesize) return [y, y, y, 255];
 	return [127, 127, 127, 255];
 });
 
-procedural_canvas('#gradient-test', function(i, j, h, w) {
-	if (i > 3 * h / 4) {
-		return [to8bit(linear2gamma(1 - j / w)), 0, to8bit(linear2gamma(j / w)), 255];
+procedural_canvas('#gradient-test', function(y, x, h, w) {
+	if (y > 3 * h / 4) {
+		return [to8bit(linear2gamma(1 - x / w)), 0, to8bit(linear2gamma(x / w)), 255];
 	}
-	if (j < w / 3) return [255, 0, 0, 255];
-	if (j > 2 * w / 3) return [0, 0, 255, 255];
-	if (i < h / 2) return [127, 0, 127, 255];
+	if (x < w / 3) return [255, 0, 0, 255];
+	if (x > 2 * w / 3) return [0, 0, 255, 255];
+	if (y < h / 2) return [127, 0, 127, 255];
 	var c = to8bit(linear2gamma(0.5));
 	return [c, 0, c, 255];
 });
@@ -656,9 +699,9 @@ grad.addColorStop(1, "blue");
 ctx.fillStyle = grad;
 ctx.fillRect(0, 0, canvas.width, canvas.height / 4);
 
-procedural_canvas('#rgb', function(i, j, h, w) {
-	var x = j - w / 2;
-	var y = h / 2 - i;
+procedural_canvas('#rgb', function(y, x, h, w) {
+	x = x - w / 2;
+	y = h / 2 - y;
 
 	if (x * x + y * y > w * w / 4) return [0, 0, 0, 0];
 
@@ -668,61 +711,64 @@ procedural_canvas('#rgb', function(i, j, h, w) {
 	if (theta < Math.PI/3) return [0, 255, 0, 255];
 	return [0, 0, 255, 255];
 });
-procedural_canvas("#baw", function(i, j, h, w) {
+procedural_canvas("#baw", function(y, x, h, w) {
 	var color = [28, 130, 60];
-	if (i < h / 2) return [color[0], color[1], color[2], 255];
+	if (y < h / 2) return [color[0], color[1], color[2], 255];
 	var l;
-	if (j < w / 3) {
+	if (x < w / 4) {
 		l = Math.round((color[0] + color[1] + color[2]) / 3);
 	}
-	else if (j < 2 * w / 3) {
-		l = to8bit(linear2gamma(gamma2linear(color[0] / 255) * 0.2126 + gamma2linear(color[1] / 255) * 0.7152 + gamma2linear(color[2] / 255) * 0.0722));
+	else if (x < w / 2) {
+        l = (Math.max.apply(this, color) + Math.min.apply(this, color)) / 2;
+	}
+	else if (x < 3 * w / 4) {
+		l = Math.round(color[0] * 0.2126 + color[1] * 0.7152 + color[2] * 0.0722);
 	}
 	else {
-		l = Math.round(color[0] * 0.2126 + color[1] * 0.7152 + color[2] * 0.0722);
+		l = to8bit(linear2gamma(gamma2linear(color[0] / 255) * 0.2126 + gamma2linear(color[1] / 255) * 0.7152 + gamma2linear(color[2] / 255) * 0.0722));
 	}
 	return [l, l, l, 255];
 });
-procedural_canvas('#compare-rgbry', function(i, j, h, w) {
+procedural_canvas('#compare-rgbry', function(y, x, h, w) {
     var edgesize = 80;
-	if (j <= edgesize) {
-		var color = (i + j) % 2 ? 0 : 255;
+	if (x <= edgesize) {
+		var color = (y + x) % 2 ? 0 : 255;
 		return [255, color, 0, 255];
 	}
-	if (j > edgesize && j <= w / 2) {
-		var color = to8bit(linear2gamma(i / 255));
+	if (x > edgesize && x <= w / 2) {
+		var color = to8bit(linear2gamma(y / 255));
 		return [255, color, 0, 255];
 	}
-	if (j > w / 2 && j < w - edgesize) return [255, i, 0, 255];
+	if (x > w / 2 && x < w - edgesize) return [255, y, 0, 255];
 	return [255, 127, 0, 255];
 });
-procedural_canvas('#compare-rgbrb', function(i, j, h, w) {
+procedural_canvas('#compare-rgbrb', function(y, x, h, w) {
     var edgesize = 80;
-	if (j <= edgesize) {
-		var color = (i + j) % 2 ? 0 : 255;
+	if (x <= edgesize) {
+		var color = (y + x) % 2 ? 0 : 255;
 		return [255 - color, 0, color, 255];
 	}
-	if (j > edgesize && j <= w / 2) {
-		var c1 = to8bit(linear2gamma(i / 255));
-		var c2 = to8bit(linear2gamma(1 - i / 255));
+	if (x > edgesize && x <= w / 2) {
+		var c1 = to8bit(linear2gamma(y / 255));
+		var c2 = to8bit(linear2gamma(1 - y / 255));
 		return [c2, 0, c1, 255];
 	}
-	if (j > w / 2 && j < w - edgesize) return [255 - i, 0, i, 255];
+	if (x > w / 2 && x < w - edgesize) return [255 - y, 0, y, 255];
 	return [127, 0, 127, 255];
 });
-procedural_canvas('#invert', function(i, j, h, w) {
-    if (i < h / 2) {
-        return [j, j, j, 255];
+procedural_canvas('#invert', function(y, x, h, w) {
+    if (y < h / 2) {
+        return [x, x, x, 255];
     }
 
-    var c = to8bit(linear2gamma(1 - gamma2linear(j / (w - 1))));
+    var c = to8bit(linear2gamma(1 - gamma2linear(x / (w - 1))));
     return [c, c, c, 255];
 });
-procedural_canvas('#invertrgb', function(i, j, h, w) {
-    if (i < h / 2) {
-        return [j, j, j, 255];
+procedural_canvas('#invertrgb', function(y, x, h, w) {
+    if (y < h / 2) {
+        return [x, x, x, 255];
     }
-    return [255 - j, 255 - j, 255 - j, 255];
+    return [255 - x, 255 - x, 255 - x, 255];
 });
 
 </script>
