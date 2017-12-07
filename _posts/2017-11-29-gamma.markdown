@@ -577,10 +577,11 @@ these terms a little vague because they are implicitly referring to light
 intensities: sRGB has nonlinear light intensity and when you gamma correct it
 you (obviously) get linear light intensity because that's what gamma correction
 is. But if you think about it in terms of perceived brightness then sRGB is the
-linear one and the "linear RGB" is now nonlinear! See, it's confusing. The point
-is that humans like to think in terms of linear spaces. sRGB is linear in the
-perceptual space and "linear RGB" is linear in the light intensity space and
-both of them are nonlinear when viewed from the perspective of the other space.
+linear one and the "linear RGB" is now nonlinear! I find that thinking linearly
+is more intuitive, so I named both of them by the context in which they are
+linear. sRGB is linear in the perceptual space and "linear RGB" is linear in the
+light intensity space and both of them are nonlinear when viewed from the
+perspective of the other space.
 
 There is a large class of software that does color blending right: graphics
 drivers. The code that runs on graphics processors to compute colors all runs in
