@@ -155,7 +155,7 @@ to it I'll have your web browser show the same checkerboard shrunk by
 25%.
 
 <canvas class="checkers" width="200" height="200"></canvas>
-<canvas id="scaled" width="200" height="200" style="width: 100px; height: 100px"></canvas>
+<canvas class="checkers" id="scaled" width="200" height="200" style="width: 100px; height: 100px"></canvas>
 ...WHAT!?
 
 I told your browser to make it smaller, which it did, but it also made it
@@ -602,12 +602,25 @@ well be the reason for its existence.
 
 // fill canvases pixel-by-pixel
 function procedural_canvas(selector, callback) {
+	var ratio = window.devicePixelRatio;
 	var canvases = document.querySelectorAll(selector);
 	for (var k = 0; k < canvases.length; ++k) {
-		var width = canvases[k].width;
-		var height = canvases[k].height;
+		var canvas = canvases[k];
+		var width = canvas.width;
+		var height = canvas.height;
 
-		var ctx = canvases[k].getContext('2d');
+		var ctx = canvas.getContext('2d');
+
+		var div;
+		if (ratio > 1) {
+			div = document.createElement("div");
+			div.style.width = width + "px";
+			div.style.height = height + "px";
+			canvas.width *= ratio;
+			canvas.height *= ratio;
+			width = canvas.width;
+			height = canvas.height;
+		}
 
 		var image = new ImageData(width, height);
 		for (var y = 0; y < height; ++y) {
@@ -617,6 +630,13 @@ function procedural_canvas(selector, callback) {
 			}
 		}
 		ctx.putImageData(image, 0, 0);
+
+		if (ratio > 1) {
+			div.style.background = "url(" + canvas.toDataURL("image/png") + ")";
+			div.style.backgroundSize = "cover";
+			canvas.parentNode.insertBefore(div, canvas);
+			canvas.style.display = "none";
+		}
 	}
 }
 
@@ -689,7 +709,7 @@ update_interactive();
  * to know the scaling algorithm to do it programmatically
  */
 function black() {
-	if (window.devicePixelRatio > 1) return 118;
+	//if (window.devicePixelRatio > 1) return 118;
 	return 0;
 }
 
@@ -697,27 +717,29 @@ procedural_canvas('.checkers', function(y, x) {
 	var color = (y + x) % 2 ? black() : 255;
 	return [color, color, color, 255];
 });
-procedural_canvas('#scaled', function(y, x) {
-	/* XXX this is supposed to look bad, so don't bother using the workaround
-	 * for black on high-DPI
-	 */
-	var color = (y + x) % 2 ? 0 : 255;
-	return [color, color, color, 255];
-});
+if (window.devicePixelRatio > 1)  {
+    var scaled = document.getElementById('scaled').previousSibling;;
+    scaled.style.width = (parseInt(scaled.style.width) / 2) + "px";
+    scaled.style.height = (parseInt(scaled.style.height) / 2) + "px";
+}
+
 procedural_canvas('#solid', function() {
 	return [127, 127, 127, 255];
 });
 procedural_canvas('#compare', function(y, x, h, w) {
-	var edgesize = 80;
+	var edgesize = w / 4;
 	if (x <= edgesize) {
 		var color = (y + x) % 2 ? black() : 255;
 		return [color, color, color, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
-		var color = to8bit(linear2gamma(y / 255));
+		var color = to8bit(linear2gamma(y / (h - 1)));
 		return [color, color, color, 255];
 	}
-	if (x > w / 2 && x < w - edgesize) return [y, y, y, 255];
+	if (x > w / 2 && x < w - edgesize) {
+		var c = to8bit(y / (h - 1));
+		return [c, c, c, 255];
+	}
 	return [127, 127, 127, 255];
 });
 
@@ -725,19 +747,16 @@ procedural_canvas('#gradient-test', function(y, x, h, w) {
 	if (y > 3 * h / 4) {
 		return [to8bit(linear2gamma(1 - x / w)), 0, to8bit(linear2gamma(x / w)), 255];
 	}
+	if (y < h / 4) {
+		var c = to8bit(x / (w - 1));
+		return [255 - c, 0, c, 255];
+	}
 	if (x < w / 3) return [255, 0, 0, 255];
 	if (x > 2 * w / 3) return [0, 0, 255, 255];
 	if (y < h / 2) return [127, 0, 127, 255];
 	var c = to8bit(linear2gamma(0.5));
 	return [c, 0, c, 255];
 });
-var canvas = document.getElementById('gradient-test');
-var ctx = canvas.getContext('2d');
-var grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-grad.addColorStop(0, "red");
-grad.addColorStop(1, "blue");
-ctx.fillStyle = grad;
-ctx.fillRect(0, 0, canvas.width, canvas.height / 4);
 
 procedural_canvas('#rgb', function(y, x, h, w) {
 	x = x - w / 2;
@@ -770,45 +789,51 @@ procedural_canvas("#baw", function(y, x, h, w) {
 	return [l, l, l, 255];
 });
 procedural_canvas('#compare-rgbry', function(y, x, h, w) {
-	var edgesize = 80;
+	var edgesize = w / 4;
 	if (x <= edgesize) {
 		var color = (y + x) % 2 ? black() : 255;
 		return [255, color, 0, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
-		var color = to8bit(linear2gamma(y / 255));
+		var color = to8bit(linear2gamma(y / (h - 1)));
 		return [255, color, 0, 255];
 	}
-	if (x > w / 2 && x < w - edgesize) return [255, y, 0, 255];
+	if (x > w / 2 && x < w - edgesize) {
+		var c = to8bit(y / (h - 1));
+		return [255, c, 0, 255];
+	}
 	return [255, 127, 0, 255];
 });
 procedural_canvas('#compare-rgbrb', function(y, x, h, w) {
-	var edgesize = 80;
+	var edgesize = w / 4;
 	if (x <= edgesize) {
 		if ((y + x) % 2) return [255, 0, black(), 255];
 		return [black(), 0, 255, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
-		var c1 = to8bit(linear2gamma(y / 255));
-		var c2 = to8bit(linear2gamma(1 - y / 255));
+		var c1 = to8bit(linear2gamma(y / (h - 1)));
+		var c2 = to8bit(linear2gamma(1 - y / (h - 1)));
 		return [c2, 0, c1, 255];
 	}
-	if (x > w / 2 && x < w - edgesize) return [255 - y, 0, y, 255];
+	if (x > w / 2 && x < w - edgesize) {
+		var c = to8bit(y / (h - 1));
+		return [255 - c, 0, c, 255];
+	}
 	return [127, 0, 127, 255];
 });
 procedural_canvas('#invert', function(y, x, h, w) {
 	if (y < h / 2) {
-		return [x, x, x, 255];
+		var c = to8bit(x / (w - 1));
+		return [c, c, c, 255];
 	}
 
 	var c = to8bit(linear2gamma(1 - gamma2linear(x / (w - 1))));
 	return [c, c, c, 255];
 });
 procedural_canvas('#invertrgb', function(y, x, h, w) {
-	if (y < h / 2) {
-		return [x, x, x, 255];
-	}
-	return [255 - x, 255 - x, 255 - x, 255];
+	var c = to8bit(x / (w - 1));
+	if (y < h / 2) return [c, c, c, 255];
+	return [255 - c, 255 - c, 255 - c, 255];
 });
 
 </script>
