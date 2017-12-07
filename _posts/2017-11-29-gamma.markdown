@@ -584,6 +584,20 @@ why this gamma correction issue is so hard to teach people about. So it might as
 well be the reason for its existence.
 
 <script>
+if (window.devicePixelRatio) {
+    var canvases = document.getElementsByTagName('canvas');
+    for (var k = 0; k < canvases.length; ++k) {
+        var canvas = canvases[k];
+        var width = canvas.width;
+        var height = canvas.height;
+        // XXX assumes that style dimensions are given in pixels
+        if (canvas.style.width) width = parseInt(canvas.style.width);
+        if (canvas.style.height) height = parseInt(canvas.style.height);
+        canvas.style.width = Math.round(width / window.devicePixelRatio) + "px";
+        canvas.style.height = Math.round(height / window.devicePixelRatio) + "px";
+    }
+}
+
 // fill canvases pixel-by-pixel
 function procedural_canvas(selector, callback) {
 	var canvases = document.querySelectorAll(selector);
