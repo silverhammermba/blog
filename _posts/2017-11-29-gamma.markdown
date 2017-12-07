@@ -160,7 +160,7 @@ to it I'll have your web browser show the same checkerboard shrunk by
 25%.
 
 <canvas class="checkers" width="200" height="200"></canvas>
-<canvas class="checkers" id="scaled" width="200" height="200" style="width: 100px; height: 100px"></canvas>
+<canvas id="scaled" width="200" height="200" style="width: 100px; height: 100px"></canvas>
 ...WHAT!?
 
 I told your browser to make it smaller, which it did, but it also made it
@@ -588,9 +588,6 @@ well be the reason for its existence.
 
 // fill canvases pixel-by-pixel
 function procedural_canvas(selector, callback) {
-    var pixelRatio = 1;
-    if (window.devicePixelRation) pixelRatio = window.devicePixelRatio;
-
 	var canvases = document.querySelectorAll(selector);
 	for (var k = 0; k < canvases.length; ++k) {
 		var width = canvases[k].width;
@@ -599,14 +596,10 @@ function procedural_canvas(selector, callback) {
 		var ctx = canvases[k].getContext('2d');
 
 		var image = new ImageData(width, height);
-		for (var y = 0; y < height; y += pixelRatio) {
-			for (var x = 0; x < width; x += pixelRatio) {
+		for (var y = 0; y < height; ++y) {
+			for (var x = 0; x < width; ++x) {
 				var color = callback(y, x, height, width);
-                for (var ty = y; ty < y + pixelRatio; ++ty) {
-                    for (var tx = x; tx < x + pixelRatio; ++tx) {
-                        for (var c = 0; c < 4; ++c) image.data[(ty * width + tx) * 4 + c] = color[c];
-                    }
-                }
+				for (var c = 0; c < 4; ++c) image.data[(y * width + x) * 4 + c] = color[c];
 			}
 		}
 		ctx.putImageData(image, 0, 0);
@@ -637,56 +630,73 @@ function to8bit(x) {
 }
 
 function hextonum(x) {
-    return [parseInt(x.slice(1, 3), 16) / 255, parseInt(x.slice(3, 5), 16) / 255, parseInt(x.slice(5, 7), 16) / 255];
+	return [parseInt(x.slice(1, 3), 16) / 255, parseInt(x.slice(3, 5), 16) / 255, parseInt(x.slice(5, 7), 16) / 255];
 }
 
 function update_interactive() {
-    var grad1 = hextonum(document.getElementById('grad1').value);
-    var grad2 = hextonum(document.getElementById('grad2').value);
+	var grad1 = hextonum(document.getElementById('grad1').value);
+	var grad2 = hextonum(document.getElementById('grad2').value);
 
-    var grad1l = grad1.map(gamma2linear);
-    var grad2l = grad2.map(gamma2linear);
+	var grad1l = grad1.map(gamma2linear);
+	var grad2l = grad2.map(gamma2linear);
 
-    procedural_canvas('#interactive', function(y, x, h, w) {
-        var p = x / w;
+	procedural_canvas('#interactive', function(y, x, h, w) {
+		var p = x / w;
 
-        var g1 = grad1;
-        var g2 = grad2;
+		var g1 = grad1;
+		var g2 = grad2;
 
-        if (y < h / 2) {
-            g1 = grad1l;
-            g2 = grad2l;
-        }
+		if (y < h / 2) {
+			g1 = grad1l;
+			g2 = grad2l;
+		}
 
-        var color = [];
-        for (var c = 0; c < 3; ++c) {
-            color[c] = g1[c] * (1 - p) + g2[c] * p;
-        }
+		var color = [];
+		for (var c = 0; c < 3; ++c) {
+			color[c] = g1[c] * (1 - p) + g2[c] * p;
+		}
 
-        if (y < h / 2) {
-            for (var c = 0; c < 3; ++c) {
-                color[c] = linear2gamma(color[c]);
-            }
-        }
+		if (y < h / 2) {
+			for (var c = 0; c < 3; ++c) {
+				color[c] = linear2gamma(color[c]);
+			}
+		}
 
-        return [to8bit(color[0]), to8bit(color[1]), to8bit(color[2]), 255];
-    });
+		return [to8bit(color[0]), to8bit(color[1]), to8bit(color[2]), 255];
+	});
 }
 update_interactive();
 
+/* on high-DPI displays, images are pre-scaled which ruins the checkerboards.
+ * Using a value of 118 for black gives the checkerboard the correct final
+ * brightness.
+ * XXX this was found through trial-and-error on a device with pixel ratio 2. On
+ * devices with a different ratio this will probably be wrong, but we'd need
+ * to know the scaling algorithm to do it programmatically
+ */
+function black() {
+	if (window.devicePixelRatio > 1) return 118;
+	return 0;
+}
+
 procedural_canvas('.checkers', function(y, x) {
-    var r = window.devicePixelRatio || 1;
-	var color = (y/r + x/r) % 2 ? 0 : 255;
+	var color = (y + x) % 2 ? black() : 255;
+	return [color, color, color, 255];
+});
+procedural_canvas('#scaled', function(y, x) {
+	/* XXX this is supposed to look bad, so don't bother using the workaround
+	 * for black on high-DPI
+	 */
+	var color = (y + x) % 2 ? 0 : 255;
 	return [color, color, color, 255];
 });
 procedural_canvas('#solid', function() {
 	return [127, 127, 127, 255];
 });
 procedural_canvas('#compare', function(y, x, h, w) {
-    var edgesize = 80;
+	var edgesize = 80;
 	if (x <= edgesize) {
-        var r = window.devicePixelRatio || 1;
-		var color = (y/r + x/r) % 2 ? 0 : 255;
+		var color = (y + x) % 2 ? black() : 255;
 		return [color, color, color, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
@@ -735,7 +745,7 @@ procedural_canvas("#baw", function(y, x, h, w) {
 		l = Math.round((color[0] + color[1] + color[2]) / 3);
 	}
 	else if (x < w / 2) {
-        l = (Math.max.apply(this, color) + Math.min.apply(this, color)) / 2;
+		l = (Math.max.apply(this, color) + Math.min.apply(this, color)) / 2;
 	}
 	else if (x < 3 * w / 4) {
 		l = Math.round(color[0] * 0.2126 + color[1] * 0.7152 + color[2] * 0.0722);
@@ -746,10 +756,9 @@ procedural_canvas("#baw", function(y, x, h, w) {
 	return [l, l, l, 255];
 });
 procedural_canvas('#compare-rgbry', function(y, x, h, w) {
-    var edgesize = 80;
+	var edgesize = 80;
 	if (x <= edgesize) {
-        var r = window.devicePixelRatio || 1;
-		var color = (y/r + x/r) % 2 ? 0 : 255;
+		var color = (y + x) % 2 ? black() : 255;
 		return [255, color, 0, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
@@ -760,11 +769,10 @@ procedural_canvas('#compare-rgbry', function(y, x, h, w) {
 	return [255, 127, 0, 255];
 });
 procedural_canvas('#compare-rgbrb', function(y, x, h, w) {
-    var edgesize = 80;
+	var edgesize = 80;
 	if (x <= edgesize) {
-        var r = window.devicePixelRatio || 1;
-		var color = (y/r + x/r) % 2 ? 0 : 255;
-		return [255 - color, 0, color, 255];
+		if ((y + x) % 2) return [255, 0, black(), 255];
+		return [black(), 0, 255, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
 		var c1 = to8bit(linear2gamma(y / 255));
@@ -775,18 +783,18 @@ procedural_canvas('#compare-rgbrb', function(y, x, h, w) {
 	return [127, 0, 127, 255];
 });
 procedural_canvas('#invert', function(y, x, h, w) {
-    if (y < h / 2) {
-        return [x, x, x, 255];
-    }
+	if (y < h / 2) {
+		return [x, x, x, 255];
+	}
 
-    var c = to8bit(linear2gamma(1 - gamma2linear(x / (w - 1))));
-    return [c, c, c, 255];
+	var c = to8bit(linear2gamma(1 - gamma2linear(x / (w - 1))));
+	return [c, c, c, 255];
 });
 procedural_canvas('#invertrgb', function(y, x, h, w) {
-    if (y < h / 2) {
-        return [x, x, x, 255];
-    }
-    return [255 - x, 255 - x, 255 - x, 255];
+	if (y < h / 2) {
+		return [x, x, x, 255];
+	}
+	return [255 - x, 255 - x, 255 - x, 255];
 });
 
 </script>
