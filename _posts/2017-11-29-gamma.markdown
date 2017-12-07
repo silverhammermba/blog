@@ -25,6 +25,11 @@ from the screen or squint a bit. Because we'll be using this image to
 strike at the heart of a seriously tricky issue related to how
 computers display color: brightness.
 
+(Unfortunatley, if you are reading this on a high-DPI device like a smart phone
+or a newish macbook, your browser is upscaling that image and ruining the effect
+I'm going for. All of the checkerboard examples in this article will look wrong.
+Sorry.)
+
 Let's imagine how we perceive this square in terms of measurable light.
 If the square were pure white, it would be emitting whatever the
 maximum amount of light is for your screen (disregarding the
@@ -439,7 +444,7 @@ gradients in sRGB space. Instead you have to force it to reinterpret the image
 as light-intensity RGB (without performing gamma correction) so that the final
 `-colorspace sRGB` gamma encodes it correctly:
 
-    convert -size 200x200 gradient:red-blue -set colorspace RGB -colorspace sRGB out
+    convert -size 200x200 gradient:red-blue -set colorspace RGB -colorspace sRGB outputfile.png
 
 Converting an image to black and white is also different. If you specify the
 BT.709 formula it does the gamma correction for you, but the output result is
@@ -522,28 +527,28 @@ the smaller case (making small fonts less readable).
 
 Here are links to where I did most of my research:
 
-[Gamma error in picture scaling](http://www.ericbrasseur.org/gamma.html)
+[Gamma error in picture scaling][1]. A very extensive article with a focus on
+image resizing. Good examples of real world images with noticable distortion due
+to incorrect color space handling.
 
-A very extensive article with a focus on image resizing. Good examples of real
-world images with noticable distortion due to incorrect color space handling.
+[Computer Color is Broken][2]. A nicely animated explanation with a focus on
+image bluring.
 
-[Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw)
+[What every coder should know about gamma][3]. Really thorough article with even
+more examples than I have here.
 
-A nicely animated explanation with a focus on image bluring.
-
-[What every coder should know about gamma](http://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/)
-
-Really thorough article with even more examples than I have here.
-
-[Resizing with Colorspace Correction](http://www.imagemagick.org/Usage/resize/#resize_colorspace)
-
-The ImageMagick manual's section on correctly resizing images, with some notes
-about other linear color spaces.
+[Resizing with Colorspace Correction][4]. The ImageMagick manual's section on
+correctly resizing images, with some notes about other linear color spaces.
 
 Lastly, if you're interested in how the math works, you can read the source for
 this page in your browser. All of the images in this article are procedurally
 generated in javascript so you can see how I do the gamma-correct gradients and
 such.
+
+[1]: http://www.ericbrasseur.org/gamma.html
+[2]: https://www.youtube.com/watch?v=LKnqECcg6Gw
+[3]: http://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/
+[4]: http://www.imagemagick.org/Usage/resize/#resize_colorspace
 
 ## For the pedants ##
 
@@ -553,7 +558,7 @@ things a bit to get the point across quicker. But if you really care about
 technical details, read on.
 
 "Light intensity" and "perceived brightness" are not the correct terms for this
-stuff. Usually people described sRGB as "nonlinear RGB" color space. And when
+stuff. Usually people described sRGB as a "nonlinear RGB" color space. And when
 you gamma correct sRGB to get light intensities, that's "linear RGB". I find
 these terms a little vague because they are implicitly referring to light
 intensities: sRGB has nonlinear light intensity and when you gamma correct it
