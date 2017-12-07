@@ -584,22 +584,13 @@ why this gamma correction issue is so hard to teach people about. So it might as
 well be the reason for its existence.
 
 <script>
-if (window.devicePixelRatio) {
-    var canvases = document.getElementsByTagName('canvas');
-    for (var k = 0; k < canvases.length; ++k) {
-        var canvas = canvases[k];
-        var width = canvas.width;
-        var height = canvas.height;
-        // XXX assumes that style dimensions are given in pixels
-        if (canvas.style.width) width = parseInt(canvas.style.width);
-        if (canvas.style.height) height = parseInt(canvas.style.height);
-        canvas.style.width = Math.round(width / window.devicePixelRatio) + "px";
-        canvas.style.height = Math.round(height / window.devicePixelRatio) + "px";
-    }
-}
+"use strict";
 
 // fill canvases pixel-by-pixel
 function procedural_canvas(selector, callback) {
+    var pixelRatio = 1;
+    if (window.devicePixelRation) pixelRatio = window.devicePixelRatio;
+
 	var canvases = document.querySelectorAll(selector);
 	for (var k = 0; k < canvases.length; ++k) {
 		var width = canvases[k].width;
@@ -608,10 +599,14 @@ function procedural_canvas(selector, callback) {
 		var ctx = canvases[k].getContext('2d');
 
 		var image = new ImageData(width, height);
-		for (var y = 0; y < height; ++y) {
-			for (var x = 0; x < width; ++x) {
+		for (var y = 0; y < height; y += pixelRatio) {
+			for (var x = 0; x < width; x += pixelRatio) {
 				var color = callback(y, x, height, width);
-				for (var c = 0; c < 4; ++c) image.data[(y * width + x) * 4 + c] = color[c];
+                for (var ty = y; ty < y + pixelRatio; ++ty) {
+                    for (var tx = x; tx < x + pixelRatio; ++tx) {
+                        for (var c = 0; c < 4; ++c) image.data[(ty * width + tx) * 4 + c] = color[c];
+                    }
+                }
 			}
 		}
 		ctx.putImageData(image, 0, 0);
@@ -680,7 +675,8 @@ function update_interactive() {
 update_interactive();
 
 procedural_canvas('.checkers', function(y, x) {
-	var color = (y + x) % 2 ? 0 : 255;
+    var r = window.devicePixelRatio || 1;
+	var color = (y/r + x/r) % 2 ? 0 : 255;
 	return [color, color, color, 255];
 });
 procedural_canvas('#solid', function() {
@@ -689,7 +685,8 @@ procedural_canvas('#solid', function() {
 procedural_canvas('#compare', function(y, x, h, w) {
     var edgesize = 80;
 	if (x <= edgesize) {
-		var color = (y + x) % 2 ? 0 : 255;
+        var r = window.devicePixelRatio || 1;
+		var color = (y/r + x/r) % 2 ? 0 : 255;
 		return [color, color, color, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
@@ -751,7 +748,8 @@ procedural_canvas("#baw", function(y, x, h, w) {
 procedural_canvas('#compare-rgbry', function(y, x, h, w) {
     var edgesize = 80;
 	if (x <= edgesize) {
-		var color = (y + x) % 2 ? 0 : 255;
+        var r = window.devicePixelRatio || 1;
+		var color = (y/r + x/r) % 2 ? 0 : 255;
 		return [255, color, 0, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
@@ -764,7 +762,8 @@ procedural_canvas('#compare-rgbry', function(y, x, h, w) {
 procedural_canvas('#compare-rgbrb', function(y, x, h, w) {
     var edgesize = 80;
 	if (x <= edgesize) {
-		var color = (y + x) % 2 ? 0 : 255;
+        var r = window.devicePixelRatio || 1;
+		var color = (y/r + x/r) % 2 ? 0 : 255;
 		return [255 - color, 0, color, 255];
 	}
 	if (x > edgesize && x <= w / 2) {
