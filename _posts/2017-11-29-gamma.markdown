@@ -25,11 +25,6 @@ from the screen or squint a bit. Because we'll be using this image to
 strike at the heart of a seriously tricky issue related to how
 computers display color: brightness.
 
-(Unfortunatley, if you are reading this on a high-DPI device like a smart phone
-or a newish macbook, your browser is upscaling that image and ruining the effect
-I'm going for. All of the checkerboard examples in this article will look wrong.
-Sorry.)
-
 Let's imagine how we perceive this square in terms of measurable light.
 If the square were pure white, it would be emitting whatever the
 maximum amount of light is for your screen (disregarding the
@@ -556,6 +551,24 @@ I fudged a lot of stuff in this article. It kind of drives me crazy how
 widespread this issue is and yet how little attention it gets, so I simplified
 things a bit to get the point across quicker. But if you really care about
 technical details, read on.
+
+If you're reading this article on a high-DPI screen such as a smart phone or a
+newish Macbook, I lied to you in all of those checkerboard example images. The
+problem with high-DPI is that if you display an image as-is on a high-DPI screen
+it ends up _tiny_ because the pixels are smaller. To compensate, these devices
+scale up images to match their size on a "normal" screen. Unfortunately most
+normal image resizing algorithms are not designed to handle these kinds of
+checkerboard patterns (called [dither][d]) so you end up with a distorted
+result. This isn't a gamma issue; it's a limitation any algorithm that tries to
+enlarge dithered images. To compensate, I replaced black with a much lighter
+shade on high-DPI devices so that you get the right light intensity for the
+comparisons. You might also notice some weird patterns in the checkerboard
+images (especially the shrunken one). That's also not really a gamma correction
+issue, it's just a [moir&eacute; patten][m] likely due to how the display
+scaling interacts with the HTML canvas scaling and the checkerboard.
+
+[d]: https://en.wikipedia.org/wiki/Dither
+[m]: https://en.wikipedia.org/wiki/Moir%C3%A9_pattern
 
 "Light intensity" and "perceived brightness" are not the correct terms for this
 stuff. Usually people described sRGB as a "nonlinear RGB" color space. And when
