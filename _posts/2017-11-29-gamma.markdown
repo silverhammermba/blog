@@ -13,6 +13,7 @@ categories: etc
 
 canvas {
     image-rendering: pixelated;
+    max-width: 100%;
 }
 #scaled {
     image-rendering: auto;
@@ -28,8 +29,8 @@ This boring gray square is much more interesting than it first appears.
 In fact it isn't gray at all; it's a checkerboard of black and white pixels. If
 you're reading this article on a high-DPI device like a smart phone or a newish
 Macbook, your screen really doesn't like displaying this kind of pattern and you
-might see weird artifacts like a faint grid of polka dots or a shimmering
-appearance when you scroll the page. Try zooming in on your device until such
+might see weird artifacts like a faint grid of polka dots or a colorful
+shimmering when you scroll the page. Try zooming in on your device until such
 effects disappear. Also if you are very close to the screen, you might actually
 be able to see the individual pixels, which is also not what we want. Adjust
 your viewing distance or squint your eyes. The goal is to have this square
@@ -56,8 +57,8 @@ Again, half are white and half are black so overall it averages out to look like
 a square full of a single color. X=0 and Y=255 so (X+Y)/2=127 with rounding. So
 that single color should be [127, 127, 127]. Right?
 
-Well let's put those two side-by-side. The checkerboard from above on the left,
-and that solid [127, 127, 127] on the right. By the above logic, the two will
+Well let's put those two side-by-side. The checkerboard from above first,
+and that solid [127, 127, 127] right next to it. By the above logic, the two will
 look almost exactly the same.
 
 <canvas class="checkers" width="200" height="200"></canvas>
@@ -326,8 +327,8 @@ With all of these exampels of sRGB going bad, you might be thinking that it's a
 no-brainer to always gamma correct your colors first. But there are other
 complications. For example, let's repeat the image from the beginning of the
 article comparing the light intensity method with perceived brightness method
-but now with black/white replaced with red/blue on the left and with red/yellow
-on the right.
+but now with black/white replaced with red/blue in the first image and with red/yellow
+in the second:
 
 <canvas id="compare-rgbrb" width="256" height="256"></canvas>
 <canvas id="compare-rgbry" width="256" height="256"></canvas>
@@ -335,15 +336,15 @@ on the right.
 Recall how both of these images were made: the left side is a checkerboard
 showing a mix of light intensities, then a gradient based on light intensities,
 then a naive sRGB-based gradient, then a solid color resulting from a naive sRGB
-average. Focus on the left image first: this is just like the red/blue gradient
+average. Focus on the purple image first: this is just like the red/blue gradient
 comparison I did earlier. Again, the left side looks correct since it gives us
 the intuitive bright red + bright blue = bright purple result. But now look at
-the red/yellow image on the right.
+the orange image.
 
 Even with everything I've talked about in this article, my gut still tells me
-that the right side of the red/yellow image using incorrect sRGB averaging looks
-"correct". But why? Why does the left side of the left image look correct while
-the right side of the right image looks correct? Why doesn't a single method of
+that the right side of the orange image using incorrect sRGB averaging looks
+"correct". But why? Why does the left side of the purple image look correct while
+the right side of the orange image looks correct? Why doesn't a single method of
 color mixing always give us the right answer?
 
 The difference is in the colors. Red and blue are separate color channels, so
