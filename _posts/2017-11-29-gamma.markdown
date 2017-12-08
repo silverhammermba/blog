@@ -65,8 +65,8 @@ look almost exactly the same.
 ...WHAT!?
 
 The reason why they don't look the same is because of an incorrect assumption in
-our second argument about 24-bit RGB. Namely, that 127 is halfway between 0 and
-255. Sure, it's _mathematically_ halfway between 0 and 255 but we're talking
+our second argument about 24-bit RGB. Namely, that 127 is halfway between 0 and 255.
+Sure, it's _mathematically_ halfway between 0 and 255 but we're talking
 about _light intensity_, not math. Think back to our original reasoning about
 brightness: there is some minimum brightness X and maximum brightness Y.
 Certainly 0 should correspond with X and 255 should correspond with Y, but do we
@@ -131,6 +131,24 @@ _only way_ that your screen can display that color is if your computer can
 convert from perceived brightness to light intensity. So I should have said
 "24-bit **s**RGB" i.e. RGB in terms of perceived brightness plus a gamma curve
 for converting to light intensity.
+
+One subtle point is how sRGB relates to black and white (grayscale) images. All
+of the previuos examples used grayscale images so that we could focus on just
+the percieved brightness vs. light intensity issue. This works because the gamma
+correction function is actually applied to each color channel separately and
+treats all three the same. So when we gamma correct [127,127,127] we get
+[55,55,55]. We can essentially think of each pixel as just a single percieved
+brightness (127) that gets gamma corrected to a single light intensity (55). But
+this fact also helps us when we start looking at full-color sRGB images later
+on. Since gamma correction is applied to each channel separately and
+identically, all of the previous principles about perceived brightness vs. light
+intensity still apply! You just need to think about each color channel on its
+own. For example, we know that a checkerboard between red [255,0,0] and blue
+[0,0,255]  will look brighter than their sRGB average [127,0,127] because
+of the principles we just learned:
+
+<canvas id="checkersrb" width="200" height="200"></canvas>
+<canvas id="solidrb" width="200" height="200"></canvas>
 
 Almost all computer images store colors using sRGB. Unless your image format has
 a specific feature for specifying a different color space, the default is sRGB.
@@ -674,9 +692,16 @@ procedural_canvas('.checkers', function(y, x) {
 	var color = (y + x) % 2 ? 0 : 255;
 	return [color, color, color, 255];
 });
-
 procedural_canvas('#solid', function() {
 	return [127, 127, 127, 255];
+});
+procedural_canvas('#checkersrb', function(y, x) {
+    var color = [0, 0, 0, 255];
+    color[(y + x) % 2 ? 0 : 2] = 255;
+    return color;
+});
+procedural_canvas('#solidrb', function(y, x) {
+    return [127, 0, 127, 255];
 });
 procedural_canvas('#compare', function(y, x, h, w) {
 	var edgesize = w / 4;
