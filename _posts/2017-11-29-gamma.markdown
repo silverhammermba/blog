@@ -587,6 +587,20 @@ linear. sRGB is linear in the perceptual space and "linear RGB" is linear in the
 light intensity space and both of them are nonlinear when viewed from the
 perspective of the other space.
 
+I made it sound like everything uses sRGB and there's only one sRGB gamma curve,
+but that's not entirely true. Different screens can display colors differently
+and might have to tweak the gamma conversion to get the right result. So
+although there's only one sRGB standard, the standard gamma curve can have
+variations. And again gamma is really about the difference between how colors
+are stored and displayed, but colors can get stored in lots of places before
+they end up on your screen. For example your image file might get loaded by your
+operating system, which uploads it your web browser, which uploads it to your
+graphics card, which uploads it your screen. All of those intermediate steps
+might use different color spaces and do their own gamma conversion and you need
+the whole chain to be working correctly in order to get the right result. So
+your software can be handling sRGB gamma exactly right and still the result
+looks wrong because something else in the chain messed it up.
+
 There is a large class of software that does color blending right: graphics
 drivers. The code that runs on graphics processors to compute colors all runs in
 a linear RGB color space so that they blend correctly. Though it's still
