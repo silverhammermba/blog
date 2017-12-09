@@ -29,12 +29,12 @@ This boring gray square is much more interesting than it first appears.
 In fact it isn't gray at all; it's a checkerboard of black and white pixels. If
 you're reading this article on a high-DPI device like a smart phone or a newish
 Macbook, your screen really doesn't like displaying this kind of pattern and you
-might see weird artifacts like a faint grid of polka dots or a colorful
-shimmering when you scroll the page. Try zooming in on your device until such
-effects disappear. Also if you are very close to the screen, you might actually
-be able to see the individual pixels, which is also not what we want. Adjust
-your viewing distance or squint your eyes. The goal is to have this square
-appear like one uniform shade of gray.
+might see weird artifacts like a faint grid of polka dots or colorful
+flickering. You can try zooming in on your device until such effects disappear.
+Also if you are very close to the screen, you might actually be able to see the
+individual pixels, which is also not what we want. Adjust your viewing distance
+or squint your eyes. The goal is to have this square appear like one uniform
+shade of gray.
 
 I want this image to look correct on your screen because we'll be using it to
 strike at the heart of a seriously tricky issue related to how computers display
@@ -65,14 +65,19 @@ look almost exactly the same.
 <canvas id="solid" width="200" height="200"></canvas>
 ...WHAT!?
 
-The reason why they don't look the same is because of an incorrect assumption in
-our second argument about 24-bit RGB. Namely, that 127 is halfway between 0 and 255.
-Sure, it's _mathematically_ halfway between 0 and 255 but we're talking
-about _light intensity_, not math. Think back to our original reasoning about
-brightness: there is some minimum brightness X and maximum brightness Y.
-Certainly 0 should correspond with X and 255 should correspond with Y, but do we
-_need_ (0+255)/2 to correspond with (X+Y)/2? Not really. Here's another example
-to illustrate this point:
+The reason why the second square looks darker is because of an incorrect
+assumption in our second argument about 24-bit RGB (on many cheap laptop
+displays, the second square will also look much more blueish: this is an
+unrelated effect, so try to ignore it and focus just on how bright the two
+squares are).
+
+Our incorrect assumption is that 127 is halfway between 0 and 255. Sure, it's
+_mathematically_ halfway between 0 and 255 but we're talking about _light
+intensity_, not math. Think back to our original reasoning about brightness:
+there is some minimum brightness X and maximum brightness Y. Certainly 0 should
+correspond with X and 255 should correspond with Y, but do we _need_ (0+255)/2
+to correspond with (X+Y)/2? Not really. Here's another example to illustrate
+this point:
 
 <canvas id="compare" width="256" height="256"></canvas>
 
@@ -595,11 +600,11 @@ although there's only one sRGB standard, the standard gamma curve can have
 variations. And again gamma is really about the difference between how colors
 are stored and displayed, but colors can get stored in lots of places before
 they end up on your screen. For example your image file might get loaded by your
-operating system, which uploads it your web browser, which uploads it to your
-graphics card, which uploads it your screen. All of those intermediate steps
-might use different color spaces and do their own gamma conversion and you need
-the whole chain to be working correctly in order to get the right result. So
-your software can be handling sRGB gamma exactly right and still the result
+operating system, which uploads it your image editing software, which uploads it
+to your graphics card, which uploads it your screen. All of those intermediate
+steps might use different color spaces and do their own gamma conversion and you
+need the whole chain to be working correctly in order to get the right result.
+So your software can be handling sRGB gamma exactly right and still the result
 looks wrong because something else in the chain messed it up.
 
 There is a large class of software that does color blending right: graphics
