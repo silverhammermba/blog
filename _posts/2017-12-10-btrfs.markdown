@@ -1,0 +1,112 @@
+---
+layout: post
+title: "Fixing btrfs"
+date: 2017-12-10
+categories: etc
+---
+
+I've recently been getting weird crashes and slow behavior on my home server. I
+suspected that a disk failure was to blame and I was right. Luckily I'm running
+btrfs in RAID1 so nothing is lost. Here is how I went about discovering/fixing
+the problem.
+
+## Find it ##
+
+The most helpful thing is that from day one I set up a monthly scrub of the
+volume to detect/correct errors. This is trivial on Arch because it provides a
+systemd timer and service in the `btrfs-progs` package.
+
+### btrfs-scrub@.service ###
+
+    [Unit]
+    Description=Btrfs scrub on %f
+    
+    [Service]
+    Nice=19
+    IOSchedulingClass=idle
+    ExecStart=/usr/bin/btrfs scrub start -B %f
+
+### btrfs-scrub@.timer ###
+
+    [Unit]
+    Description=Monthly Btrfs scrub on %f
+    
+    [Timer]
+    OnCalendar=monthly
+    AccuracySec=1d
+    Persistent=true
+    
+    [Install]
+    WantedBy=multi-user.target
+
+That's all in the package, so no work for you to do. Just start it with
+
+    $ systemctl enable btrfs-scrub@home.timer
+    $ systemctl start  btrfs-scrub@home.timer
+
+to scrub your `/home/` partition. This monthly scrub has been showing errors for
+_years_.
+
+    $ journalctl --unit=btrfs-scrub@home
+
+    Mar 01 00:00:00 eleven systemd[1]: Started Btrfs scrub on /home.
+    Mar 01 02:16:28 eleven btrfs[20021]: WARNING: errors detected during scrubbing, corrected
+    Mar 01 02:16:28 eleven btrfs[20021]: scrub done for 4d3ab8e2-acc4-44bf-bf79-f2870dabb705
+    Mar 01 02:16:28 eleven btrfs[20021]:         scrub started at Tue Mar  1 00:00:00 2016 and finished after 02:16:28
+    Mar 01 02:16:28 eleven btrfs[20021]:         total bytes scrubbed: 1.76TiB with 63 errors
+    Mar 01 02:16:28 eleven btrfs[20021]:         error details: read=63
+    Mar 01 02:16:28 eleven btrfs[20021]:         corrected errors: 63, uncorrectable errors: 0, unverified errors: 0
+
+But the error numbers were all small and correctable so I ignored them... until
+a few months ago. I started getting lots of scary "uncorrectable errors" that
+would pop up one scrub only to disappear the next (I guess they got corrected?).
+And the total number of errors was steadily climbing.
+
+This was worrying, but the server kept chugging along just fine, so I took a
+mental note and no further action. When it started acting up with really slow
+boot times and crashes I finally rolled up my sleeves and looked for the issue:
+
+    # btrfs device stats /home
+
+    [/dev/sdb].write_io_errs    16
+    [/dev/sdb].read_io_errs     10768
+    [/dev/sdb].flush_io_errs    0
+    [/dev/sdb].corruption_errs  0
+    [/dev/sdb].generation_errs  0
+    [/dev/sdc].write_io_errs    0
+    [/dev/sdc].read_io_errs     0
+    [/dev/sdc].flush_io_errs    0
+    [/dev/sdc].corruption_errs  0
+    [/dev/sdc].generation_errs  0
+
+So `/dev/sdb` is the culprit.
+
+## Fix it ##
+
+First I need to figure out what disk that is, because I sure as hell don't
+remember.
+
+    $ cat /sys/block/sdb/device/wwid
+
+    t10.ATA     WDC WD20EZRX-00D8PB0                         WD-WMC4M2261405
+
+I don't feel like buying that old model of HDD again, so how big of a
+drive do I need to replace it?
+
+    # btrfs filesystem show /home
+
+    Label: none  uuid: 4d3ab8e2-acc4-44bf-bf79-f2870dabb705
+            Total devices 2 FS bytes used 573.50GiB
+            devid    1 size 1.82TiB used 812.06GiB path /dev/sdb
+            devid    2 size 1.82TiB used 812.04GiB path /dev/sdc
+
+btrfs needs it to be as big or bigger so any old 2TB drive will do. Plug that
+sucker in and then out with old, in with the new:
+
+    # btrfs replace start -r /dev/sdb /dev/sdd
+    # btrfs replace status -1 /home
+
+`/dev/sdd` is the new drive, `-r` tells btrfs to only read from the bad drive as
+a last resort while mirroring everything. `/dev/sdc` is still in good shape so
+this should greatly speed up the replacement process. This starts a background
+process which you can monitor with the second command.
