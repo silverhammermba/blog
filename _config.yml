@@ -5,7 +5,7 @@
 # in the templates via {{ site.myvariable }}.
 title: Max's blog?
 email: silverhammermba@gmail.com
-baseurl: ""
+baseurl: "/blog"
 url: "https://silverhammermba.github.io"
 github_username:  silverhammermba
 
