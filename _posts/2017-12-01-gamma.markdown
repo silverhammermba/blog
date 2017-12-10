@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Yet another article about gamma correction"
-date: 2017-11-12
+title: "Yet another blog post about gamma correction"
+date: 2017-12-01
 categories: etc
 ---
 
@@ -27,7 +27,7 @@ This boring gray square is much more interesting than it first appears.
 <canvas class="checkers" width="200" height="200"></canvas>
 
 In fact it isn't gray at all; it's a checkerboard of black and white pixels. If
-you're reading this article on a high-DPI device like a smart phone or a newish
+you're reading this on a high-DPI device like a smart phone or a newish
 Macbook, your screen really doesn't like displaying this kind of pattern and you
 might see weird artifacts like a faint grid of polka dots or colorful
 flickering. You can try zooming in on your device until such effects disappear.
@@ -118,25 +118,24 @@ bright we perceive that light (or color) to be.
 
 The relationship between these two ways of thinking about brightness is
 well-studied. There is a function that will give you the light intensity for a
-perceived brightness and vice versa. For the purposes of this article, we don't
+perceived brightness and vice versa. For the purposes of this blog, we don't
 care what this function is exactly, but in general this process of switching
 between perceived brightness and light intensity is called gamma correction, and
 thus the function is often called a gamma curve.
 
 What complicates the issue somewhat is that there are many different gamma
 curves out there. Because in general gamma is a way of converting between how a
-color is _stored_ and how a color is _displayed_. However for the purposes of
-this article we're only looking at images stored and displayed on computers, and
-on computers there's one ubiquitious standard: sRGB. I fudged things earlier
-when I was talking about "24-bit RGB". As we've just learned, there's a
-difference between perceived brightness and light intensity. We humans obviously
-care about the former, but your screen (which has to show you color by
-controlling sub-pixel light intensities) only cares about the latter. Since
-we've already established that 127-gray corresponds to perceived color, the
-_only way_ that your screen can display that color is if your computer can
-convert from perceived brightness to light intensity. So I should have said
-"24-bit **s**RGB" i.e. RGB in terms of perceived brightness plus a gamma curve
-for converting to light intensity.
+color is _stored_ and how a color is _displayed_. However for now we only care
+about images stored and displayed on computers, and on computers there's one
+ubiquitious standard: sRGB. I fudged things earlier when I was talking about
+"24-bit RGB". As we've just learned, there's a difference between perceived
+brightness and light intensity. We humans obviously care about the former, but
+your screen (which has to show you color by controlling sub-pixel light
+intensities) only cares about the latter. Since we've already established that
+127-gray corresponds to perceived color, the _only way_ that your screen can
+display that color is if your computer can convert from perceived brightness to
+light intensity. So I should have said "24-bit **s**RGB" i.e. RGB in terms of
+perceived brightness plus a gamma curve for converting to light intensity.
 
 One subtle point is how sRGB relates to black and white (grayscale) images. All
 of the previuos examples used grayscale images so that we could focus on just
@@ -170,7 +169,7 @@ curve for converting that to light intensity."
 
 ## The problem ##
 
-So far this article has been purely academic and I've been focusing only on
+So far this has all has been purely academic and I've been focusing only on
 correcting your understanding of brightness. But there are occasionally
 situations where _your computer_ needs to understand these different ways of
 thinking about brightness. And when it understands them incorrectly, problems
@@ -232,13 +231,14 @@ Bright red + bright blue = dark purple? Ew, no. The bright purple on bottom
 makes both intuitive and visual sense. This is the general pattern when
 mishandling brightness: colors end up too dark.
 
-In this article, I'm picking examples that clearly point out the error. In real
-applications, with real digital images, the difference is usually more subtle.
-And when you start getting into photo manipulation where color distortion is
-_intended_ in order to achieve a certain look, it can be even harder to tell
-what is "correct". But the simple fact is still that your web browser, which was
-made by hundreds of highly trained software developers, and is used by billions
-of people every day, is mixing colors incorrectly. Which means it's also
+In this blog post, I'm picking examples that clearly point out the error. In
+real applications, with real digital images, the difference is usually more
+subtle. And when you start getting into photo manipulation where color
+distortion is _intended_ in order to achieve a certain look, it can be even
+harder to tell what is "correct". But the simple fact is still that your web
+browser, which was made by hundreds of highly trained software developers, and
+is used by billions of people every day, is mixing colors incorrectly. Which
+means it's also
 
 * Resizing images incorrectly
 * Bluring incorrectly
@@ -330,8 +330,8 @@ good match for a black-and-white conversion.
 
 With all of these exampels of sRGB going bad, you might be thinking that it's a
 no-brainer to always gamma correct your colors first. But there are other
-complications. For example, let's repeat the image from the beginning of the
-article comparing the light intensity method with perceived brightness method
+complications. For example, let's repeat the image from the beginning of this
+post comparing the light intensity method with perceived brightness method
 but now with black/white replaced with red/blue in the first image and with red/yellow
 in the second:
 
@@ -346,7 +346,7 @@ comparison I did earlier. Again, the left side looks correct since it gives us
 the intuitive bright red + bright blue = bright purple result. But now look at
 the orange image.
 
-Even with everything I've talked about in this article, my gut still tells me
+Even with everything I've talked about so far, my gut still tells me
 that the right side of the orange image using incorrect sRGB averaging looks
 "correct". But why? Why does the left side of the purple image look correct while
 the right side of the orange image looks correct? Why doesn't a single method of
@@ -367,7 +367,7 @@ so the sRGB gradient spreads out those dark differences more and ends up giving
 a color that really is **perceptually halfway** between red and yellow.
 
 This problem existed right from the beginning. Go back and look at the
-black/white image from the start of the article. Sure, the left side illustrates
+black/white image from the beginning. Sure, the left side illustrates
 what color is halfway between black and white in terms of light intensities, but
 which color actually **looks** like its halfway between black and white? The
 right side. It **has** to be the right side because the whole point of sRGB is
@@ -405,8 +405,8 @@ more **correct** in some cases; mixing colors in the sRGB space is **always
 incorrect**. This is about sRGB being more **intuitive** for people who do not
 understand the difference between perceived brightness and light intensity.
 
-Go back and read the beginning of the article if you have to. Perceived
-brightness &ne; light intensity.
+Go back and read from the beginning if you have to. Perceived brightness &ne;
+light intensity.
 
 So why does mishandling of sRGB color persist? In my opinion, it's a perfect mix
 of ignorant programmers, uneducated users, and the status quo. Many programmers
@@ -575,7 +575,7 @@ such.
 
 ## For the pedants ##
 
-I fudged a lot of stuff in this article. It kind of drives me crazy how
+I fudged a lot of stuff while writing this. It kind of drives me crazy how
 widespread this issue is and yet how little attention it gets, so I simplified
 things a bit to get the point across quicker. But if you really care about
 technical details, read on.
