@@ -44,7 +44,7 @@ That's all in the package, so no work for you to do. Just start it with
     $ systemctl enable btrfs-scrub@home.timer
     $ systemctl start  btrfs-scrub@home.timer
 
-to scrub your `/home/` partition. This monthly scrub has been showing errors for
+to scrub your `/home` partition. This monthly scrub has been showing errors for
 _years_.
 
     $ journalctl --unit=btrfs-scrub@home
