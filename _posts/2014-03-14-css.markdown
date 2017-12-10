@@ -1,0 +1,9 @@
+---
+layout: post
+title: "Learn CSS"
+date: 2014-03-14
+categories: etc
+---
+
+Being able to use Photoshop to make a picture that looks like a website does not
+make you a web designer.

@@ -1,0 +1,9 @@
+---
+layout: post
+title: "Java FTW"
+date: 2014-04-17
+categories: etc
+---
+
+Get with the times, fools! _Real_ programming languages come with a free browser
+toolbar and try to change your search engine!

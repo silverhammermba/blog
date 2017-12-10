@@ -1,0 +1,14 @@
+---
+layout: post
+title: "Hard truths"
+date: 2014-01-31
+categories: etc
+---
+
+I ❤️ Ruby, but…
+
+The whole ruby/gem/packaging/versioning thing is an utter mess. Proof: it is
+widely considered bad practice to use your package manager to manage your Ruby
+package or to use rubygems to manage your gems.
+
+Something has gone wrong.

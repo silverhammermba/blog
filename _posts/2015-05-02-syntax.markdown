@@ -1,0 +1,18 @@
+---
+layout: post
+title: "Vocabulary needed"
+date: 2015-05-02
+categories: etc
+---
+
+There should be a term for a concept that is so difficult to understand at first
+that once you finally grok it you feel compelled to write a little tutorial
+explaining it&mdash;inevitably resulting in thousands of nearly identical blog
+posts, slideshows, and demos all poorly explaining the same thing.
+
+Examples:
+
+* Ruby's singleton classes
+* Haskell's monads
+* Vim
+* Git

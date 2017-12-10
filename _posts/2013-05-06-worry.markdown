@@ -1,0 +1,8 @@
+---
+layout: quote
+title: "Worry does not empty tomorrow of its sorrow, it empties today of its strength."
+date: 2013-05-06
+categories: etc
+---
+
+Corrie ten Boom

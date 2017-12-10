@@ -1,0 +1,8 @@
+---
+layout: quote
+title: "The time to repair the roof is when the sun is shining."
+date: 2013-05-05
+categories: etc
+---
+
+John F. Kennedy

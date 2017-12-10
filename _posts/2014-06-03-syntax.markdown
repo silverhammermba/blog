@@ -1,0 +1,11 @@
+---
+layout: post
+title: "Surprisingly valid syntax"
+date: 2014-06-03
+categories: etc
+---
+
+The proper way to do addition in Ruby:
+
+    2+-+-+-+-+-+-+4
+    => 6

@@ -1,0 +1,10 @@
+---
+layout: post
+title: "Surprisingly valid syntax"
+date: 2013-06-09
+categories: etc
+---
+
+Python 2.7
+
+    "t""""""" "h"""b"e b" "" b"est st" ""r"r" r"""i""" "ng!"

@@ -1,0 +1,30 @@
+---
+layout: post
+title: "Please stop"
+date: 2013-10-10
+categories: etc
+---
+
+    class Object
+      def metaclass
+        class << self
+          self
+        end
+      end
+    end
+
+No.
+
+    class Object
+      def eigenclass
+        class << self
+          self
+        end
+      end
+    end
+
+That is even worse.
+
+    x.singleton_class
+
+**Thank you**.

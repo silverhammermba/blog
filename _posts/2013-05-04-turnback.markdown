@@ -1,0 +1,8 @@
+---
+layout: quote
+title: "No matter how far you have gone down the wrong road, turn back."
+date: 2013-05-04
+categories: etc
+---
+
+Turkish Proverb

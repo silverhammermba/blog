@@ -1,0 +1,12 @@
+---
+layout: post
+title: "Hard truths"
+date: 2014-02-01
+categories: etc
+---
+
+I ❤️ Ruby, but…
+
+The net/http stdlib needs to be scrapped and rebuilt. There are 5
+different-but-similar ways to do any given thing, yet it doesn’t supply any
+high-level code for easily performing common tasks.

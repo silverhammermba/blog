@@ -1,0 +1,16 @@
+---
+layout: post
+title: "`"
+date: 2015-06-20
+categories: etc
+---
+
+Check out this one weird tip. Ruby programmers hate it!
+
+{% highlight ruby %}
+def ` x
+  puts x.upcase
+end
+
+`don't do this`
+{% endhighlight %}

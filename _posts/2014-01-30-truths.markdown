@@ -1,0 +1,14 @@
+---
+layout: post
+title: "Hard truths"
+date: 2014-01-30
+categories: etc
+---
+
+I ❤️ Ruby, but…
+
+It is way too difficult to create a native extension. The Ruby headers define
+over 1,000 functions and macros. And yet the official documentation for this
+mess is a 1,500-line text file.
+
+That is some bullshit.

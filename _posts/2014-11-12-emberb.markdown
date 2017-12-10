@@ -1,0 +1,8 @@
+---
+layout: post
+title: "I wrote a book"
+date: 2014-11-12
+categories: etc
+---
+
+[The Definitive Guide to Ruby's C API](http://silverhammermba.github.io/emberb/)
