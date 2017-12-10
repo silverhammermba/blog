@@ -127,7 +127,7 @@ What complicates the issue somewhat is that there are many different gamma
 curves out there. Because in general gamma is a way of converting between how a
 color is _stored_ and how a color is _displayed_. However for now we only care
 about images stored and displayed on computers, and on computers there's one
-ubiquitious standard: sRGB. I fudged things earlier when I was talking about
+ubiquitous standard: sRGB. I fudged things earlier when I was talking about
 "24-bit RGB". As we've just learned, there's a difference between perceived
 brightness and light intensity. We humans obviously care about the former, but
 your screen (which has to show you color by controlling sub-pixel light
@@ -142,7 +142,7 @@ of the previuos examples used grayscale images so that we could focus on just
 the percieved brightness vs. light intensity issue. This works because the gamma
 correction function is actually applied to each color channel separately and
 treats all three the same. So when we gamma correct [127,127,127] we get
-[55,55,55]. We can essentially think of each pixel as just a single percieved
+[55,55,55]. We can essentially think of each pixel as just a single perceived
 brightness (127) that gets gamma corrected to a single light intensity (55). But
 this fact also helps us when we start looking at full-color sRGB images later
 on. Since gamma correction is applied to each channel separately and
@@ -194,7 +194,7 @@ assumption we made in the first section. Half of the pixels are black and half
 are white, so when we shrink the image the _light intensities_ blend together
 and we should end up with a solid square with _light intensity_ halfway between
 black and white: (X+Y)/2. But your browser instead says black=0, white=255, so
-we get (0+255)/2=127. It's mixing up percieved brightness and light intensity!
+we get (0+255)/2=127. It's mixing up perceived brightness and light intensity!
 
 To understand why this is incorrect, think about this: when colors blend
 together, they blend together _physically_ i.e. with groups of photons mixing
@@ -241,7 +241,7 @@ is used by billions of people every day, is mixing colors incorrectly. Which
 means it's also
 
 * Resizing images incorrectly
-* Bluring incorrectly
+* Blurring incorrectly
 * Blending semi-transparent layers incorrectly
 * Drawing gradients incorrectly
 
@@ -277,7 +277,7 @@ light intensity! It's our human eyes playing tricks on us again: we perceive the
 brightness of light differently depending on its color.
 
 One commonly accepted standard (on which sRGB is based) which quantifies this is
-ITU-R Recommandation BT.709, which defines a formula for how bright a color is
+ITU-R Recommendation BT.709, which defines a formula for how bright a color is
 based on its RGB light intensities:
 
 L = 0.2126R + 0.7152G + 0.0722B
@@ -328,7 +328,7 @@ border between the green and the gray, the last (correct) square is the least
 distinguishable from the color in terms of brightness, indicating that it is a
 good match for a black-and-white conversion.
 
-With all of these exampels of sRGB going bad, you might be thinking that it's a
+With all of these examples of sRGB going bad, you might be thinking that it's a
 no-brainer to always gamma correct your colors first. But there are other
 complications. For example, let's repeat the image from the beginning of this
 post comparing the light intensity method with perceived brightness method
@@ -385,7 +385,7 @@ fixes this by devoting more of those levels to the darks than the brights
 meaning we can store the maximum number of _discernable differences in
 brightness_ within the limited number of levels we have available.
 
-On the other hand, sRGB has also been coopted as a user-friendly way of picking
+On the other hand, sRGB has also been co-opted as a user-friendly way of picking
 and working with colors. Because sRGB smooths out perceptual differences in
 light intensities, an sRGB gradient from dark to light matches our (incorrect)
 expectations of what the dark to light transition should look like: halfway
@@ -445,7 +445,7 @@ colors and get a feel for how the two differ.
 </div>
 
 If you want to try out correct color manipulation, a great way to get started is
-with [ImageMagick][im]. If you want to use your prefered image manipulation
+with [ImageMagick][im]. If you want to use your preferred image manipulation
 software, you're going to have to look up specific instructions for it
 elsewhere.
 
@@ -506,7 +506,7 @@ the darker shades in the lower half which used to be easily distinguishable are
 now nearly-identical white! We intended to just invert the colors, but we ended
 up inverting the details as well.
 
-The trouble is that unlike color mixing, bluring, or image resizing, color
+The trouble is that unlike color mixing, blurring, or image resizing, color
 inversion doesn't have a real-world analogue so there's no ground truth to
 compare to. The most reasonable result I can think of is one that inverts colors
 while maintaining perceptual differences between them so that details don't get
@@ -551,11 +551,11 @@ without breaking the smaller case (making small fonts less readable).
 Here are links to where I did most of my research:
 
 [Gamma error in picture scaling][1]. A very extensive article with a focus on
-image resizing. Good examples of real world images with noticable distortion due
+image resizing. Good examples of real world images with noticeable distortion due
 to incorrect color space handling.
 
 [Computer Color is Broken][2]. A nicely animated explanation with a focus on
-image bluring.
+image blurring.
 
 [What every coder should know about gamma][3]. Really thorough article with even
 more examples than I have here.
@@ -565,7 +565,7 @@ correctly resizing images, with some notes about other linear color spaces.
 
 Lastly, if you're interested in how the math works, you can read the source for
 this page in your browser. All of the images in this article are procedurally
-generated in javascript so you can see how I do the gamma-correct gradients and
+generated in Javascript so you can see how I do the gamma-correct gradients and
 such.
 
 [1]: http://www.ericbrasseur.org/gamma.html
