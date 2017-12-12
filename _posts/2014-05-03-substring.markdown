@@ -7,5 +7,7 @@ categories: etc
 
 Take your pick:
 
-    string[0...3]
-    string[/.../]
+{% highlight ruby %}
+string[0...3]
+string[/.../]
+{% endhighlight %}

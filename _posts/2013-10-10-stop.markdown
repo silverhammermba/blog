@@ -5,26 +5,32 @@ date: 2013-10-10
 categories: etc
 ---
 
-    class Object
-      def metaclass
-        class << self
-          self
-        end
-      end
+{% highlight ruby %}
+class Object
+  def metaclass
+    class << self
+      self
     end
+  end
+end
+{% endhighlight %}
 
 No.
 
-    class Object
-      def eigenclass
-        class << self
-          self
-        end
-      end
+{% highlight ruby %}
+class Object
+  def eigenclass
+    class << self
+      self
     end
+  end
+end
+{% endhighlight %}
 
 That is even worse.
 
-    x.singleton_class
+{% highlight ruby %}
+x.singleton_class
+{% endhighlight %}
 
 **Thank you**.

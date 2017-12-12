@@ -7,13 +7,15 @@ categories: etc
 
 I’ve found this surprisingly useful:
 
-    class String
-      def to_proc
-        Proc.new { |x| x[self] }
-      end
-    end
+{% highlight ruby %}
+class String
+  def to_proc
+    Proc.new { |x| x[self] }
+  end
+end
 
-    [{'a' => 1, 'b' => 2}].map(&'a')
-    # [1]
+[{'a' => 1, 'b' => 2}].map(&'a')
+# [1]
+{% endhighlight %}
 
 It makes Hashes a bit more like Objects.

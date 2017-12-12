@@ -5,6 +5,8 @@ date: 2014-05-28
 categories: etc
 ---
 
-    i = 6
-    i.to_s +5
-    # "11"
+{% highlight ruby %}
+i = 6
+i.to_s +5
+# "11"
+{% endhighlight %}
