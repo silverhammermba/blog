@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Gone one, Javascript!"
+title: "Good one, Javascript!"
 date: 2014-04-08
 categories: etc
 ---
