@@ -67,7 +67,7 @@ look almost exactly the same.
 
 The reason why the second square looks darker is because of an incorrect
 assumption in our second argument about 24-bit RGB (on many cheap laptop
-displays, the second square will also look much more blueish: this is an
+displays, the second square will also look much more blueish; this is an
 unrelated effect, so try to ignore it and focus just on how bright the two
 squares are).
 

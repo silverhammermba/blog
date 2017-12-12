@@ -1,10 +1,24 @@
 ---
 layout: default
 ---
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-<article>
-	<blockquote>
-		<p>{{ page.title }}</p>
-		<cite>{{ content }}</cite>
+	<blockquote class="post-header">
+		<p class="post-title" itemprop="name headline">{{ page.title | escape }}</p>
+		<cite class="post-content">
+			{{ content }}
+		</cite>
 	</blockquote>
+
+	<p class="post-meta">
+	Posted
+	<time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+		{% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+		{{ page.date | date: date_format }}
+	</time>
+	</p>
+
+	{% if site.disqus.shortname %}
+	  {% include disqus_comments.html %}
+	{% endif %}
 </article>
