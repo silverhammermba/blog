@@ -1,4 +1,7 @@
+theme: jekyll-theme-cayman
 title: Floating little leaves of code
+description: No description provided
+google_analytics: UA-101409735-1
 email: silverhammermba@gmail.com
 baseurl: "/blog"
 url: "https://silverhammermba.github.io"
