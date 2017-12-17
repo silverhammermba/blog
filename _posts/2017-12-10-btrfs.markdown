@@ -103,7 +103,7 @@ drive do I need to replace it?
 btrfs needs it to be as big or bigger so any old 2TB drive will do. Plug that
 sucker in and then out with old, in with the new:
 
-    # btrfs replace start -r /dev/sdb /dev/sdd
+    # btrfs replace start -r /dev/sdb /dev/sdd /home
     # btrfs replace status -1 /home
 
 `/dev/sdd` is the new drive, `-r` tells btrfs to only read from the bad drive as
