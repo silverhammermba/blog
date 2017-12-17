@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Fixing btrfs"
-date: 2017-12-10
+date: 2017-12-17
 categories: etc
 ---
 
@@ -110,3 +110,7 @@ sucker in and then out with old, in with the new:
 a last resort while mirroring everything. `/dev/sdc` is still in good shape so
 this should greatly speed up the replacement process. This starts a background
 process which you can monitor with the second command.
+
+Took a bit over an hour:
+
+    Started on 17.Dec 12:52:45, finished on 17.Dec 14:18:18, 0 write errs, 0 uncorr. read errs
