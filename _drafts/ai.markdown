@@ -28,3 +28,6 @@ too much.
 The limitations of a machine-learned function are unknown and (by nature) almost
 unknowable because the whole point is the domain is too big to study.
 
+A good example is the Youtube Adpocalypse and people complaining about the
+algorithm. It can't take over the world but it can fundamentally change how we
+humans consume online media.
