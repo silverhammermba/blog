@@ -563,6 +563,9 @@ more examples than I have here.
 [Resizing with Colorspace Correction][4]. The ImageMagick manual's section on
 correctly resizing images, with some notes about other linear color spaces.
 
+[Interactive Wide-Gamut Comparison][5]. Kinda unrelated, but neat if you want to
+check out some non-SRGB colorspaces.
+
 Lastly, if you're interested in how the math works, you can read the source for
 this page in your browser. All of the images in this article are procedurally
 generated in Javascript so you can see how I do the gamma-correct gradients and
@@ -572,6 +575,7 @@ such.
 [2]: https://www.youtube.com/watch?v=LKnqECcg6Gw
 [3]: http://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/
 [4]: http://www.imagemagick.org/Usage/resize/#resize_colorspace
+[5]: https://webkit.org/blog-files/color-gamut/comparison.html
 
 ## For the pedants ##
 
@@ -606,6 +610,10 @@ steps might use different color spaces and do their own gamma conversion and you
 need the whole chain to be working correctly in order to get the right result.
 So your software can be handling sRGB gamma exactly right and still the result
 looks wrong because something else in the chain messed it up.
+
+I'm not a physicist. I'm sure there's something terribly inaccurate about saying
+that "tiny groups of black photons" are "mixing" with "tiny groups of white
+photons". But hopefully this still gets the idea across.
 
 There is a large class of software that does color blending right: graphics
 drivers. The code that runs on graphics processors to compute colors all runs in
