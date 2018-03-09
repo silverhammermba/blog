@@ -15,4 +15,5 @@ But there are actual gotchas that even seasoned Rubyists will be surprised by.
   inheritance
 * .. and ... can be used to define flip-flops inside conditionals, there's even
   a warning if you use a range literal
+* where do top-level defs end up?
 * TODO
