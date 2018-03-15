@@ -6,6 +6,8 @@ categories: etc
 
 Article about how AI isn't dangerous in the way people usually think
 
+Include this chart: https://insights.stackoverflow.com/survey/2018/#technology-ai-concerns-by-developer-type
+
 Address the main assumptions:
 
 1. "intelligence" is on some linear scale, so there exists some intelligence that is "more intelligent" than us (not just faster thinking, or having more memory, or just alien/different)
@@ -31,3 +33,4 @@ unknowable because the whole point is the domain is too big to study.
 A good example is the Youtube Adpocalypse and people complaining about the
 algorithm. It can't take over the world but it can fundamentally change how we
 humans consume online media.
+
