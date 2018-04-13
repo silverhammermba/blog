@@ -16,4 +16,5 @@ But there are actual gotchas that even seasoned Rubyists will be surprised by.
 * .. and ... can be used to define flip-flops inside conditionals, there's even
   a warning if you use a range literal
 * where do top-level defs end up?
+* and/or are actually really useful for control flow. most Ruby devs say to avoid them
 * TODO
