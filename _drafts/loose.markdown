@@ -41,3 +41,10 @@ holistic rather than localized designs.
 I think this ties into my original point that you can take a tightly coupled
 design, apply points 1-3, and end up with something that _looks_ loosely coupled
 but is really just the same as before, just harder to read.
+
+EXAMPLE
+
+Modifying global state is bad
+Slightly better(?) use a singleton service locator to get/set global state
+That's still global state, so even better, use DI to inject the service locator
+Problem solved?
