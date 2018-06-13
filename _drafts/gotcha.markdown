@@ -17,4 +17,5 @@ But there are actual gotchas that even seasoned Rubyists will be surprised by.
   a warning if you use a range literal
 * where do top-level defs end up?
 * and/or are actually really useful for control flow. most Ruby devs say to avoid them
+* Unary & actually has really low precedence inside method args, because it's enforced at the syntax level
 * TODO
