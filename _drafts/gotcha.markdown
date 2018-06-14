@@ -18,4 +18,5 @@ But there are actual gotchas that even seasoned Rubyists will be surprised by.
 * where do top-level defs end up?
 * and/or are actually really useful for control flow. most Ruby devs say to avoid them
 * Unary & actually has really low precedence inside method args, because it's enforced at the syntax level
+* &nil is a special case, has nothing to do with `to_proc`, needed so you can not pass a block
 * TODO
