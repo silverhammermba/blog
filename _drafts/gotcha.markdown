@@ -94,10 +94,10 @@ Object`, see:
 
 **What!?**
 
-That's `Object.singleton_class`. Don't even try to puzzle out how this works; as
-far as I know this is just hacked into the language. And this is the gotcha: a
-class's singleton class's superclass is the class's superclass's singleton
-class. Got that?
+That's `Object.singleton_class`. Don't try to puzzle out how this works; as far
+as I know this is just hacked into the language. This is the gotcha: a class's
+singleton class's superclass is the class's superclass's singleton class. Got
+that?
 
 It might be easier to look at an example
 
@@ -121,11 +121,38 @@ See how the hierarchy of singleton classes matches the hierarchy of normal
 classes? Like I said, this is a hack. There's no simple consistent rule that
 says this is how singleton classes should work. But it _is_ a nice hack,
 because it means that "class methods" work the way you would expect with
-inheritance. If you call `B.foo` it gets looked up in B's singleton class and
-then A's. TODO and then Object's and then in Class?
+inheritance. If you call `B.foo`, this is the search order:
 
-* .. and ... can be used to define flip-flops inside conditionals, there's even
-  a warning if you use a range literal
+1. `#<Class:B>`
+2. `#<Class:A>`
+3. `#<Class:Object>`
+4. `#<Class:BasicObject>`
+5. `Class`
+
+So eventually you get back to `Class`, as logic would dictate. But you take
+a little detour first. Luckily this quirk is unlikely to impact your Ruby code.
+The surprising part is that it works the way you expect, since doing so involves
+a little inheritance magic.
+
+### def
+
+It's the favorite of quick'n'dirty Rubyists everywhere, the simple unadorned
+top-level `def`
+
+    def foobar
+    end
+
+You almost never need to think about this, but how does this method actually get
+called?
+
+1. Is it a special case where the method is looked up differently? Nope.
+2. Is it thrown into `Kernel` with all the other random methods like `puts` and
+   `rand`? Nope.
+3. Is it... in `Object`? Yes!
+
+TODO the above sucks
+
+
 * where do top-level defs end up?
 * and/or are actually really useful for control flow. most Ruby devs say to avoid them
 * Unary & actually has really low precedence inside method args, because it's enforced at the syntax level
@@ -136,3 +163,4 @@ then A's. TODO and then Object's and then in Class?
 
 * super vs super()
 * constant lookup is syntactic
+* flip-flops, soon to be removed https://bugs.ruby-lang.org/issues/5400
