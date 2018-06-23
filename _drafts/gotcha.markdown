@@ -96,13 +96,34 @@ Object`, see:
 
 That's `Object.singleton_class`. Don't even try to puzzle out how this works; as
 far as I know this is just hacked into the language. And this is the gotcha: a
-class's singleton class's superclass is its superclass's singleton class. Got
-that?
+class's singleton class's superclass is the class's superclass's singleton
+class. Got that?
 
+It might be easier to look at an example
 
-* Singleton classes of classes have special behavior: they inherit from the
-  superclass's singleton. This is hacked in so that "class methods" have
-  inheritance
+    class A # < Object
+    end
+
+    class B < A
+    end
+
+    B.superclass
+    # => A
+    A.superclass
+    # => Object
+
+    B.singleton_class.superclass
+    # => #<Class:A>
+    A.singleton_class.superclass
+    # => #<Class:Object>
+
+See how the hierarchy of singleton classes matches the hierarchy of normal
+classes? Like I said, this is a hack. There's no simple consistent rule that
+says this is how singleton classes should work. But it _is_ a nice hack,
+because it means that "class methods" work the way you would expect with
+inheritance. If you call `B.foo` it gets looked up in B's singleton class and
+then A's. TODO and then Object's and then in Class?
+
 * .. and ... can be used to define flip-flops inside conditionals, there's even
   a warning if you use a range literal
 * where do top-level defs end up?
