@@ -49,31 +49,33 @@ technique can be used on classes and instances alike because at the end of the
 day everything's just an object and who cares if that object is an instance of
 `Class` or something else? Another wonderful non-gotcha of Ruby.
 
-    class Foo
-      def self.bar
-      end
-    end
+{% highlight ruby %}
+class Foo
+  def self.bar
+  end
+end
 
-    Foo.singleton_class.instance_methods false
-    # => [:bar]
-    Foo.is_a? Class
-    # => true
-    Foo.is_a? Foo.singleton_class
-    # => true, our secret parent!
+Foo.singleton_class.instance_methods false
+# => [:bar]
+Foo.is_a? Class
+# => true
+Foo.is_a? Foo.singleton_class
+# => true, our secret parent!
 
-    # same thing works on instances
+# same thing works on instances
 
-    foo = Foo.new
+foo = Foo.new
 
-    def foo.baz
-    end
+def foo.baz
+end
 
-    foo.singleton_class.instance_methods false
-    # => [:baz]
-    foo.is_a? Foo
-    # => true
-    foo.is_a? foo.singleton_class
-    # => true
+foo.singleton_class.instance_methods false
+# => [:baz]
+foo.is_a? Foo
+# => true
+foo.is_a? foo.singleton_class
+# => true
+{% endhighlight %}
 
 You might think that this is certainly weird enough to be a gotcha, but actually
 it's quite ordinary. It helps if you think of the singleton class as always
@@ -81,16 +83,20 @@ being there, just normally hidden from view because it kinda goes without saying
 (_every object_ has a singleton class!). Methods defined in the singleton class
 are ordinary methods and they get looked up in the ordinary way, see:
 
-    foo.singleton_class.superclass
-    # => Foo
+{% highlight ruby %}
+foo.singleton_class.superclass
+# => Foo
+{% endhighlight %}
 
 The class chain really goes `foo.singleton_class < Foo < Object`. That way
 `foo.baz` gets looked up in the singleton class before it gets to `Foo`. The
 same exact principle works for classes, you have `Foo.singleton_class < Class <
 Object`, see:
 
-    Foo.singleton_class.superclass
-    # => #<Class:Object>
+{% highlight ruby %}
+Foo.singleton_class.superclass
+# => #<Class:Object>
+{% endhighlight %}
 
 **What!?**
 
@@ -101,21 +107,23 @@ that?
 
 It might be easier to look at an example
 
-    class A # < Object
-    end
+{% highlight ruby %}
+class A # < Object
+end
 
-    class B < A
-    end
+class B < A
+end
 
-    B.superclass
-    # => A
-    A.superclass
-    # => Object
+B.superclass
+# => A
+A.superclass
+# => Object
 
-    B.singleton_class.superclass
-    # => #<Class:A>
-    A.singleton_class.superclass
-    # => #<Class:Object>
+B.singleton_class.superclass
+# => #<Class:A>
+A.singleton_class.superclass
+# => #<Class:Object>
+{% endhighlight %}
 
 See how the hierarchy of singleton classes matches the hierarchy of normal
 classes? Like I said, this is a hack. There's no simple consistent rule that
@@ -136,24 +144,22 @@ a little inheritance magic.
 
 ### def
 
-It's the favorite of quick'n'dirty Rubyists everywhere, the simple unadorned
-top-level `def`
+{% highlight ruby %}
+def foobar
+end
+{% endhighlight %}
 
-    def foobar
-    end
+A method that you can call from anywhere without an explicit receiver. Have you
+ever wondered how that works? Hint: just like the previous gotcha, it's another
+hack so that the normal method lookup procedure can be used. Personally, I
+always expect these to end up in `Kernel` because that's where all of the
+leftover methods like `puts`, `rand`, and `loop` are, but that's now how the
+Ruby devs chose to do it.
 
-You almost never need to think about this, but how does this method actually get
-called?
-
-1. Is it a special case where the method is looked up differently? Nope.
-2. Is it thrown into `Kernel` with all the other random methods like `puts` and
-   `rand`? Nope.
-3. Is it... in `Object`? Yes!
-
-TODO the above sucks
+The problem with putting them in `Kernel` is that you might want to redefine one
+those built-in methods
 
 
-* where do top-level defs end up?
 * and/or are actually really useful for control flow. most Ruby devs say to avoid them
 * Unary & actually has really low precedence inside method args, because it's enforced at the syntax level
 * &nil is a special case, has nothing to do with `to_proc`, needed so you can not pass a block
