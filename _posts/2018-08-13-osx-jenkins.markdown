@@ -10,7 +10,7 @@ review each others' pull requests before each merge. We wanted a continuous
 integration setup that would report build or unit test failures right in each
 pull request. We did this with Jenkins. The resulting setup is very simple and
 easy to maintain, but I was surprised at how few resources I could find on the
-web about it. So this is what I did.
+web about it. This is what I did.
 
 ## Fastlane
 
@@ -28,14 +28,15 @@ First, we didn't use any of Fastlane's recommended signing tools
 (match/cert/sigh). I think they're designed for smaller organizations where each
 developer is allowed to update signing on their own, where it's not a big deal
 to revoke and recreate the signing certificate. But we have an organization-wide
-signing certificate, and most iOS devs don't have access to it because it would
-be a huge headache if anyone was to revoke it.
+distribution certificate, and most iOS devs don't have access to it because it
+would be a huge headache if anyone was to revoke it.
 
 So instead, we just made a new iOS developer account that has the master signing
 certificate for the purpose of running on our build machines. Then you just have
 to make sure that your Xcode project is set up correctly for that one account to
 do signing and you pretty much don't have to do any of Fastlane's fancy signing
-stuff.
+stuff. The best way to do this is to open up Xcode on the build machine itself
+and go through the steps of pushing a build to TestFlight.
 
 ### Config
 
@@ -79,7 +80,6 @@ through them and then fail if any of the tests failed. Second is the
 the case that Xcode is able to automatically fix a provisioning problem (I think
 this is a new feature in Xcode 9).
 
-
 ## Jenkins
 
 For the distributed builds, you first need a Jenkins instance that can act as
@@ -87,8 +87,11 @@ the master. There are actually tons of guides on how to do this, and there's
 nothing specific you need to worry about with respect to iOS or OSX.
 
 We set up each agent to connect via JNLP by having each agent run a .jar that is
-provided by the Jenkins master. It's also easy to create a startup service so
-that your agent gets restarted on each boot.
+provided by the Jenkins master. You need to use [Homebrew][brew] to install Java
+8 to run the .jar without issues. Once that's done, it's easy to create a startup
+service so that your agent gets restarted on each boot.
+
+[brew]: https://brew.sh
 
 Next set up a multi-branch pipeline job on the master. This way the master can
 monitor all of your branches and trigger distributed builds for each one. The
@@ -121,7 +124,7 @@ pipeline {
         // needed by Fastlane
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
-        // to find Homebrew's bundler
+        // to find Homebrew's java and bundler
         PATH = "/usr/local/bin:$PATH"
       }
       steps {
@@ -156,13 +159,36 @@ just want master to hand out jobs to available agents and each agent does the
 whole job. For this you need to specify `agent none` and `skipDefaultCheckout
 true`, otherwise master will do a full checkout of each branch (pointless! only
 the agent needs that) and master will pass your jobs to agents that can't even
-perform the build (which essentially DDOSes your other build agents if your iOS
+perform the build (which essentially DOSes your other build agents if your iOS
 build machines get backed up).
 
 As an aside, I don't really understand why Jenkins is designed in this way; our
 simple setup of having master delegate builds to agents was _so easy_ to get
 wrong. Our initial attempts wasted so much time performing pointless steps and
 blocking agents that had no business even touching our iOS app.
+
+To simplify this process, we also configured our app to use bundler to install
+gems locally. Our `.bundle/config` is just
+
+{% highlight yaml %}
+---
+BUNDLE_PATH: ".bundle"
+{% endhighlight %}
+
+That way we don't have to worry about setting up gems on each agent, it's
+handled entirely in the repository.
+
+We could add `fastlane` to our `Gemfile` but for... reasons, some of our
+developers don't want to install it when they build on their own machines. So
+instead we have that `install_fastlane.sh` script which runs on the Jenkins
+agents
+
+{% highlight bash %}
+#!/bin/bash
+
+! grep fastlane Gemfile && echo 'gem "fastlane"' >> Gemfile
+bundle install
+{% endhighlight %}
 
 ## Deploying
 
