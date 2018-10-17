@@ -37,17 +37,13 @@ of experimentation to try to understand some quirk of the language.
 ### Singleton superclass
 
 If you've plumbed the depths of [Dwemthy's Array][array], you know that "class
-methods" are just plain-old instance methods. The only special bit is that these
-methods are defined in a _secret class_ that is dynamically created after the
-fact as your new class so that it can intercept method calls before they reach
-your normal class.
+methods" are actually plain-old instance methods defined in a special class (the
+singleton class). In fact you know that there's nothing special at all about
+"class methods" because the exact same technique works for _all_ objects.
+Classes are just instance of `Class`, after all. Another wonderful non-gotcha of
+Ruby.
 
 [array]: https://poignant.guide/dwemthy/
-
-In fact you know that "class methods" don't exist, because this exact same
-technique can be used on classes and instances alike because at the end of the
-day everything's just an object and who cares if that object is an instance of
-`Class` or something else? Another wonderful non-gotcha of Ruby.
 
 {% highlight ruby %}
 class Foo
@@ -156,8 +152,90 @@ always expect these to end up in `Kernel` because that's where all of the
 leftover methods like `puts`, `rand`, and `loop` are, but that's now how the
 Ruby devs chose to do it.
 
-The problem with putting them in `Kernel` is that you might want to redefine one
-those built-in methods
+TODO finish this section
+
+### and and/or or
+
+The sort-of-not-really-official [style guide][style] has a strong opinion about
+`and` and `or`:
+
+> The `and` and `or` keywords are banned. The minimal added readability is just
+> not worth the high probability of introducing subtle bugs.
+
+[style]: https://github.com/rubocop-hq/ruby-style-guide#syntax
+
+I heard this opinion echoed so many times over so many years that I just
+accepted it as fact and didn't give it a second thought. But I was a hypocrite!
+While shunning `and`/`or` along with the rest of the community, I happily (and
+rightly) embraced using `if` and `unless` inline.
+
+{% highlight ruby %}
+# Rubyists love this
+raise("Failed to save document!") unless document.save
+
+# but they hate this???
+document.save or raise("Failed to save document!")
+{% endhighlight %}
+
+I don't see anything reprehensible about the second form and would have a hard
+time coming up with an objective argument for one of them being _always_
+superior.
+
+But what about those "subtle bugs"? The classical example is this
+
+{% highlight ruby %}
+x = 3 and 4
+# x == 3! Whaaaat?
+{% endhighlight %}
+
+But this is just a big misunderstanding. Let's take a step back. Really there
+are two totally different concepts of "and" at play here:
+
+* On one hand, there's Boolean conjunction. Like, X is true or false, Y
+  is true or false, "X **and** Y" is true if and only if X and Y are both true.
+  This is a proper binary operator like + or &times;.
+* On the other hand, there's... English. Like "Buy cookies **and** bring them to
+  the party" which is just saying to do two things in a certain order (obviously
+  you can't bring cookies if you fail to buy any). It's not really math.
+
+Most programming languages, taking after C (probably?) mash these two concepts
+together. But **Ruby fixed it**. We've got two syntaxes for the two different
+concepts:
+
+{% highlight ruby %}
+did_send_invites && house_is_decorated && have_beer
+# versus
+get_money and buy :cookies and bring_to_party :cookies, :cool_hat
+{% endhighlight %}
+
+I think both of these examples are perfectly clear and readable Ruby if you
+understand the distinction between `and` and `&&`. Here's a simple test to see
+if your code is OK: replace `&&`/`||` with `*` and replace with `and`/`or` with
+`if`. If the resulting syntax looks batshit crazy, you're probably using them
+wrong.
+
+{% highlight ruby %}
+# is this OK?
+get_money && buy :cookies && bring_to_party :cookies, :cool_hat
+# uhhh, maybe not. need parentheses to make any sense of how this is evaluated
+get_money * buy :cookies * bring_to_party :cookies, :cool_hat
+# logically this is backwards, but it still reads well, so "and" is a better fit
+get_money if buy :cookies if bring_to_party :cookies, :cool_hat
+
+# is this OK?
+if did_send_invites and house_is_decorated and have_beer
+  # get ready for party
+end
+# definitely not. dear god no
+if did_send_invites if house_is_decorated if have_beer
+  # get ready for party
+end
+# in C this would make more sense (0 is false), but at least it's clear how this
+# would be interpreted, so "&&" is a better fit
+if did_send_invites * house_is_decorated * have_beer
+  # get ready for party
+end
+{% endhighlight %}
 
 
 * and/or are actually really useful for control flow. most Ruby devs say to avoid them

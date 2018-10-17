@@ -258,9 +258,9 @@ If you're using software to mix colors together, chances are it's doing it wrong
 
 ## Colors ##
 
-But it's not even that simple. So far we've been mainly talking about
-shades of gray, it all gets even more complicated when you consider the
-RGB channels.
+But it's not even that simple. Earlier I said that we can just think about this
+gamma issue with each color channel independent of the others, but that was a
+lie.
 
 sRGB stores three separate numbers representing the perceived
 brightness of red, green, and blue, respectively. All three numbers go
@@ -302,7 +302,8 @@ match the brightness of the original color. Notice that if R=G=B, plugging into
 the formula gives you L=R=G=B. So if you set red, green, and blue to L you get
 the desired brightness-preserving black-and-white image. But this is in terms of
 light intensity, so we have to convert from and to sRGB if we want to use this
-formula with digital images. So the steps should be:
+formula with digital images. So a good brightness-preserving black-and-white
+conversion for SRGB would go like this:
 
 1. Convert from perceived brightness sRGB to light intensity RGB
 2. Plug that into the BT.709 formula
