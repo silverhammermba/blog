@@ -9,3 +9,23 @@ cite p:before {
 blockquote em {
 	font-style: normal;
 }
+
+blockquote.a-quote {
+	background-color: #ffc4c4;
+	color: #995656;
+}
+
+blockquote.b-quote {
+	background-color: #e1efec;
+	color: #686f77;
+}
+
+blockquote.f-quote {
+	background-color: #b4efbb;
+	color: #3a7148;
+}
+
+blockquote.d-quote {
+	background-color: #edd8ac;
+	color: #9f6b31;
+}
