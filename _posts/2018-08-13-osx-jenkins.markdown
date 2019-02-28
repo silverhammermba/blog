@@ -5,10 +5,12 @@ date: 2018-08-03
 categories: etc
 ---
 
+#### Updated 2019-02-28
+
 I work on a couple iOS apps on a small team. We collaborate via Bitbucket and
 review each others' pull requests before each merge. We wanted a continuous
 integration setup that would report build or unit test failures right in each
-pull request. We did this with Jenkins. The resulting setup is very simple and
+pull request. We did this with Jenkins. The resulting setup is pretty simple and
 easy to maintain, but I was surprised at how few resources I could find on the
 web about it. This is what I did.
 
@@ -40,7 +42,7 @@ and go through the steps of pushing a build to TestFlight.
 
 ### Config
 
-Here's our config, nice and simple:
+Here's our config, mostly simple:
 
 {% highlight ruby %}
 default_platform :ios
@@ -48,20 +50,19 @@ default_platform :ios
 platform :ios do
   before_all do
     # store all output in the Jenkins workspace
-    setup_jenkins
+    # result_bundle: false works around a fastlane bug where run_tests can't find the test results to pass to trainer
+    setup_jenkins result_bundle: false
   end
 
-  desc 'Run tests'
-  lane :test do |opts|
-    exception = nil
-    %w[TestTarget1 TestTarget2].each do |name|
-      begin
-        run_tests scheme: name, device: 'iPhone 6', output_types: 'junit', output_files: "#{name}.junit"
-      rescue => ex
-        exception = ex
-      end
-    end
-    raise exception if exception
+  lane :build_tests do
+    run_tests scheme: 'Tests', device: 'iPhone 6', build_for_testing: true, output_types: ''
+  end
+
+  lane :test do
+    scheme_name = 'Tests'
+    run_tests scheme: scheme_name, device: 'iPhone 6', test_without_building: true, output_types: '', fail_build: false
+    # because of result_bundle: false, the test results will be in derivedData, but we want them in the output dir
+    trainer extension: '.junit', output_directory: ENV['SCAN_OUTPUT_DIRECTORY']
   end
 
   desc 'Build and sign for testflight'
@@ -73,12 +74,26 @@ platform :ios do
 end
 {% endhighlight %}
 
-There's only two tricks here. First because of... reasons, we have multiple test
-targets that we run for unit tests. So our testing lane is set up to loop
-through them and then fail if any of the tests failed. Second is the
-`-allowProvisioningUpdates` option. This allows the build to run unattended in
-the case that Xcode is able to automatically fix a provisioning problem (I think
-this is a new feature in Xcode 9).
+We had to make some other changes to get this working. Previously we had
+multiple test schemes in our Xcode project (organized by framework), but that
+made the fastlane configuration needlessly complex because we had to handle
+stuff like aggregating their results and ensuring that all tests were run.
+Instead just make a new scheme in Xcode (I called ours "Tests") and add all of
+your testing targets to it. Then your Fastfile is cleaner.
+
+We also had to use the [trainer plugin][trainer] to generate the junit report
+rather than fastlane itself. It turns out that fastlane uses xcpretty to
+generate its junit report and... xcpretty kinda sucks at it. Just look at their
+issue tracker: there are **tons** of [open bugs][bugs] related to missing test
+results. Though as you can see in the comments of the Fastfile, there were a
+couple tricks needed to get fastlane working with trainer...
+
+[trainer]: https://github.com/xcpretty/trainer/tree/master/fastlane-plugin-trainer
+[bugs]: https://github.com/xcpretty/xcpretty/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+tests
+
+Another trick is the `-allowProvisioningUpdates` option. This allows the build
+to run unattended in the case that Xcode is able to automatically fix a
+provisioning problem (I think this was a new feature in Xcode 9).
 
 ## Jenkins
 
@@ -116,33 +131,52 @@ pipeline {
   }
 
   stages {
-    stage('Test') {
+    stage('waiting for executor') {
       agent {
         label 'OSX && xcode'
       }
       environment {
-        // needed by Fastlane
+        // for fastlane
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
-        // to find Homebrew's java and bundler
+        // for homebrew
         PATH = "/usr/local/bin:$PATH"
       }
-      steps {
-        checkout scm
-        script {
-          // show "build in progress" on bitbucket (using Master's credentials)
-          notifyBitbucket credentialsId: '00000000-1111-2222-3333-444444444444'
+      stages {
+        stage("prepare") {
+          steps {
+            checkout scm
+            script {
+              // show "build in progress" on bitbucket (using Master's credentials)
+              notifyBitbucket credentialsId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+            }
+            sh 'bash install_fastlane.sh'
+          }
         }
-        sh 'bash install_fastlane.sh'
-        sh 'bundle exec fastlane test'
+        stage("build") {
+          steps {
+            sh 'bundle exec fastlane build_tests'
+          }
+        }
+        stage("test") {
+          steps {
+            sh 'xcrun simctl shutdown all'
+            sh 'xcrun simctl erase all'
+            sh 'bundle exec fastlane test'
+          }
+          post {
+            always {
+              junit 'output/*.junit'
+            }
+          }
+        }
       }
       post {
         always {
-          junit '**/output/*.junit'
           script {
             // result is nil on success, which the Stash plugin doesn't handle
             currentBuild.result = currentBuild.result ?: 'SUCCESS'
-            notifyBitbucket credentialsId: '00000000-1111-2222-3333-444444444444'
+            notifyBitbucket credentialsId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
           }
         }
         success {
@@ -162,13 +196,34 @@ the agent needs that) and master will pass your jobs to agents that can't even
 perform the build (which essentially DOSes your other build agents if your iOS
 build machines get backed up).
 
-As an aside, I don't really understand why Jenkins is designed in this way; our
-simple setup of having master delegate builds to agents was _so easy_ to get
-wrong. Our initial attempts wasted so much time performing pointless steps and
-blocking agents that had no business even touching our iOS app.
+The really confusing part here is the nested stages. Notice how that first stage
+is called "waiting for executor" even though it contains literally everything?
+That's because the `agent { label ... }` part changes everything: this first
+stage is running in an `agent none` block, meaning it's running on master
+_until_ a suitable agent is found. Then the stage is _done_ because everything
+else is running on the agent. Hence the name, because the duration you'll see in
+Jenkins is only the time it took master to find an agent to run it on.
 
-To simplify this process, we also configured our app to use bundler to install
-gems locally. Our `.bundle/config` is just
+The other thing that took me a while to learn the importance of is splitting up
+the stages on the agent. Separating prepare/build/test is a huge help for
+diagnosing build issues quickly, but also for avoiding pointless errors. For
+example, we used to have everything in a single stage and this caused confusing
+error messages when some of our build agents started failing while installing
+fastlane. Since they never got around to building or testing, there was no junit
+report to collect, so the final `post { always { junit` part was _also_ failing
+because it couldn't find the report.
+
+The other kinda paranoid thing is those two `simctl` calls. Our app runs
+database migrations on launch and we've had issues when multiple branches of
+development are using different migrations. This is a problem because the
+simulator will actually keep your app around between test runs, so if your agent
+is switching between branches with conflicting migrations, xcode might try to
+"update" the app on the simulator to a version with a totaly different migration
+path, which makes core data very angry. So just to be safe we wipe and restart
+everything on the simulator before testing.
+
+To assist running this on distributed agents, we also configured our app to use
+bundler to install gems locally. Our `.bundle/config` is just
 
 {% highlight yaml %}
 ---
@@ -186,7 +241,9 @@ agents
 {% highlight bash %}
 #!/bin/bash
 
-! grep fastlane Gemfile && echo 'gem "fastlane"' >> Gemfile
+! grep -q fastlane Gemfile &&\
+    echo 'gem "fastlane"' >> Gemfile &&\
+    echo 'gem "fastlane-plugin-trainer"' >> Gemfile
 bundle install
 {% endhighlight %}
 
@@ -221,7 +278,7 @@ pipeline {
         label 'OSX && xcode'
       }
       steps {
-          deleteDir()
+        deleteDir()
         checkout([$class: 'GitSCM',
             userRemoteConfigs: [[
                 url: 'ssh://git@myhost.com:7999/myapp.git',
@@ -240,10 +297,10 @@ pipeline {
 }
 {% endhighlight %}
 
-The main differences here are that we have to specify the iTunes Connect account
-that is authorized to sign and upload the app and we call fastlane's `build` and
-`upload_to_testlight` actions (the former is from our Fastfile, the latter is
-built-in).
+The main differences here are that we have to specify the App Store Connect
+account that is authorized to sign and upload the app and we call fastlane's
+`build` and `upload_to_testlight` actions (the former is from our Fastfile, the
+latter is built-in).
 
 The tricky part is that hideous checkout block. Since I wanted the git checkout
 to be a parameter, I couldn't use the automatic `scm` variable defined by
@@ -251,6 +308,7 @@ Jenkins. The pipeline snippet generator is somewhat helpful for figuring out
 what syntax to use here, but I still had to clean it up to get this minimal example.
 
 This works great and lets you have (mostly) unattended deploys from whatever
-build machine happens to be free. The only part that prevents it from being
-fully unattended is that occasionally Apple will force you to log in and answer
-the uploading account's security questions.
+build machine happens to be free. Unintuitively, you have to disable two-factor
+authentication for the App Store Connect account to make this run unattended. If
+you enable two-factor auth, your two-factor session will expire after a month so
+someone will have to manually refresh it before deploys wil work again.
