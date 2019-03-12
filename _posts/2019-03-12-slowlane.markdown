@@ -1,0 +1,345 @@
+---
+layout: post
+title: "Life in the slow lane"
+categories: etc
+---
+
+### or, how we stopped using fastlane for continuous integration
+
+I [previously wrote][fast] about how to set up continuous integration for an iOS
+app with fastlane and Jenkins. I have come to regret our decision to use
+fastlane in that process and have since migrated us to a new system which I will
+detail below.
+
+[fast]: {% post_url 2018-08-13-osx-jenkins %}
+
+## Why we used fastlane
+
+When I was initially tasked with setting up CI for our team, I used fastlane
+because
+
+1. Senior developers said "I heard about this thing called fastlane that can
+   automate iOS deployment. You should use that."
+2. and when I looked up fastlane it had a large community around it
+
+To be fair, fastlane did work. For about a year, on every push it would build
+our app, run our tests, and report back to git if the branch was OK to merge.
+This brought huge improvements to our development process because previously we
+were basically relying on due diligence and the honor system to make sure that
+tests got run.
+
+## What sucks about fastlane
+
+1. Xcode sucks
+2. It's a huge dependency
+3. It's buggy
+4. Everyone uses it
+5. It's an additional layer of complexity
+6. It has way 👏 too 💯 many 😂 emoji 🚀
+
+Let's dive into each of these a bit.
+
+## Xcode sucks
+
+fastlane advertises itself as making your life as an iOS developer so much
+easier. Perhaps in certain areas that is true, but for a lot of what we were
+using fastlane for it was ultimately just wrapping commands to Xcode. And here's
+the problem: Xcode _really_ really sucks. A lot. I hate it.
+
+Ever since the release of Xcode 10, some frameworks in our app sometimes have
+build cycles reported _inside them_. Somehow Xcode thinks that linking the files
+in a framework can require the framework itself to already be built? I have a
+[500 point bounty][bounty] on Stackoverflow about this. Let's not get into that. The point
+is that sometimes, seemingly randomly, Xcode will decide it won't build our app
+anymore. That means the Jenkins build fails, which means no tests run, which
+means no merge.
+
+[bounty]: https://stackoverflow.com/questions/52724480/xcode-10-framework-dependency-cycle-with-itself
+
+Or sometimes the build succeeds and Xcode won't run the tests. Why? "Early
+unexpected exit," it says. "No restart will be attempted," even though
+restarting the tests is _literally the **only fix for this error**_. So again,
+no tests, no merge, seemingly at random.
+
+fastlane doesn't help with this. And I don't expect it to, because fastlane is
+built on the insane assumption that Xcode will always work. So this isn't a mark
+against fastlane, but for us it made me start to question why we used this tool
+if it was doing nothing to address the two main pain points for our continuous
+integration setup. Especially considering that fastlane is a
+
+## Huge dependency
+
+When you finally get fastlane running and look at your cute little `Fastfile`,
+you'll feel giddy:
+
+{% highlight ruby %}
+platform :ios do
+  before_all do
+    setup_jenkins
+  end
+
+  lane :test do
+    run_tests scheme: 'Tests', device: 'iPhone 6'
+  end
+end
+{% endhighlight %}
+
+So simple! So clean! Just don't look at your `Gemfile.lock`
+
+{% highlight bash %}
+$ wc -l Gemfile.lock
+# 170 Gemfile.lock
+{% endhighlight %}
+
+That simplicity doesn't come cheap. And since we want to keep our Jenkins
+workspaces clean, that's 65 dependencies to install on the build machine for
+_every push_.
+
+And it's not just big in terms of _build_ dependencies. fastlane does a lot at
+runtime that I don't care about. For example, every one of our builds gets tons
+of messages like this:
+
+{% highlight bash %}
+$ xcodebuild -showBuildSettings -scheme LoggingSharedFrameworkTests -project ./MyApp.xcodeproj
+# Command timed out after 3 seconds on try 1 of 4, trying again with a 6 second timeout...
+{% endhighlight %}
+
+Sometimes it takes three or four of these timeouts (with increasing durations)
+before it succeeds. Why run this at all? And when you look at the build command
+it ends up running...
+
+{% highlight bash %}
+$ set -o pipefail && env NSUnbufferedIO=YES xcodebuild -scheme LoggingSharedFrameworkTests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,id=4EE01278-1CB2-4723-B24E-B9B5C0CF4983' -derivedDataPath '/Users/jenkins/.agent/workspace/p-66UA6AA2W6/derivedData' -resultBundlePath '/Users/jenkins/.agent/workspace/p-66UA6AA2W6/output/LoggingSharedFrameworkTests.test_result' build test | tee '/Users/jenkins/Library/Logs/scan/LoggingSharedFrameworkTests-LoggingSharedFrameworkTests.log' | xcpretty  --report junit --output '/Users/jenkins/.agent/workspace/p-66UA6AA2W6/output/LoggingSharedFrameworkTests.junit' --report junit --output '/var/folders/4c/fw71hw555x99lkr_vt1c5krw0000gq/T/junit_report20180803-11540-1ntdx6t'
+{% endhighlight %}
+
+Yeah. Seeing this stuff makes me nervous, because I worry that fastlane is doing
+a bunch of extra work that
+
+* at best, I don't care about or
+* at worst, is going to cause problems that I have to fix (don't laugh, read
+  on...)
+
+## Fastlane bugs
+
+I now know that fastlane is buggy, especially in the realm of generating test
+reports. There are two main ways to do this with fastlane and both of them are
+bad.
+
+1. `xcpretty`, the default. This tries to generate test results by parsing
+   Xcode's output while it runs tests. If you've ever written a tool that tries
+   to parse another piece of software's logs, you know how insane and fragile
+   this is. Unsurprisingly, this results in errors like success/fail being mixed
+   up or large numbers of tests being missed entirely.
+2. `trainer`, a fastlane plugin. This does the sane thing of actually reading
+   the Xcode test report. But while working on it I found two bugs that made it
+   unsuitable for use on Jenkins (it doesn't handle Jenkins workspaces well, and
+   you end up with weird test durations and test suites when Jenkins parses the
+   report).
+
+All software has bugs, I don't blame fastlane for this. But what makes it awful
+is that
+
+## Everyone uses fastlane
+
+Have you ever needed to go to a government office to get some bureacratic
+paperwork processed? Or have you ever needed to go to your cable company's
+office in person to exchange some hardware or resolve a billing dispute?
+
+These are universally awful experiences and I theorize that they are both awful
+for these two reasons:
+
+1. They have to serve a wide audience with a broad range of needs and
+   capabilities
+2. The people being served are only there out of necessity and would much rather
+   be doing something else
+
+These translate into awfulness because the employees need to treat every
+customer like they have the same lowest possible baseline of intelligence. It
+doesn't matter if you're a professional network engineer, the cable company is
+going to make sure you restart your computer and check the internet again before
+they replace your cable modem that is literally on fire. And the employees
+aren't entirely at fault because the people are desperate to get out of there,
+meaning they are liable to misrepresent facts, misreport problems, and often
+expect the employees to magically fix things that are completely out of their
+control.
+
+fastlane's bug tracker is exactly this situation.
+
+Because it's advertised as a time-saving miracle tool, lots of people use it.
+Because it tries to do all things iOS, people use it for a broad set of
+unrelated tasks. And people only show up in the bug tracker because all of a
+sudden they're losing money and the only thing they know is that they're running
+a fastlane command and getting an error message.
+
+So getting a fastlane bug addressed is like waiting in line in the customer
+service department of your nightmares. If they listen to you at all it's going
+to take a long time, and even longer for them to actually fix anything.
+
+## Additional complexity
+
+Because I never witnessed a bug report being addressed by fastlane developers, I
+ended up doing a lot of build debugging myself. Here's the problme: Xcode is a
+really complicated tool and fastlane is a really complicated tool and fastlane
+needs to run Xcode to do almost anything. Surprisingly, it's way harder to debug
+fastlane than it is to debug Xcode! It took me longer than I'd like to admit to
+realize this.
+
+Once I finally stopped relying entirely on fastlane and started running Xcode
+commands directly, it became much easier to realize which problems were coming
+from where.
+
+But while the Xcode problems were easy to debug because I could ignore the
+complexity of fastlane, I still would have to figure out how to make my solution
+work in fastlane. Like restarting tests if they fail for a very particular,
+mysterious reason; it wasn't obvious how to do that in fastlane even though I
+knew exactly where that error appeared and in what Xcode command. And the
+fastlane problems were essentially unfixable as discussed in the previous
+section.
+
+Again, I kept coming to the question, "Why am I even using this tool?"
+
+## Emoji
+
+This is petty, so I'll keep it brief.
+
+What is it with the emoji? I don't understand the obsession. fastlane's logs,
+github, and documentation are littered with them. Do you know why I'm reading
+your logs, github, or documentation 9 times out of 10?
+
+**BECAUSE MY APP ISN'T BUILDING AND I'M LOSING MONEY.**
+
+Seeing a cutesy rocket ship doesn't really offset that. I'll go ahead and throw
+aliases like `scan` and `gym` into the same bucket. I'm all for having short,
+memorable software names but these are essentially method calls in fastlane's
+API and they both have sensible real names: `run_tests` and `build_ios_app`. Why
+make your tool more confusing just so it can be cute?
+
+## Replacing fastlane
+
+So we ditched fastlane. What now? I replaced it with four scripts:
+
+### prepare build
+
+{% highlight bash %}
+#!/bin/bash
+bundle install
+carthage bootstrap --platform iOS --cache-builds
+{% endhighlight %}
+
+The simplest, sets up dependencies since Jenkins always starts with a clean
+workspace. The only gem we need is `xcpretty`, which has only one other
+dependency.
+
+### build tests
+
+{% highlight bash %}
+#!/bin/bash
+
+set -xo pipefail
+
+DATADIR=derivedData
+DERIVED_DATA=(-derivedDataPath "$DATADIR")
+
+build() {
+    xcodebuild -scheme Tests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 6' ${DERIVED_DATA[@]} build-for-testing | tee buildlog | bundle exec xcpretty --color
+}
+
+if ! build && grep 'error: Cycle' buildlog; then
+    rm -rf "$DATADIR"
+    build
+fi
+{% endhighlight %}
+
+Pretty self-explanatory. I only use that `DERIVED_DATA` variable so that it's
+easy to comment out in case I want to run with the default path. And note that I
+still use `xcpretty`. It sucks at test reports, but it does make the log easier
+to read.
+
+And lastly, look at that simple fix for random cycle errors. We first try an
+incremental build (if the workspace wasn't clean). If we see that error, clean
+it and start again. If it _still_ fails, the cycle is probably legitimate.
+
+### test
+
+{% highlight bash %}
+#!/bin/bash
+
+set -xo pipefail
+
+DATADIR=derivedData
+OUTDIR=output
+DERIVED_DATA=(-derivedDataPath "$DATADIR")
+OUTPUT=(-resultBundlePath "$OUTDIR")
+
+test() {
+	rm -rf "$OUTDIR"
+	xcodebuild -scheme Tests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 6' ${DERIVED_DATA[@]} ${OUTPUT[@]} test-without-building | bundle exec xcpretty --color
+}
+
+for run in {1..5}; do
+	test
+	RESULT=$?
+
+	! grep --max-count=1 'Early unexpected exit, operation never finished bootstrapping' "$OUTDIR"/TestSummaries.plist && break
+done
+
+./scripts/plist2junit.rb "$OUTDIR"/TestSummaries.plist > "$OUTDIR"/report.junit
+
+exit $RESULT
+{% endhighlight %}
+
+Slightly more complicated. Sometimes Xcode _really_ doesn't want to start those
+tests, so this loops 5 times, only exiting the loop if the results did not show
+that random failure to start.
+
+### plist2junit
+
+I was _very_ hesitant to make this script for generating test reports. Perhaps the
+"proper" way to do this would be to use extensible stylesheet language
+transformations (XSLT) to transform Xcode's test report plist (which is XML)
+into the JUnit report (which is slightly reorganized XML). But, first of all, I
+didn't even know XSLT was a _thing_ before finding this [blog post][xslt] about it
+when researching this exact issue. Secondly, XSLT seems to be some ancient lost
+art that would involve buying and reading a book from the 90s before I can even
+start hacking on it (seriously, bravo to XML; you have further secured your
+position as the most over-engineered language). Third, I love me some Ruby.
+
+[xslt]: https://warchimede.github.io/2017/07/16/convert-xcode-plist-test-reports-to-junit-xml/
+
+So I won't paste this here because it's a bit more beefy, though still less than
+100 lines of Ruby. It's on my [github][plist]. Check the readme for the benefits
+of using it.
+
+[plist]: https://github.com/silverhammermba/plist2junit
+
+### Results
+
+First, most importantly, our continuous integration reliability has shot through
+the roof. Previously I felt like I had to babysit it every day, constantly
+diagnosing whether build or test failures were legitimate. Consequently the rest
+of my team never trusted it.
+
+Hopefully, from now on, errors should be actual errors that developers need to
+address in their code.
+
+Secondly, I feel much more in control of our build process. Yes, less code is
+better code, and I did have to write more code to get rid of fastlane. But that
+increase in code size is utterly dwarfed by the 65 dependencies we were able to
+eliminate, even ignoring the increased reliability of the process. If something
+goes wrong, there are very few places I have to look.
+
+This build process is easy to test, since you can just run the separate scripts
+yourself, or even copy-paste their commands directly into your terminal. I don't
+need fastlane's entire environment present to support the simple build commands
+I need.
+
+### fastlane rocks
+
+But fastlane isn't useless! I'm only critical of it in the realm of continuous
+integration where, as I explained, I think its meager benefits do not outweigh
+its costs.
+
+But it has tons of other functionality, for example automated screenshots and
+automated deployments, that I wouldn't dare replace with hacked-together shell
+scripts. We still have a Fastfile sitting around in our repo, we just don't use
+it as often anymore.
