@@ -7,8 +7,7 @@ categories: etc
 ### or, how we stopped using fastlane for continuous integration
 
 I [previously wrote][fast] about how to set up continuous integration for an iOS
-app with fastlane and Jenkins. I no longer think that fastlane should be a part
-of that process. This details why and how we switched away from fastlane.
+app with fastlane and Jenkins. I have since changed my mind about that approach.
 
 ## Why we used fastlane
 
