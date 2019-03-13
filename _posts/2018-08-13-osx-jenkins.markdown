@@ -16,6 +16,10 @@ web about it. This is what I did.
 
 ## Fastlane
 
+**Edit 2019-03-12:** [I don't recommend fastlane anymore][slow].
+
+[slow]: {{ site.baseurl }}/{% post_url 2019-03-12-slowlane %}
+
 I highly recommend using [Fastlane][fl] for your iOS builds. It makes your
 builds much more easily configurable and reproducable and makes it easy to
 build, test, and even deploy your app all with one tool. It can be pretty

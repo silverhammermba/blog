@@ -7,11 +7,8 @@ categories: etc
 ### or, how we stopped using fastlane for continuous integration
 
 I [previously wrote][fast] about how to set up continuous integration for an iOS
-app with fastlane and Jenkins. I have come to regret our decision to use
-fastlane in that process and have since migrated us to a new system which I will
-detail below.
-
-[fast]: {% post_url 2018-08-13-osx-jenkins %}
+app with fastlane and Jenkins. I no longer think that fastlane should be a part
+of that process. This details why and how we switched away from fastlane.
 
 ## Why we used fastlane
 
@@ -39,7 +36,7 @@ tests got run.
 
 Let's dive into each of these a bit.
 
-## Xcode sucks
+### Xcode sucks
 
 fastlane advertises itself as making your life as an iOS developer so much
 easier. Perhaps in certain areas that is true, but for a lot of what we were
@@ -67,7 +64,7 @@ against fastlane, but for us it made me start to question why we used this tool
 if it was doing nothing to address the two main pain points for our continuous
 integration setup. Especially considering that fastlane is a
 
-## Huge dependency
+### Huge dependency
 
 When you finally get fastlane running and look at your cute little `Fastfile`,
 you'll feel giddy:
@@ -87,12 +84,12 @@ end
 So simple! So clean! Just don't look at your `Gemfile.lock`
 
 {% highlight bash %}
-$ wc -l Gemfile.lock
-# 170 Gemfile.lock
+$ bundle install
+# Bundle complete! 2 Gemfile dependencies, 67 gems now installed.
 {% endhighlight %}
 
 That simplicity doesn't come cheap. And since we want to keep our Jenkins
-workspaces clean, that's 65 dependencies to install on the build machine for
+workspaces clean, that's 67 dependencies to install on the build machine for
 _every push_.
 
 And it's not just big in terms of _build_ dependencies. fastlane does a lot at
@@ -119,7 +116,7 @@ a bunch of extra work that
 * at worst, is going to cause problems that I have to fix (don't laugh, read
   on...)
 
-## Fastlane bugs
+### Fastlane bugs
 
 I now know that fastlane is buggy, especially in the realm of generating test
 reports. There are two main ways to do this with fastlane and both of them are
@@ -139,7 +136,7 @@ bad.
 All software has bugs, I don't blame fastlane for this. But what makes it awful
 is that
 
-## Everyone uses fastlane
+### Everyone uses fastlane
 
 Have you ever needed to go to a government office to get some bureacratic
 paperwork processed? Or have you ever needed to go to your cable company's
@@ -175,10 +172,10 @@ So getting a fastlane bug addressed is like waiting in line in the customer
 service department of your nightmares. If they listen to you at all it's going
 to take a long time, and even longer for them to actually fix anything.
 
-## Additional complexity
+### Additional complexity
 
 Because I never witnessed a bug report being addressed by fastlane developers, I
-ended up doing a lot of build debugging myself. Here's the problme: Xcode is a
+ended up doing a lot of build debugging myself. Here's the problem: Xcode is a
 really complicated tool and fastlane is a really complicated tool and fastlane
 needs to run Xcode to do almost anything. Surprisingly, it's way harder to debug
 fastlane than it is to debug Xcode! It took me longer than I'd like to admit to
@@ -198,25 +195,16 @@ section.
 
 Again, I kept coming to the question, "Why am I even using this tool?"
 
-## Emoji
+### Emoji
 
-This is petty, so I'll keep it brief.
-
-What is it with the emoji? I don't understand the obsession. fastlane's logs,
-github, and documentation are littered with them. Do you know why I'm reading
-your logs, github, or documentation 9 times out of 10?
-
-**BECAUSE MY APP ISN'T BUILDING AND I'M LOSING MONEY.**
-
-Seeing a cutesy rocket ship doesn't really offset that. I'll go ahead and throw
-aliases like `scan` and `gym` into the same bucket. I'm all for having short,
-memorable software names but these are essentially method calls in fastlane's
-API and they both have sensible real names: `run_tests` and `build_ios_app`. Why
-make your tool more confusing just so it can be cute?
+Unrelated, but it seems like fastlane is kind of obsessed with them. I don't get
+it. It's weird right?
 
 ## Replacing fastlane
 
-So we ditched fastlane. What now? I replaced it with four scripts:
+So we ditched fastlane. What now? I replaced it with four scripts. If you read
+my [Jenkins post][fast], the three bash scripts directly match the three steps
+in our Jenkins pipeline.
 
 ### prepare build
 
@@ -312,7 +300,7 @@ of using it.
 
 [plist]: https://github.com/silverhammermba/plist2junit
 
-### Results
+## Results
 
 First, most importantly, our continuous integration reliability has shot through
 the roof. Previously I felt like I had to babysit it every day, constantly
@@ -324,7 +312,7 @@ address in their code.
 
 Secondly, I feel much more in control of our build process. Yes, less code is
 better code, and I did have to write more code to get rid of fastlane. But that
-increase in code size is utterly dwarfed by the 65 dependencies we were able to
+increase in code size is utterly dwarfed by the 67 dependencies we were able to
 eliminate, even ignoring the increased reliability of the process. If something
 goes wrong, there are very few places I have to look.
 
@@ -333,7 +321,7 @@ yourself, or even copy-paste their commands directly into your terminal. I don't
 need fastlane's entire environment present to support the simple build commands
 I need.
 
-### fastlane rocks
+## fastlane doesn't suck
 
 But fastlane isn't useless! I'm only critical of it in the realm of continuous
 integration where, as I explained, I think its meager benefits do not outweigh
@@ -343,3 +331,5 @@ But it has tons of other functionality, for example automated screenshots and
 automated deployments, that I wouldn't dare replace with hacked-together shell
 scripts. We still have a Fastfile sitting around in our repo, we just don't use
 it as often anymore.
+
+[fast]: {{ site.baseurl }}/{% post_url 2018-08-13-osx-jenkins %}
