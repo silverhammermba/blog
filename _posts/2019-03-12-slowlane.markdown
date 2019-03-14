@@ -230,6 +230,7 @@ DERIVED_DATA=(-derivedDataPath "$DATADIR")
 build() {
     xcodebuild -scheme Tests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 6' ${DERIVED_DATA[@]} build-for-testing | tee buildlog | bundle exec xcpretty --color
     RESULT=$?
+    return $RESULT
 }
 
 if ! build && grep 'error: Cycle' buildlog; then
