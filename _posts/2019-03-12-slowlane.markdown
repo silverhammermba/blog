@@ -229,12 +229,15 @@ DERIVED_DATA=(-derivedDataPath "$DATADIR")
 
 build() {
     xcodebuild -scheme Tests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 6' ${DERIVED_DATA[@]} build-for-testing | tee buildlog | bundle exec xcpretty --color
+    RESULT=$?
 }
 
 if ! build && grep 'error: Cycle' buildlog; then
     rm -rf "$DATADIR"
     build
 fi
+
+exit $RESULT
 {% endhighlight %}
 
 Pretty self-explanatory. I only use that `DERIVED_DATA` variable so that it's
@@ -259,15 +262,15 @@ DERIVED_DATA=(-derivedDataPath "$DATADIR")
 OUTPUT=(-resultBundlePath "$OUTDIR")
 
 test() {
-	rm -rf "$OUTDIR"
-	xcodebuild -scheme Tests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 6' ${DERIVED_DATA[@]} ${OUTPUT[@]} test-without-building | bundle exec xcpretty --color
+    rm -rf "$OUTDIR"
+    xcodebuild -scheme Tests -project ./MyApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 6' ${DERIVED_DATA[@]} ${OUTPUT[@]} test-without-building | bundle exec xcpretty --color
+    RESULT=$?
 }
 
 for run in {1..5}; do
-	test
-	RESULT=$?
+    test
 
-	! grep --max-count=1 'Early unexpected exit, operation never finished bootstrapping' "$OUTDIR"/TestSummaries.plist && break
+    ! grep --max-count=1 'Early unexpected exit, operation never finished bootstrapping' "$OUTDIR"/TestSummaries.plist && break
 done
 
 ./scripts/plist2junit.rb "$OUTDIR"/TestSummaries.plist > "$OUTDIR"/report.junit
