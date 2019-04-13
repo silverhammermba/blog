@@ -107,7 +107,9 @@ Once you start feeling comfortable with your meal prep service (you reliably
 produce something that tastes good), start watching Chef John's fantastic
 cooking show Food Wishes.
 
+<div class="videoWrapper">
 <iframe align="center" width="560" height="315" src="https://www.youtube.com/embed/ifWWRZSWS18" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 This show is in a totally different ball park from the fluff on the Food
 Network. Chef John never shows you his kitchen, or even his face. He shows you
@@ -176,7 +178,7 @@ through trial and error. This has worked out very well for us so far.
 <figcaption>
 Clockwise, from top-right.
 <ul>
-<li>Curried chickpeas and sweet potato</li>
+<li>Curried chickpeas and sweet potato (rice not pictured)</li>
 <li>Fettuccine primavera with feta cream sauce</li>
 <li>Salt-and-pepper tofu stir fry with cashew sauce</li>
 </ul>
