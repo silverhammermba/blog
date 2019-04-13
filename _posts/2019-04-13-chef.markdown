@@ -172,7 +172,7 @@ think by distancing ourselves from instructions we can develop better intutition
 through trial and error. This has worked out very well for us so far.
 
 <figure>
-<img src="/assets/cooked.png">
+<img src="{{ site.baseurl }}/assets/cooked.png">
 <figcaption>
 Clockwise, from top-right.
 <ul>
