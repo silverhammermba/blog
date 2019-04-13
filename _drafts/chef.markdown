@@ -4,7 +4,7 @@ title: "How to become a good cook"
 categories: etc
 ---
 
-## The easy way to become a skillful chef in only four long, expensive years.
+## The easy way to become a skillful chef in only four expensive years.
 
 A confession: I used to have a fear of cooking. After a series of kitchen
 disasters and disappointed romantic partners, I pretty much swore off the
@@ -12,22 +12,51 @@ craft. Most recipes I tried to follow online seemed infuriatingly vague. Cooking
 shows seemed to gloss over important details and make difficult tasks look
 deceptively simple.
 
-When I got married it forced the issue a bit since my wife really wanted us to
-cook together. This caused quite a lot of friction because just the thought of
-meal planning made me anxious, especially since my wife loves variety and
-branching out to experiment with new recipes.
+When I got married it forced the issue a bit since my wife&mdash;who also had
+very little cooiking experience&mdash;really wanted us to cook together. This
+caused quite a lot of friction because just the thought of meal planning made me
+anxious, especially since my wife loves variety and branching out to experiment
+with new recipes.
 
-But we figured it out! Here's how.
+Eventually, we figured it out. I cannot overemphasize just how much I used to
+suck at cooking, so if this process worked for me it will probably work for you.
 
-## Step 1: Subscribe to a meal prep service
+## Step 1: Have a partner
+
+I don't think you need to be married. Perhaps not even romantically involved.
+But you need someone who will stick with you through a long and frustrating
+process. You need someone you trust, who will speak freely with you, who you
+can bounce ideas off of, and who will help shoulder the burden.
+
+You could _maybe_ skip this step entirely, but the process is going to be much
+harder. Here's a secret: anyone that tells you that cooking at home is "quick"
+or "easy" is _lying to you_. These people are forgetting that cooking at home
+_always_ involves _significantly_ more effort than not cooking at home. You have
+to shop for ingredients, chop ingredients, make tricky cooking decisions
+on-the-fly, and then clean up everything when you're done. These tasks **take
+time** and they **are not easy** (unless you already know what you're doing, in
+which case _everything_ is "easy").
+
+Learning to cook doesn't magically remove these time-sinks, it just makes them
+more enjoyable. Not knowing what ingredient to use starts off nerve-wracking but
+ends up being a fun opportunity to try something new. Making a mistake in a
+recipe changes from a disapointment to an opportunity for improvisation.
+
+It's kinda like exercise. If you want to be buff, you can't just "become buff"
+and then never go to the gym again. Buff people are buff because their lifestyle
+involves spending a lot of time at the gym. If you're reading this because you
+thought "I wish I cooked at home more", know that that only comes with a
+lifestyle that involves more time spent working with food.
+
+## Step 2: Subscribe to a meal prep service
 
 Meal prep services like Blue Apron get a lot of flak. People say they're
 overpriced, they waste food by giving you the wrong proportions, the food
-quality isn't good, etc. Some of these criticisms are probably true **but**
-there are benefits that make them worth the price if you are cooking-challenged
-like I was. I'm not familiar with all the different services, but for our
-service ([Sunbasket](https://sunbasket.com/) I felt like we got our money's
-worth because:
+quality isn't good, they don't actually save you much time, etc. Some of these
+criticisms are probably true **but** there are benefits that make them worth the
+price if you are cooking-challenged like I was. I'm not familiar with all the
+different services, but for our service ([Sunbasket](https://sunbasket.com/)) I
+felt like we got our money's worth because:
 
 * We didn't have to think about meal prep anymore. They automatically chose
   meals for us and sent them regularly unless we told them not to. So it
@@ -50,29 +79,29 @@ locally-sourced ingredients and recyclable packaging whenever possible, and they
 also have a good selection of vegetarian meals each week. But probably most meal
 prep services offer the benefits I mentioned above.
 
-Those are all of the benfits that I expected when we signed up, but there are
+Those are all of the benfits that I _expected_ when we signed up, but there are
 other, hidden benefits you'll discover once you start regularly using a meal
 prep service.
 
 * Prepping with your partner creates regular bonding/teamwork time, which can be
   hard to schedule if you're both busy.
-* Coordinating the chopping/cooking/cleaning stages to efficiently finish the
-  meal naturally pressures you to become more efficient at these tasks. I used
+* Coordinating the chopping/cooking/cleaning stages to quickly get to the eating
+  stage naturally pressures you to become more efficient at these tasks. I used
   to hate chopping and cleaning in particular, since they felt like extra tasks
   that took away from the cooking. Now I find them oddly satisfying.
 * You will quickly discover which parts of your kitchen are sub-par and you will
   start developing strong opinions about your cooking tools. The kinds of tools
-  I choose and the way I care for them have changed entirely since I started
+  I choose and the ways I care for them have changed entirely since I started
   this journey.
-* You will start noticing the hidden patterns in cooking. I think that this is
-  the big secret that most chefs forget when trying to teach. After making your
-  100th pasta dish or your 100th salad, you'll find you have an almost
-  subconscious sense of what flavors or ingredients are important. You'll know
-  how a certain ingredient should be prepared or cooked without looking at the
-  recipe. You'll have a hunch which ingredient can be substituted if one is
-  missing.
+* Most importantly, you will start noticing the hidden patterns in cooking. I
+  think that this is the big secret that most chefs forget when trying to teach.
+  After making your 100th pasta dish or your 100th salad, you'll find you have
+  an almost subconscious sense of what flavors or ingredients are important.
+  You'll know how a certain ingredient should be prepared or cooked without
+  looking at the recipe. You'll have a hunch which ingredient can be substituted
+  if one is missing.
 
-## Step 2: Watch Food Wishes
+## Step 3: Watch Food Wishes
 
 Once you start feeling comfortable with your meal prep service (you reliably
 produce something that tastes good), start watching Chef John's fantastic
@@ -80,24 +109,117 @@ cooking show Food Wishes.
 
 <iframe align="center" width="560" height="315" src="https://www.youtube.com/embed/ifWWRZSWS18" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-This show is in a totally different ball park from the crap on the Food Network.
-No panning shots of fake, fancy kitchens, no prettied up chef taking up half the
-frame, no array of pre-portioned ingredients in cute little dishes. Just a
-close-up of the food, well-edited to show every single step in detail. Chef John
-keeps his mistakes in, he shows you his process. I love it when he says, "That's
-just you cookin'" because he makes it clear where the process is _precise_ and
-where you just need to develop intuition through practice. He knows all of the
-gotchas, he seems to anticipate every possible common mistake you could make.
+This show is in a totally different ball park from the fluff on the Food
+Network. Chef John never shows you his kitchen, or even his face. He shows you
+the food in HD close-up, with each step of the process clearly shown. He never
+says "Here's one I made earlier"; the dish you see at the end is the one he
+started off with. He doesn't edit out his mistakes, in fact there are whole
+videos of his that are experiments gone wrong. Instead he tells you what he
+learned from the process and what you should do differently.
 
-It's the only cooking show I watch now. Cooking shows I watch on the Food
-Network always make me think "That looks nice... but when am I actually going to
-do that?" But Food Wishes has fundamentally changed how I cook. I "season to
-taste" differently, I buy ingredients differently, I chop differently, I no
-longer rely on fixed cooking times. His techniques for French toast and
-hard-boiled eggs are now the only ones I use. His recipes for shakshuka and
-lemon bars are staples in our household.
+One of my favorite catch-phrases of his is "That's just you cookin'" because he
+makes it clear where the process is _precise_ and where you need to develop
+intuition through practice. He knows all of the gotchas and seems to anticipate
+every possible common mistake you could make.
 
-Once you are comfortable with cooking, Chef John will quick start elevating you
-to a more serious level.
+For a long while it was the only cooking show I would watch. Food Network stuff
+always made me think "That looks nice... but when am I actually going to
+do that?" It felt like they were targeting people who were already good cooks.
 
-## Step 3: Stop using your meal prep service
+But Food Wishes was something that I could understand even as a novice and it
+ended up fundamentally changing how I cook. I "season to taste" differently, I
+buy ingredients differently, I chop differently, I no longer rely on fixed
+cooking times. His techniques for French toast and hard-boiled eggs are now the
+only ones I use. His recipes for shakshuka and lemon bars are staples in our
+household.
+
+Once you are comfortable with cooking, Chef John will quickly elevate you to a
+more serious level.
+
+## Step 4: Stop using your meal prep service
+
+After doing Sunbasket almost every week for three years (remember I said this
+was an expensive procedure), I noticed a difference in how we talked about our
+Sunbasket meals. Rather than saying "This isn't good", we would say "I would've
+made this differently". We started noticing certain recipes, or certain steps in
+recipes, where we would reliably deviate from the instructions because we knew
+we liked it a different way. We would incorporate techniques we saw on Food
+Wishes into our Sunbasket meals.
+
+After maybe another year of that going on, I started escalating. After the
+cooking was done and we were enjoying the fruits of our labor I would ask my
+wife, "Do you think we could have made this, knowing only the list of the
+ingredients (no quantities), the name, and a picture of the end result?" In most
+cases she thought the answer was "yes". So we took the plunge.
+
+This is our new cooking process. Whenever we're getting low on food at home, we
+log into our Sunbasket account and put our future deliveries on hold. Again, I'm
+not sure how other services work, but Sunbasket lets you skip deliveries up to a
+month out and they only charge you if you don't skip. Then we look at the menu
+for what Sunbasket _would_ have sent us next week and pick a few meals that we
+like. For each meal, I copy down a list of its ingredients into our shopping
+list (minus what we already have in stock, of course) and save the link to the
+recipe for later. Crucially, Sunbasket recipes often come with a sauce or
+dressing pre-made, but they still tell you the ingredients (without quantities)
+so we can add those to our shopping list too.
+
+After we go shopping, the process is fairly similar to Sunbasket proper. We pull
+up the recipe, get out all of the ingredients, and get to work. The main
+difference is that we use the recipe a lot less. We try to discuss the dish
+ahead of time and agree on a general approach to take, only using the recipe for
+help if we're unsure. There's no shame in looking up how to do something, but I
+think by distancing ourselves from instructions we can develop better intutition
+through trial and error. This has worked out very well for us so far.
+
+<figure>
+<img src="/assets/cooked.png">
+<figcaption>
+Clockwise, from top-right.
+<ul>
+<li>Curried chickpeas and sweet potato</li>
+<li>Fettuccine primavera with feta cream sauce</li>
+<li>Salt-and-pepper tofu stir fry with cashew sauce</li>
+</ul>
+</figcaption>
+</figure>
+
+The key benefit this retains from using a service is that the meal selection
+process is very simple. I still get anxious trying to plan out meals with no
+assistance. Like, which meals from the infinite selection of possible meals do I
+want to make this week? By looking at our hypothetical Sunbasket delivery, we
+get three vegetarian meals chosen automatically. If we don't like how they look,
+Sunbasket has 2-3 other vegetarian meals to choose from plus a dozen others
+involving meat that can usually be adapted. Pre-Sunbasket when we tried to cook
+on our own we often fell into a pattern of making the same meals over and over,
+but now we still get Sunbasket's variety.
+
+The differences from Sunbasket are mostly positive:
+
+* Now that we buy our own ingredients, we naturally buy and cook in bulk, which
+  means we get more leftovers
+* Since we control which ingredients we buy, we can also take our own
+  preferences and pantry into account
+    * Three different recipes call for three different kinds of greens? Screw
+      it. Buy a big thing of spinach and use it for all three
+    * Got leftover broth from last week? Let's choose a meal involving rice and
+      turn it into
+      [Chef John's oven fried rice](https://www.youtube.com/watch?v=1q576aZQICU)
+    * Got leftover Asian carrot slaw from those tofu burgers last week? Carrot
+      slaw, meet this week's salt-and-pepper tofu stir fry.
+* We do make mistakes. You can see there's quite a bit of excess cream sauce for
+  the fettuccine, and I think the spice ratio for the curry was off (too much
+  garam masala, not enough turmeric). But these aren't deal-breakers and I think
+  we learned from each of them
+
+## What next?
+
+Because I'm a software engineer, I can't help but imagine a service similar to
+Sunbasket that only helps with the planning part. It would give you a limited
+selection of interesting meals each week to spare you from decision paralysis.
+Ideally it would understand how to slightly modify a meal to take advantage of
+what you have in your pantry, or similar ingredients needed by other meals that
+week. Even better if it had a cloud-based shopping list app so my wife and I can
+coordinate ingredient acquisition easier.
+
+I think such a service would be fantastic, but also quite difficult to make. So
+for now I'm perfectly happy doing things manually.
