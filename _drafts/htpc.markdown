@@ -85,5 +85,14 @@ Windows, but I think Linux (Arch, specifically) has benefits:
    one. I don't know what it is about Mac OS and Windows that causes them to
    sloooowly degrade over the years until you're smashing your keyboard in
    frustration, but Linux doesn't have it. This isn't going to be your main PC,
-   so you don't want to have to do regular maintenaince on it.
-2. 
+   so you don't want to have to do regular maintenance on it.
+2. Unless you have some very specific software in mind, Linux has the broadest
+   software support. The main shortcoming used to be gaming, but with DXVK and
+   Steam Play even that has virtually disappeared. So far Arch Linux has been
+   able to satisfy all of my requirements.
+3. Every OS is hackable, but for an HTPC it's especially important. It probably
+   won't have a mouse and keyboard for input and the traditional desktop
+   metaphor makes no sense for it. If you want it to behave like a typical
+   set-top device you want tight control over the startup process and you want
+   to customize the UI. Again, it's possible to do with other OSes but easier
+   with Linux, especially a bare-bones distribution like Arch.
