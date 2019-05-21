@@ -28,14 +28,10 @@ This boring gray square is much more interesting than it first appears.
 <canvas class="checkers" width="200" height="200"></canvas>
 
 In fact it isn't gray at all; it's a checkerboard of black and white pixels. If
-you're reading this on a high-DPI device like a smart phone or a newish
-Macbook, your screen really doesn't like displaying this kind of pattern and you
-might see weird artifacts like a faint grid of polka dots or colorful
-flickering. You can try zooming in on your device until such effects disappear.
-Also if you are very close to the screen, you might actually be able to see the
-individual pixels, which is also not what we want. Adjust your viewing distance
-or squint your eyes. The goal is to have this square appear like one uniform
-shade of gray.
+you are very close to the screen, you might actually be able to see the
+individual pixels, which is not what we want. Adjust your viewing distance or
+squint your eyes. The goal is to have this square appear like one uniform shade
+of gray.
 
 I want this image to look correct on your screen because we'll be using it to
 strike at the heart of a seriously tricky issue related to how computers display
@@ -185,10 +181,9 @@ have your web browser show the same checkerboard but shrunk down in size.
 ...WHAT!?
 
 I told your browser to make it smaller, which it did, but it also made it
-**darker** (again, you might need to zoom in on high-DPI devices to see the
-effect). Is this the correct behavior? Here's a simple test: keep looking at the
-larger checkerboard and back away from your screen until it looks about half as
-big. Does it look darker? Nope.
+**darker**. Is this the correct behavior? Here's a simple test: keep looking at
+the larger checkerboard and back away from your screen. Does the square get
+darker as you get further away? Nope.
 
 What's happening here is your browser is making the exact same incorrect
 assumption we made in the first section. Half of the pixels are black and half
