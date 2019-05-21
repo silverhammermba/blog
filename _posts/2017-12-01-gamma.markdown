@@ -13,6 +13,7 @@ categories: etc
 
 canvas {
     image-rendering: pixelated;
+    image-rendering: crisp-edges;
     max-width: 100%;
 }
 #scaled {
@@ -176,10 +177,10 @@ thinking about brightness. And when it understands them incorrectly, problems
 can occur.
 
 Let's look at our familiar checkerboard again, and then right next to it I'll
-have your web browser show the same checkerboard shrunk by 25%.
+have your web browser show the same checkerboard but shrunk down in size.
 
 <canvas class="checkers" width="200" height="200"></canvas>
-<canvas class="checkers" id="scaled" width="200" height="200" style="width: 100px; height: 100px"></canvas>
+<canvas class="checkers" id="scaled" width="200" height="200" style="width: 50px; height: 50px"></canvas>
 
 ...WHAT!?
 
