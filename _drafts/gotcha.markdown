@@ -1,15 +1,9 @@
 ---
 layout: post
-title: "The REAL Ruby Gotchas"
+title: "The stuff I always forget about Ruby"
 categories: etc
 ---
 
-Most Ruby "gotchas" are just things that Ruby does a little differently from
-other languages, but are actually wonderful and consistent once you get used to
-the language. If you Google "Ruby gotchas", none of the top-five results mention
-what I would consider a _real_ gotcha. They're clearly written from the
-perspective of someone just learning Ruby (or just learning programming!) and
-would be things that I would expect any experienced Ruby programmer to know.
 
 > [T]hey come up to me and say, "I was surprised by this feature of the
 > language, so therefore Ruby violates the principle of least surprise." Wait.
@@ -152,7 +146,10 @@ always expect these to end up in `Kernel` because that's where all of the
 leftover methods like `puts`, `rand`, and `loop` are, but that's now how the
 Ruby devs chose to do it.
 
-TODO finish this section
+These methods are added as private instance methods under Object.
+
+Except in IRB where they're public for some reason.
+
 
 ### and and/or or
 
@@ -185,18 +182,18 @@ But what about those "subtle bugs"? The classical example is this
 
 {% highlight ruby %}
 x = 3 and 4
-# x == 3! Whaaaat?
+# x == 4 Whaaaat?
 {% endhighlight %}
 
 But this is just a big misunderstanding. Let's take a step back. Really there
 are two totally different concepts of "and" at play here:
 
-* On one hand, there's Boolean conjunction. Like, X is true or false, Y
-  is true or false, "X **and** Y" is true if and only if X and Y are both true.
-  This is a proper binary operator like + or &times;.
+* On one hand, there's Boolean conjunction. Like, "X **and** Y" is true if and
+  only if X and Y are both true. This is a proper binary operator like + or
+  &times;.
 * On the other hand, there's... English. Like "Buy cookies **and** bring them to
   the party" which is just saying to do two things in a certain order (obviously
-  you can't bring cookies if you fail to buy any). It's not really math.
+  you can't bring cookies if you fail to buy any). It's not math.
 
 Most programming languages, taking after C (probably?) mash these two concepts
 together. But **Ruby fixed it**. We've got two syntaxes for the two different
@@ -224,24 +221,40 @@ get_money if buy :cookies if bring_to_party :cookies, :cool_hat
 
 # is this OK?
 if did_send_invites and house_is_decorated and have_beer
-  # get ready for party
 end
 # definitely not. dear god no
 if did_send_invites if house_is_decorated if have_beer
-  # get ready for party
 end
 # in C this would make more sense (0 is false), but at least it's clear how this
 # would be interpreted, so "&&" is a better fit
 if did_send_invites * house_is_decorated * have_beer
-  # get ready for party
 end
 {% endhighlight %}
 
+### Unary &
 
-* and/or are actually really useful for control flow. most Ruby devs say to avoid them
-* Unary & actually has really low precedence inside method args, because it's enforced at the syntax level
-* &nil is a special case, has nothing to do with `to_proc`, needed so you can not pass a block
-* TODO
+This is a short one. Everyone knows that unary & works by calling `to_proc` on
+the object and then converting the proc to a block, see:
+
+{% highlight ruby %}
+class String
+  def to_proc
+    to_sym.to_proc
+  end
+end
+
+strings = numbers.map &"to_s" # now this works!
+{% endhighlight %}
+
+Except it doesn't really
+
+{% highlight ruby %}
+numbers.map &nil # #<Enumerator> i.e. no block passed
+nil.to_proc # NoMethodError
+{% endhighlight %}
+
+It has a special case for `nil`! I don't know of any way to hook into this
+behavior since it doesn't seem to work like a normal method call.
 
 ### Honorable Mentions
 

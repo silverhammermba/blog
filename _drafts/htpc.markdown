@@ -294,9 +294,10 @@ it works more or less exactly how I want.
 But there's always room for improvement.
 
 1. I obviously want a better IR blaster. The PS3 is a lender so one day we'll be
-   stuck with normal Blu-Ray player and I really don't want to use its remote.
-   Blu-Ray support on Linux is still not great as far as I know, so IR is the
-   only path I have at this point.
+   stuck with the normal Blu-Ray player and I really don't want to use its
+   remote. Blu-Ray support on Linux is still not great as far as I know, so IR
+   is the only path I have at this point. Which IR blaster is easy to buy and
+   has great lirc support?
 2. I wish I could easily track the power state of everything. The HTPC is really
    the only thing that needs to be always-on (because it operates as a server).
    If it could track the power state of every device, it could do stuff like
@@ -304,3 +305,13 @@ But there's always room for improvement.
    when you switch back. I could do this manually for now, but there would
    always be the risk of the recorded state getting out of sync and I can't
    think of a good UX for fixing that.
+3. Before I got the Apple TV, the weak point of this setup was streaming video.
+   The closest I could get was using [x2x](https://github.com/dottedmag/x2x) to
+   connect my laptop to the HTPC and then opening a browser to
+   Netflix/Hulu/whatever, but that was a really crappy UX. Seeing as all of
+   these streaming services run fine in a browser on Linux, I feel like there
+   _should_ be a Linux app that is essentially Chromium with a good gamepad
+   interface and a stripped-down UI (for example, I don't need a URL bar or tabs
+   or anything, I just need to be able to load from a pre-configured set of
+   bookmarks). I tried using Steam's web browser in this capacity but it didn't
+   work very well.
