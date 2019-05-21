@@ -66,7 +66,7 @@ I would look for are
 
 The reasoning behind this is that this is primarily for streaming and network
 storage. When I built this, 1080p was still perfectly acceptable and Intel's
-integrated graphics were perfectly cabale of acheiving 1080p _video_ at 60fps.
+integrated graphics were perfectly cabaple of achieving 1080p _video_ at 60fps.
 These days 4K is the goal to aim for and guess what? Intel's integrated graphics
 are still keeping up. You just don't need the cost, power, and clunkiness of a
 dedicated graphics card in your HTPC.
@@ -94,5 +94,213 @@ Windows, but I think Linux (Arch, specifically) has benefits:
    won't have a mouse and keyboard for input and the traditional desktop
    metaphor makes no sense for it. If you want it to behave like a typical
    set-top device you want tight control over the startup process and you want
-   to customize the UI. Again, it's possible to do with other OSes but easier
+   to customize the UI. Again, it's possible to do with other OSes but it's easier
    with Linux, especially a bare-bones distribution like Arch.
+
+## Software
+
+Here is the general software configuration of the HTPC.
+
+1. Arch installed in UEFI mode
+2. Motherboard boots Arch directly via
+   [EFISTUB](https://wiki.archlinux.org/index.php/EFISTUB). You don't need GRUB
+   for this box!
+3. systemd starts the usual boot stuff plus a few services:
+    * [sshd](https://wiki.archlinux.org/index.php/OpenSSH) for admin work
+    * [NFS](https://wiki.archlinux.org/index.php/NFS) for accessing stored media
+      on my other devices
+    * [lighttpd](https://wiki.archlinux.org/index.php/Lighttpd) for webapps
+4. systemd [automatically logs
+   in](https://wiki.archlinux.org/index.php/Getty#Automatic_login_to_virtual_console) to the unprivileged user account
+5. Bash is set up to immediately [start X on
+   login](https://wiki.archlinux.org/index.php/Xinit#Autostart_X_at_login) for
+   that TTY.
+6. We don't need a proper desktop environment, a [window
+   manager](https://wiki.archlinux.org/index.php/Window_manager) started via
+   `.xinitrc` is sufficient. I like
+   [openbox](https://wiki.archlinux.org/index.php/Openbox) for this because it
+   gives you a very simple UI and is easy to set up
+7. The GUI-based applications have [systemd user
+   services](https://wiki.archlinux.org/index.php/Systemd/User) set up for them:
+    * [Kodi](https://wiki.archlinux.org/index.php/Kodi)
+    * [Steam](https://wiki.archlinux.org/index.php/Steam)
+    * [Spotify](https://wiki.archlinux.org/index.php/Spotify)
+
+   This is nice because all of their logs can be managed in one place
+   (`journalctl`) and they can do stuff like auto-restarting on failure.
+8. On launch, openbox starts those services in its autostart script. This seems
+   a bit weird but it's actually the easiest way to manage them. X and systemd
+   don't play nice together, so having openbox do it guarantees that the X
+   dependency is ready.
+9. Openbox rules make each application open fullscreen on its own desktop.
+
+This simple process gets you most of the way there. You also have to do a little
+configuration in each application, like making sure that Kodi and Steam use good
+big-screen interfaces and work with whatever gamepads you have plugged in.
+
+## The web server
+
+You might have noticed the big missing piece here, though: there's no way to
+control openbox itself! Gamepads work for Kodi and Steam, Spotify you can
+control through Spotify Connect, but how can you switch between the different
+desktops where these programs are running? How can you close and reopen an
+application if it gets into a weird state?
+
+I first tried hacking this in by adding extra buttons to Kodi and Steam (since
+you can control both of those with a gamepad). Kodi has a plugin system that
+lets you add extra menu items that do whatever, and in Steam you can add
+external "games" that just run the commands you need. But this was really clunky
+to maintain, awkward to navigate in the UI, and didn't play well with Steam
+because it got confused when the "game" it started didn't open any windows and
+just switched to a different desktop.
+
+I knew that a proper solution would have to be a totally separate piece of
+software. This was the first place where I couldn't find any existing solution
+for what I needed. I knew all of the commands I needed to run as the HTPC user:
+`wmctrl` for issuing standard window manager commands like closing a window or
+changing desktop, `systemctl --user` for interacting directly with the services
+I defined, etc. Ideally I wanted an easy way to run these commands as needed
+from a remote device (e.g. a smartphone), and especially a way to do it
+securely.
+
+That's the real trick: custom, secure, remote control of an HTPC. Here's the
+cheeky solution I came up with:
+
+1. systemd can monitor file paths for changes and start units in response, so
+2. Define a systemd user service for each command you want to be accessible
+   remotely. This is nice because you can test each command by starting the
+   services manually
+3. Create an empty file corresponding to each service as well as a systemd path
+   unit to monitor each file and start the corresponding service when it
+   changes. Again, you can test this by touching a file and verifying that its
+   service runs. Place the empty files in a location that is only writable by
+   your web server
+4. Make a simple web app with client-side buttons that make HTTP requests, and a
+   server side that turns those request into touches on the corresponding empty
+   files. Mine is just a static HTML page and a CGI script.
+
+The cheeky bit is that I named these empty files "buttons". So when you touch a
+button in my web app, the web server literally "touches a button" on the HTPC.
+systemd monitors those button touches and runs the services.
+
+This is secure because
+
+1. The only commands that can be run are the ones you have defined services for
+   (there's no `rm -rf /` service)
+2. The only commands that the _web app_ can trigger are the ones that _systemd
+   is looking for_ in the web server directory (if you wanted to have a "delete
+   everything" service, just don't set up a path unit monitoring the web
+   server's button for it)
+3. The only people who can access my web app are on my local network (I just
+   don't forward those ports)
+
+Even if I exposed this to the Internet it wouldn't be that bad. The worst I
+could get is a DOS attack with people repeatedly switching my desktop or
+restarting Kodi. Pretty limited threat model.
+
+Because of the multiple pieces, I set up up a little project in Ruby that hooks
+it all up for me. I just create a data file saying which services I want
+exposed and how they should appear in the web app and it generates the path
+units, button files, and web app to match.
+
+The final touch is that the wallpaper on my HTPC directs people how to access
+the web app on the local network. You only ever see the wallpaper if something
+goes wrong, so this works nicely.
+
+## The remote
+
+All of the above is what we used successfully for several years, but my wife and
+I were still annoyed by the plethora of remotes:
+
+* Gamepads for Kodi/Steam
+* AppleTV remote
+* TV remote, on which we only ever use the power button
+* Receiver remote, our largest remote by far, on which we only use the
+  buttons to switch input and raise/lower volume
+* Blu-Ray player remote (this was before we started using a PS3), on which
+  we only use the usual play, pause, eject, select, etc. buttons but by
+  tradition must include 20 other useless buttons
+
+The first two you can't really do without. Obviously you need the gamepads for
+gaming so no ditching those, and unless you've totally bought into the Apple
+ecosystem (we haven't) there's no way to control the Apple TV without the remote.
+But the rest should go!
+
+The idea was simple: this HTPC is always sitting right next to the devices that
+we use remotes for, so just turn the HTPC into a master remote for all of them!
+My plan was to buy an IR emitter for it, set it up in a hidden location with
+line-of-sight to my devices, and extend my web app with more commands for
+issuing IR blasts.
+
+I ended up buying a [USB-UIRT](http://www.usbuirt.com/). It looks good on paper
+but I do **not** recommend it. I like that it can both send and receive, so I
+can use [LIRC](https://wiki.archlinux.org/index.php/LIRC) to learn my remotes'
+blast patterns and have it essentially replay them. But I found that only the
+seller's proprietary Windows software worked well. With LIRC it worked for some
+devices (TV, receiver) but not others (Blu-Ray). And even when it did work, it
+was slow, taking about twice as long (or longer) to raise the volume by a
+certain amount.
+
+I spent a lot of time messing around with LIRC settings, trying to modify the
+remote definitions, tweaking the drivers, all to no avail. LIRC supports a ton
+of different drivers, but I also had a really hard time finding any other IR
+blaster to buy. Everything I found was either being sold from a website that
+hadn't been updated since the 90s or was a homebrew kit that you had to build
+yourself. Do I suck at Googling? Is there a good USB IR blaster out there that
+"just works"?
+
+Anyway, for now this works, just not as well as I would like. It's less of an
+issue now that we use the PS3 which again has its own proprietary controller
+that we can't get rid of.
+
+### Upgraded app
+
+With LIRC and the IR blaster set up, I needed more buttons in the web app. This
+was a little tricky because the web app had been designed for the case of one
+command per button push, but now I wanted to be able to continuously raise and
+lower volume. I hacked this in by defining multiple buttons: start raise volume,
+stop lower volume, etc. Then in the HTML/JS I add extra buttons that press those
+buttons on press/release and in the CSS I hide the start/stop ones. It _is_
+a hack, but it works perfectly, is purely client-side, and lets me keep the
+stupid simple model of one command per button.
+
+It was easy to add buttons to toggle the TV power and to switch to whatever
+input on the receiver because that worked just like the old buttons.
+
+The other part that was easy but kinda magical was that this let me unify
+everything in the web app. Previously there was a distinction between multiple
+inputs (PC, Xbox, etc.) controlled through the receiver and multiple
+applications (Kodi, Steam, etc.) controlled through the app. But now that the
+app could control the receiver, everything fell in line. If you tap the Kodi
+button, it switches the receiver input _and_ the openbox desktop. Pretty cool.
+
+The other features I've found necessary over time are basic troubleshooting
+buttons. I have a generic "close window" button that closes whatever is on top
+in openbox. Sometimes something (usually a Steam window) somehow ends up on top
+and you can't control the thing you want. Also I changed the application buttons
+such that a single tap does a normal "switch to" button touch, but a second tap
+does a "restart" button touch. I implemented this using the same client-side
+hack as the volume control. I've noticed that sometimes Spotify or Kodi get in a
+weird state where you'll switch to them and they're just a blank window; tap
+again and they'll restart (using systemd, which is really easy).
+
+## Future work
+
+Overall I really like this system. With my smartphone and possibly one other
+specific controller (Xbox, PS3, Apple TV) I can interact with whatever media I
+want. I didn't have to replace any devices with "smart" devices and even better
+it works more or less exactly how I want.
+
+But there's always room for improvement.
+
+1. I obviously want a better IR blaster. The PS3 is a lender so one day we'll be
+   stuck with normal Blu-Ray player and I really don't want to use its remote.
+   Blu-Ray support on Linux is still not great as far as I know, so IR is the
+   only path I have at this point.
+2. I wish I could easily track the power state of everything. The HTPC is really
+   the only thing that needs to be always-on (because it operates as a server).
+   If it could track the power state of every device, it could do stuff like
+   turn off a device when you switch away from it and turn it on automatically
+   when you switch back. I could do this manually for now, but there would
+   always be the risk of the recorded state getting out of sync and I can't
+   think of a good UX for fixing that.
