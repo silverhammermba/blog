@@ -35,7 +35,6 @@ Here is how it all looks together:
 <img src="{{ site.baseurl }}/assets/theater.png">
 <figcaption>
 Ideally there would be a line from the IR blaster to the Blu-Ray player but...
-read on.
 </figcaption>
 </figure>
 
@@ -125,6 +124,7 @@ Here is the general software configuration of the HTPC.
     * [Kodi](https://wiki.archlinux.org/index.php/Kodi)
     * [Steam](https://wiki.archlinux.org/index.php/Steam)
     * [Spotify](https://wiki.archlinux.org/index.php/Spotify)
+    * A wake-on-LAN service that wakes up my Windows PC for streaming
 
    This is nice because all of their logs can be managed in one place
    (`journalctl`) and they can do stuff like auto-restarting on failure.
@@ -138,13 +138,18 @@ This simple process gets you most of the way there. You also have to do a little
 configuration in each application, like making sure that Kodi and Steam use good
 big-screen interfaces and work with whatever gamepads you have plugged in.
 
+Once you have SSH set up, you can use
+[x2x](https://aur.archlinux.org/packages/x2x-git/) to use a laptop as a mouse
+and keyboard. This is handy for debugging or if you want to use your HTPC like a
+desktop PC occasionally.
+
 ## The web server
 
-You might have noticed the big missing piece here, though: there's no way to
-control openbox itself! Gamepads work for Kodi and Steam, Spotify you can
-control through Spotify Connect, but how can you switch between the different
-desktops where these programs are running? How can you close and reopen an
-application if it gets into a weird state?
+You might have noticed the big missing piece here: there's no way to control
+openbox itself! Gamepads work for Kodi and Steam, Spotify you can control
+through Spotify Connect, but how can you switch between the different desktops
+where these programs are running? How can you close and reopen an application if
+it gets into a weird state?
 
 I first tried hacking this in by adding extra buttons to Kodi and Steam (since
 you can control both of those with a gamepad). Kodi has a plugin system that
@@ -306,12 +311,23 @@ But there's always room for improvement.
    always be the risk of the recorded state getting out of sync and I can't
    think of a good UX for fixing that.
 3. Before I got the Apple TV, the weak point of this setup was streaming video.
-   The closest I could get was using [x2x](https://github.com/dottedmag/x2x) to
-   connect my laptop to the HTPC and then opening a browser to
-   Netflix/Hulu/whatever, but that was a really crappy UX. Seeing as all of
-   these streaming services run fine in a browser on Linux, I feel like there
-   _should_ be a Linux app that is essentially Chromium with a good gamepad
-   interface and a stripped-down UI (for example, I don't need a URL bar or tabs
-   or anything, I just need to be able to load from a pre-configured set of
-   bookmarks). I tried using Steam's web browser in this capacity but it didn't
-   work very well.
+   The closest I could get was using x2x to connect my laptop to the HTPC and
+   then opening a browser to Netflix/Hulu/whatever, but that was a really crappy
+   UX. Seeing as all of these streaming services run fine in a browser on Linux,
+   I feel like there _should_ be a Linux app that is essentially Chromium with a
+   good gamepad interface and a stripped-down UI (for example, I don't need a
+   URL bar or tabs or anything, I just need to be able to load from a
+   pre-configured set of bookmarks). I tried using Steam's web browser in this
+   capacity but it didn't work very well.
+
+## Update 2019-08-18
+
+I moved a few weeks ago and the movers broke my TV. Turns out you can't buy dumb
+TVs anymore so now I have a smart one, which replaces the receiver and Apple TV.
+It also has a pretty good unified remote that can control my Blu-Ray player, so
+there's no need for the IR blaster either. The house is also bigger than my
+apartment so I set up a dedicated music system with Spotify rather than routing
+it through the TV.
+
+The only interesting part left is my HTPC and remote app, but it only controls
+the HTPC itself (just has buttons for Kodi, Steam, and wake-on-LAN).
