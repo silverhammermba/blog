@@ -42,12 +42,12 @@ the tricky situations we often ran into.
 
 ## Swift class name gotchas
 
-By default, Swift class names are prefixed by a namespace and Objective‑C
+By default, Swift class names are prefixed by a module namespace and Objective‑C
 classes are not.
 
-For example, if you add a class to DataLayerFramework in Swift its full name is
-DataLayerFramework.NewClass but in Objective‑C it's just NewClass. Examples of
-where this matters and will cause errors:
+For example, if you add a class to MyFramework in Swift its full name is
+MyFramework.NewClass but in Objective‑C it's just NewClass. Examples of where
+this matters and will cause errors:
 
 * You're trying to get the class name as a string in Objective‑C. You need to
   use `NSStringFromClass(myClass).pathExtension` to drop the namespace
