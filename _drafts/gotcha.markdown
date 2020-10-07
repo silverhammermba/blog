@@ -141,15 +141,31 @@ end
 
 A method that you can call from anywhere without an explicit receiver. Have you
 ever wondered how that works? Hint: just like the previous gotcha, it's another
-hack so that the normal method lookup procedure can be used. Personally, I
-always expect these to end up in `Kernel` because that's where all of the
-leftover methods like `puts`, `rand`, and `loop` are, but that's now how the
-Ruby devs chose to do it.
+hack so that the normal method lookup procedure can be used i.e. this actually
+gets turned into a totally normal method. Personally, I always expect these to
+end up in `Kernel` because that's where all of the leftover methods like `puts`,
+`rand`, and `loop` are, but that's now how the Ruby devs chose to do it.
 
-These methods are added as private instance methods under Object.
+These methods are added as private instance methods under Object\*. Why? Well it
+makes sense if you think about how you expect them to work:
 
-Except in IRB where they're public for some reason.
+* They should act like global functions. Well, everything in Ruby is an Object,
+  so putting them there effectively makes them global.
+* If I define a `puts` method in my class, it should shadow the global `puts`.
+  It does! Because the normal method lookup will find your method before it
+  makes it all the way back to Object.
+* But you don't want top-level defs to feel like they are "attached" to any
+  particular object in the way methods are. `myObj.puts "Hi!"` feels wrong. So
+  make them private, then they only work without an explicit receiver. This
+  makes them feel more like a global function call.
 
+That hack some interesting consequences too. Of course you can use `send` to
+bypass the privacy, so `3.send :puts, "Hi!"` works just fine. Even weirder, if
+for some reason you want `puts` to work a little differently just inside your
+class, this will work too: `def puts; super + "!"; end`. Now your class is
+excited about everything!
+
+\*Except in IRB where they're public for some reason.
 
 ### and and/or or
 
