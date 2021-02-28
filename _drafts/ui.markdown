@@ -141,6 +141,9 @@ always be true. A naïve approach would be to say, "Neither assumption can be
 guaranteed at this time, therefore the software must be flexible for either
 assumption." So in your PI design you try something like this
 
+
+TODO: this example kinda sucks. it's too specific. need a more general thing
+
     // use an object to represent the thing to connect to
     server = ServerFactory.construct(protocol: .https, domain: "foo.bar.com", clientId: myId)
     // a singleton manages a connection pool and opens a new connection or returns the existing one
@@ -148,7 +151,7 @@ assumption." So in your PI design you try something like this
     // use the connection
     connection.send(someCommand)
 
-This is not necessarily a _bad_ software design, but I wouldn't necessarily call
+This is not necessarily a _bad_ software design, but I wouldn't call
 it programmer-interface-driven. If both assumptions _do_ turn out to be true,
 then all of this wonderful flexibility becomes annoying boilerplate. Your
 developers will almost certainly start writing their own wrappers to avoid
