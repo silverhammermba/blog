@@ -38,12 +38,12 @@ almost identical problems:
 * Isn't it frustrating when you input a bunch of info into an app then an error
   occurs and it throws it all away? Isn't it frustrating when your code is super
   permissive when compiling but then throws tons of runtime errors instead?
-* Isn't it frustrating when an app labels its UI with meaningless buzzwords
-  buzzwords like "My Solutions", "Insights", etc. making it needlessly difficult
-  to learn how to use it? Isn't it frustrating when you have to maintain code
-  with names like `EntityOperationManager` and you have absolutely no idea what
-  it is for because each of those words has several different meanings and none
-  of them are specific?
+* Isn't it frustrating when an app labels its UI with meaningless buzzwords like
+  "My Solutions", "Insights", etc. making it needlessly difficult to learn how
+  to use it? Isn't it frustrating when you have to maintain code with names like
+  `EntityOperationManager` and you have absolutely no idea what it is for
+  because each of those words has several different meanings and none of them
+  are specific?
 * Isn't it frustrating when a trivial app takes 10 or 20 seconds to load? Isn't
   it frustrating when it takes 10 minutes for your simple app to build so you
   can test your changes?
@@ -66,6 +66,10 @@ bolting on a brand new feature in 3 months who had no hand in the software
 design, the developer working at 3AM to track down a crash that is somehow
 related to your changes, the newbie trying to learn the structure of your
 code so that they can make good design decisions themselves?
+
+Did you give some thought for those people---your future users---when you were
+creating your software UI? Or did you make selfish decisions by making your
+software hard to interact with?
 
 ## How not to design a better software-UI
 
@@ -122,7 +126,7 @@ design patterns, you focus only on the immediate needs of the users of your
 software design. Is the code readable? Is the intent of the code obvious by
 looking at the names and types? Do the initialized objects do enough to seem
 useful or do they seem like they are encapsulating too much functionality?
-How will errors manifest if the code is wrong: failed build, exception,
+How will errors manifest if the code is wrong: compiler error, exception,
 silent failure? Will the cause of the error be clear to the programmer?
 
 You can still think about flexibility as well, but again focus on how your code
@@ -132,67 +136,69 @@ later if changes are needed? Is functionality encapsulated in a way that small
 functional changes can be implemented easily? One helpful technique for
 answering that last question is writing your code such that the confidence of
 your assumptions matches with how many changes would be required if the
-assumption turns out to be wrong.
+assumption turns out to be wrong. In other words, try to avoid these two
+situations:
 
-For example, let's say you're making a PI design for a client which is
-connecting to a server. Currently your app always connects to one server and it
-always uses HTTPS, however you don't know for sure if these assumptions will
-always be true. A naïve approach would be to say, "Neither assumption can be
-guaranteed at this time, therefore the software must be flexible for either
-assumption." So in your PI design you try something like this
+### 1. Flexibility über alles
 
+You make your software design extremely flexible and robust, which makes it more
+verbose and technically challenging to use. However currently there is only one
+known use-case and the flexibility is based only on personal speculation. This
+is wasteful. You're spending resources optimizing for a hypothetical situation
+while ignoring the immediate extra costs you are incurring by making your
+software harder to use. Most likely your software design needs a programmer
+interface which hides the flexibility and directly addresses your immediate
+needs.
 
-TODO: this example kinda sucks. it's too specific. need a more general thing
+### 2. Leaky assumptions
 
-    // use an object to represent the thing to connect to
-    server = ServerFactory.construct(protocol: .https, domain: "foo.bar.com", clientId: myId)
-    // a singleton manages a connection pool and opens a new connection or returns the existing one
-    connection = ConnectionManager.instance.getConnection(to: server)
-    // use the connection
-    connection.send(someCommand)
+You simplify your software design by making an assumption that a certain kind of
+flexibility won't be needed. However you don't really have evidence supporting
+that assumption, and if it turns out to be wrong, lots and lots of code will
+need to be refactored. This approach is too risky. If you want to make that
+assumption you need to find a way to isolate it to a small part of your software
+design such that less extensive refactoring would be required.
 
-This is not necessarily a _bad_ software design, but I wouldn't call
-it programmer-interface-driven. If both assumptions _do_ turn out to be true,
-then all of this wonderful flexibility becomes annoying boilerplate. Your
-developers will almost certainly start writing their own wrappers to avoid
-repeating it all over the place, which is exactly the kind of thing you want to
-figure out during your software design process and not later on after it starts
-being used. In a way it's just as bad as this naïve design
+### Examples
 
-    // connect to our one server over HTTPS with our one client ID if we haven't yet
-    // then use the connection to send the command
-    Server.send(someCommand)
+These problematic situations can arise with any language, any domain, any
+application, but here are two common examples to give you a sense of what they
+look like in practice.
 
-This will certainly be easy to use for the moment, but it will also require
-significant refactoring throughout the app if either assumption turns out to be
-false. Again, the solution here is analyze your confidence in these assumptions
-and let that inform your PI design.
+I've met a lot of programmers who, when adding a property to a class, always add
+public getters and setters for it. In most cases I would consider this
+user-unfriendly due to overemphasized flexibility. The only "benefit" is that it
+provides the maximum amount of flexibility: anything with access to that object
+can read it or modify it at any time. But this also makes it much harder for
+programmers to use: any code modification around that property might require
+refactoring in many other parts of the code, any new interaction with that
+property might introduced regressions in other code which was already using it.
+A much more user-friendly choice is to do the opposite: make it completely
+private. Even better make it private and immutable so that it can only be set
+once even inside the instance (if your language supports that). This is
+user-friendly because it is the simplest behavior to understand: if you are
+working outside of that class you don't have to think about it at all
+(encapsulation!), and if you are working inside the class you only have to
+consider the value it was initialized with (side-effect-free!). Not every
+software design works with such restrictive properties, but you should fight
+tooth and nail to give up as little ground as possible. If it must be public, at
+least make it immutable. Or if it must be mutable, make it only publicly
+readable not writable.
 
-Perhaps in this case you know that your security mechanisms are very particular
-to TLS and that your commands to the server leverage specific features of HTTP.
-If you were to start using a new protocol one day, it would require significant
-re-engineering of your whole connection and command design as well. In other
-words, you have a high confidence in this assumption--it is already expensive
-for your company to break it--therefore it's okay to make your PI design
-inflexible in this regard. On the other hand, maybe you've been thinking of
-suggesting an admin feature where the app opens multiple different connections
-while acting as many clients at once. In other words you already have reason to
-doubt that assumption. The key is to balance it, make it easy to get the single
-server that you have right now, but also leave the door open to new servers
-without much needing to be changed:
-
-    // assume all servers will be similar, so an enum case is sufficient
-    connection = ConnectionManager.instance.getConnection(to: .ourCompanyServer, clientId: myId)
-    // use it
-    connection.send(someCommand)
-
-When it comes to implementing this design, the flexibility could still exist
-only at a different layer. The HTTPS assumption is at least partially
-encapsulated in the `ConnectionManager` now, so we can still adapt to different
-protocols. However this new design forces us to separate that assumption from
-the user of the connection: if that expensive assumption change ever occurs, we
-won't need to scrutinize every single user of the connection now. Remember that
-the PI design alone is note a complete software design, you still have to go
-back and fill in a normal software design, but the structure of that design will
-now be informed by how we want the code to be used by the developer.
-
+I've also met a lot of programmers who frequently use the singleton pattern.
+When I ask why they are using singletons in their design they usually answer, "I
+only need one instance." This is a user-unfriendly decision due to leaky
+assumptions. The only case where the singleton pattern is truly needed is when
+there _must not be_ more than one instance, i.e. there is evidence that having
+more than one instance would cause problems in some way. Using a singleton
+without this evidence is an assumption which you are forcing on every user of
+your software design. In most cases they try to justify this assumption out of
+some misguided attempt at making a PI-driven-design, "Look how easy it is to
+use: `MySingleton.instance.foobar()`" but as soon you realize you need a second
+instance now all of that easy-looking code needs to be refactored and replaced
+with dependency injection. Fun! Not to mention how singletons are often just a
+thin disguise over what are actually global variables in your code. These are
+not user-friendly design decisions, they are lazy-software-designer-friendly!
+Most likely the actual problem you are trying to solve is the dependency
+injection; a true PI-driven-design would address that directly rather than
+taking the easy option of using a singleton.
