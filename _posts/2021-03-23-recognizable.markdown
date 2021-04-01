@@ -62,14 +62,15 @@ optional when needed:
 let typeName = pet.recognized?.rawValue ?? "some unknown pet type"
 ```
 
-
 It turns out that writing this generic type in Swift is super easy and useful,
 so here you go.
 
 ## Implementation
 
-All of these methods follow the same trivial pattern: use the known strict type
-if possible, otherwise use the unrecognized raw value.
+Most of the interface is inspired by Optional, since Recognizable is a similar
+kind of monad. You'll also see that most of these methods follow the same
+trivial pattern: use the known strict type if possible, otherwise use the
+unrecognized raw value.
 
 ```swift
 public enum Recognizable<Known: RawRepresentable>: RawRepresentable {
@@ -109,6 +110,26 @@ public enum Recognizable<Known: RawRepresentable>: RawRepresentable {
     public init(_ recognized: Known) {
         self = .recognized(recognized)
     }
+
+    /// maintain wrapping while mapping to a different RawRepresentable type
+    public func map<U: RawRepresentable>(_ transform: (Known) -> U) -> Recognizable<U> where Known.RawValue == U.RawValue {
+        switch self {
+        case .recognized(let known):
+            return .recognized(transform(known))
+        case .unrecognized(let raw):
+            return .unrecognized(raw)
+        }
+    }
+
+    /// avoid double-wrapping if you want to map the wrapped type to a Recognizable
+    public func flatMap<U: RawRepresentable>(_ transform: (Known) -> Recognizable<U>) -> Recognizable<U> where Known.RawValue == U.RawValue {
+        switch self {
+        case .recognized(let known):
+            return transform(known)
+        case .unrecognized(let raw):
+            return .unrecognized(raw)
+        }
+    }
 }
 
 extension Recognizable: Decodable where Known: Decodable, Known.RawValue: Decodable {
@@ -134,5 +155,3 @@ extension Recognizable: Encodable where Known: Encodable, Known.RawValue: Encoda
     }
 }
 ```
-
-Enjoy!
