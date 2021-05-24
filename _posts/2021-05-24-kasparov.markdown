@@ -1,0 +1,19 @@
+---
+layout: post
+title: "Kasparov and Computers"
+date: 2021-05-24
+categories: quotes etc
+---
+
+> [They] are being asked what do you think about this move or that move? They
+> immediately give you an answer. And if I try to ask why, they stare at me like
+> they don't understand the question: _"What do you mean why? Because the machine
+> said so!"_  Yeah, I can also look at a screen. Now, what about you? Can you
+> just tell me in human terms, without a machine to calculate it. What do you
+> think about the movement, why the idea is good or not good.
+>
+> —<cite>Garry Kasparov</cite>
+
+From [PC Gamer][1].
+
+[1]: https://www.pcgamer.com/garry-kasparov-the-greatest-chess-player-in-history-talks-the-game-of-kings-in-the-computer-age/
