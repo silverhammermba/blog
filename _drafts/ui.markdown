@@ -129,63 +129,45 @@ useful or do they seem like they are encapsulating too much functionality?
 How will errors manifest if the code is wrong: compiler error, exception,
 silent failure? Will the cause of the error be clear to the programmer?
 
-You can still think about flexibility as well, but again focus on how your code
-will flex to accommodate other programmers as opposed to specific hypothetical
-use cases. Is the code logically organized such that it is easy to find things
-later if changes are needed? Is functionality encapsulated in a way that small
-functional changes can be implemented easily? One helpful technique for
-answering that last question is writing your code such that the confidence of
-your assumptions matches with how many changes would be required if the
-assumption turns out to be wrong. In other words, try to avoid these two
-situations:
+You can still think about flexibility, but again focus on how your code will
+flex to accommodate other programmers as opposed to specific hypothetical use
+cases. Is the code logically organized such that it is easy to find things later
+if changes are needed? Is functionality encapsulated in a way that small
+functional changes can be implemented easily? Let's discuss two concrete
+examples to illustrate what too much or too little flexibility looks like.
 
 ### 1. Flexibility über alles
 
-You make your software design extremely flexible and robust, which makes it more
-verbose and technically challenging to use. However currently there is only one
-known use-case and the flexibility is based only on personal speculation. This
-is wasteful. You're spending resources optimizing for a hypothetical situation
-while ignoring the immediate extra costs you are incurring by making your
-software harder to use. Most likely your software design needs a programmer
-interface which hides the flexibility and directly addresses your immediate
-needs.
+I have met a lot of programmers who, when adding a property to a class, always
+add public getters and setters for it. In most cases I would consider this
+user-unfriendly. The only "benefit" is that it provides the maximum amount of
+flexibility: anything with access to that object can read it or modify it at any
+time. But this also makes it much harder for programmers to use: any code
+modification around that property might require refactoring in many other parts
+of the code, any new interaction with that property might introduced regressions
+in other code which was already using it. A much more user-friendly choice is to
+do the opposite: make it completely private. Even better make it private and
+immutable so that it can only be set once even inside the instance (if your
+language supports that). This is user-friendly because it is the simplest
+behavior to understand: if you are working outside of that class you don't have
+to think about it at all (encapsulation!), and if you are working inside the
+class you only have to consider the value it was initialized with
+(side-effect-free!). Not every software design works with such restrictive
+properties, but you should fight tooth and nail to give up as little ground as
+possible. If it must be public, at least make it immutable. Or if it must be
+mutable, make it only publicly readable not writable.
+
+Making your software design extremely flexible and robust often makes it more
+verbose and technically challenging to use. It is wasteful if that flexibility
+is based only on personal speculation. You're spending resources optimizing for
+a hypothetical situation while ignoring the immediate extra costs you are
+incurring by making your software harder to use. Most likely your software
+design needs a programmer interface which hides the flexibility and directly
+addresses your immediate needs.
 
 ### 2. Leaky assumptions
 
-You simplify your software design by making an assumption that a certain kind of
-flexibility won't be needed. However you don't really have evidence supporting
-that assumption, and if it turns out to be wrong, lots and lots of code will
-need to be refactored. This approach is too risky. If you want to make that
-assumption you need to find a way to isolate it to a small part of your software
-design such that less extensive refactoring would be required.
-
-### Examples
-
-These problematic situations can arise with any language, any domain, any
-application, but here are two common examples to give you a sense of what they
-look like in practice.
-
-I've met a lot of programmers who, when adding a property to a class, always add
-public getters and setters for it. In most cases I would consider this
-user-unfriendly due to overemphasized flexibility. The only "benefit" is that it
-provides the maximum amount of flexibility: anything with access to that object
-can read it or modify it at any time. But this also makes it much harder for
-programmers to use: any code modification around that property might require
-refactoring in many other parts of the code, any new interaction with that
-property might introduced regressions in other code which was already using it.
-A much more user-friendly choice is to do the opposite: make it completely
-private. Even better make it private and immutable so that it can only be set
-once even inside the instance (if your language supports that). This is
-user-friendly because it is the simplest behavior to understand: if you are
-working outside of that class you don't have to think about it at all
-(encapsulation!), and if you are working inside the class you only have to
-consider the value it was initialized with (side-effect-free!). Not every
-software design works with such restrictive properties, but you should fight
-tooth and nail to give up as little ground as possible. If it must be public, at
-least make it immutable. Or if it must be mutable, make it only publicly
-readable not writable.
-
-I've also met a lot of programmers who frequently use the singleton pattern.
+I have also met a lot of programmers who frequently use the singleton pattern.
 When I ask why they are using singletons in their design they usually answer, "I
 only need one instance." This is a user-unfriendly decision due to leaky
 assumptions. The only case where the singleton pattern is truly needed is when
@@ -202,3 +184,18 @@ not user-friendly design decisions, they are lazy-software-designer-friendly!
 Most likely the actual problem you are trying to solve is the dependency
 injection; a true PI-driven-design would address that directly rather than
 taking the easy option of using a singleton.
+
+It is very easy to simplify a software design by making an assumption that a
+certain kind of flexibility won't be needed. However you should have evidence
+supporting that assumption, or you should consider what happens if your
+assumption turns out to be wrong. Will lots and lots of code need to be
+refactored? If the evidence is sparse or the potential impact is large, the
+simplification is too risky. If you want to make that assumption you need to
+find a way to isolate it to a small part of your software design such that less
+extensive refactoring would be required.
+
+## Conclusion
+
+When you design your software, start with the users: the people on your team!
+How will they use the software? Remember that in this context "use" means:
+reading the code, extending the code, bug fixing the code.
