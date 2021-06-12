@@ -1,0 +1,134 @@
+---
+layout: post
+title: "The Clean Trap"
+date: 2021-06-12
+categories: etc
+---
+
+I just read Clean Architecture by Robert C. Martin. In general, the book
+contains a lot of great advice about software architecture. However, it also
+contains a rather large trap, which you should be wary of.
+
+## Laying the trap
+
+Like I said, the advice in the book is solid (sorry for the pun). The problem is
+that it is worded in a way that sounds very absolute. The advice is given not as
+guidelines but as "principles". You don't want to violate principles! The
+architecture which is developed over the course of the book is "_The_ Clean
+Architecture". Not _an_ architecture&mdash;no&mdash;it is the one and only clean
+architecture. What, are you going to risk using one of those other _dirty_
+architectures?
+
+Martin makes a strong case for why you should follow his strict rules. He
+presents a convincing argument for why flexibility is king and why his
+principles are _the_ way to achieve flexibility. The way it is presented, the
+clean architecture is simply the natural end of consistently designing for
+flexibility.
+
+To summarize drastically, Martin's whole architecture relies on creating strict
+architectural boundaries between software layers. That may sound daunting to
+design but luckily his principles are almost mechanical in their application:
+take any software problem and bounce around making design changes every time you
+see a principle violated. When no violations remain, the result will always be
+the clean architecture with strict architectural boundaries exactly where they
+should be. Programmers love solving puzzles and Martin presents a beautiful one:
+apply the principles to your own code base and reap the benefits!
+
+This is the trap.
+
+## The trap is sprung
+
+By the time you are half-way through the book, Martin has completely laid out
+the clean architecture and all of its principles. The rest of the book is
+just examples and practical techniques. It is _incredibly_ tempting to get to work
+re-architecting your codebase at this point. But just a couple chapters later he
+drops a bombshell:
+
+> The full-fledged architectural boundary uses reciprocal boundary interfaces to
+> maintain isolation in both directions. Maintaining separation in both
+> directions is expensive both in initial setup and in ongoing maintenance.
+
+wat
+
+This broke my brain. His whole pitch for flexibility is that it is less
+expensive, but now he says if you follow all of his advice it will also be
+expensive not just to switch to, but in the long term. To be clear, this expense
+isn't isolated to a small part of your application, it _pervades_ it. The clean
+architecture has at least _three_ of these architectural boundaries and they
+span the entire application, meaning every single functional use case has to
+cross all three.
+
+He further clarifies that you probably don't want "full-fledged" boundaries
+everywhere the principles dictate because in many cases the cost-benefit
+tradeoff will be poor (because the flexibility isn't needed). This discussion
+literally takes up four pages in the later half of his 400+ page book. And, in
+my opinion, it completely dismantles his whole clean architecture.
+
+What is the point of an all-encompassing, principled architecture when it comes
+with the asterisk "but only use this sometimes, when it's worth it"? Because
+that immediately invites more questions:
+
+* How do I determine if the flexibility is worth the cost of maintaining the
+  architectural boundaries?
+* When I weaken a boundary, which principles should be violated first and by
+  how much?
+* What architecture should I use when clean architecture isn't worth it?
+
+Martin does not discuss any of these questions. Essentially the only answer he
+gives is to claim that the clean architecture is always the ideal, so whenever
+you must compromise your architecture you should do it in a way that you can get
+back to the clean architecture if you need to. But again, if the fundamental
+problem is that part of your application _isn't worth adapting_ to the clean
+architecture, how exactly do you make the pitch that you should still architect
+it with that end goal in mind?
+
+## Re-architecting
+
+The most compelling examples Martin gives are all blank slates. When you are
+just starting out and you don't know what any of the concrete decisions will be
+for your application, a highly flexible architecture makes sense. You can defer
+low-level decisions while you focus on your core functionality. Most
+importantly, as your application evolves you can identify areas where the
+architectural boundaries aren't delivering value and weaken or remove them.
+Martin even gives an example of this for his own FitNesse software.
+
+Re-architecting is an entirely different beast and Martin even demonstrates it
+with an example, though I think it ends up showing the opposite of what he
+intends. The example is a taxi ordering app, similar to Uber. The app
+finds drivers, lets you pick one, then dispatches the driver. He presents a simple
+five component service-based architecture as a "bad" architecture. To
+demonstrate its badness, the business then pivots to Uber Eats. Not only do we
+dispatch drivers for taxi service, we also dispatch them for delivery of goods.
+He questions:
+
+> How many of those services will have to change to implement this feature? _All
+> of them._
+
+The solution he gives is a wonderful _13_ component service-based architecture.
+I have no doubt that it would solve the problem with grace, but what if you
+already have the five component architecture? How many of those components will
+have to change, possibly drastically, in order to fit the new clean
+architecture? _All of them_.
+
+He also completely overlooks that the original "bad" architecture has an elegant
+solution to the problem he presents. In between the service for finding drivers
+and the service for selecting drivers, it provides a "candidate taxi" filter
+service. If that filter were upgraded to understand what the purpose of the
+order is (delivering goods versus providing a ride), you could reuse the entire
+architecture as-is. It would require the filter component to change and possibly
+one new communication component since now the filter is configurable for each
+order.
+
+Unfortunately I am in the position where I lead development of a huge,
+established application and we are wondering if our architecture is the cause of
+our high expenses. I have a good idea of which parts of our software need to be
+flexible, and the answer definitely isn't "all of them". So I would feel naïve
+if I were to advocate for clean architecture on its own when it sounds like even
+Robert Martin would say that it either wouldn't solve all of our problems or
+would simply shift our expenses around.
+
+As I said at the beginning, many of Martin's principles are good, and I think we
+would do better to apply them in areas where our application is currently
+difficult to maintain. Unfortunately, simply accepting Martin's architectural
+vision is insufficient to make it clear what the end goal looks like for us, nor
+what the path to it should be.
