@@ -62,7 +62,10 @@ He further clarifies that you probably don't want "full-fledged" boundaries
 everywhere the principles dictate because in many cases the cost-benefit
 tradeoff will be poor (because the flexibility isn't needed). This discussion
 literally takes up four pages in the later half of his 400+ page book. And, in
-my opinion, it completely dismantles his whole clean architecture.
+my opinion, it completely dismantles his whole clean architecture. I feel like
+he should rename it "The Expensive Flexibility-Centric Architecture" because
+that more accurately captures the only situation where I can wholeheartedly
+recommend it.
 
 What is the point of an all-encompassing, principled architecture when it comes
 with the asterisk "but only use this sometimes, when it's worth it"? Because
