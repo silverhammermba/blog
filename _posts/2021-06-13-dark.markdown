@@ -1,0 +1,292 @@
+---
+layout: post
+title: "The Genetics of Dark (Netflix)"
+date: 2021-06-13
+categories: etc
+---
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+I finished watching [Dark](https://www.netflix.com/title/80100172) a few months
+ago. It was an interesting sci-fi concept, and by the end it revealed a little
+math problem inside it! It kept nagging me in the back of my mind, so I finally
+got around to solving it.
+
+# MASSIVE SPOILERS FOR THE WHOLE SHOW
+
+# STOP NOW IF YOU WANT TO WATCH IT
+
+Pretty early on in the show you learn about how all of the characters are
+connected in a time loop, but it isn't until almost the very end that you
+discover just how complicated that loop is.
+
+This raises an interesting question: assuming that genetics in the time loop
+work normally, what is the genetic makeup of each character? The answer is not
+entirely obvious because several characters end up being their own
+ancestor/descendant.
+
+## Assumptions
+
+At the end of the show we see several characters happily and obliviously hanging
+out once the loop has been destroyed/prevented. They include: Katharina Nielsen,
+Hannah Kahnwald, and Peter Doppler. The implication is that all of these
+characters exist exactly as they are regardless of the loop. Tracing their
+parentage, we can see why: none of their parents ever got involved in the time
+travel shenanigans. This is important for our problem, because it means their
+genetics are fixed. No matter how the time loops works, regardless of mirror
+universes, their genetics are "normal" since all of their parents' genes were as
+well. To this list we can also add characters like Jana Nielsen (Ulrich's
+mother) and Egon Tiedemann because, while they aren't shown at the end of show,
+we similarly have no evidence that their parentage is related to the loop.
+
+From this we can derive a second class of characters: those who similarly have
+fixed genetics, but only exist because of the time loop. For example Silja's
+parents are Hannah and Egon (both fixed genes), but could only have been born if
+Hannah was able to travel back to the 30s. We also learn in the show that the
+mirror universe exists in parallel due to subtle (or not so subtle) differences
+in how the loop occurs. The mirror universe results in _similar_ but not
+identical people being born, for example the mirror Nielsen children all have
+slightly different physical appearances than the original ones we meet in the
+show. The conclusion here is that _only characters who are born in the loop have
+mirror versions_. So even though Silja has fixed genetics, there is another
+mirror Silja also with fixed genetics, even though there is only one Hannah and
+one Egon. It's their differenct choices in the loop that lead to the different
+Siljas!
+
+Applying this logic throughout the family graph, we can derive the fixed
+genetics of several other individuals in this group (who all have mirror
+versions): Bartosz Tiedemann, Agnes Nielsen, and Noah.
+
+## Mirror siblings?
+
+We haven't gotten to the actual math problem yet, but already we have an
+interesting conclusion. All of the people in our second group are their own
+siblings (with their respective mirror version)!
+
+The show already demonstrated that mirror versions can have slightly different
+genetics (the Nielsen kids' appearances). What do you call it when the same two
+people have sex in two different circumstances and have kids with different
+genes? Those two kids are siblings! It's the same case for Silja, Noah, Agnes,
+and Bartosz: all of their parents are singular (no mirror version), but had sex
+in the two different sides of the loop.
+
+## The math
+
+Before we get into solving the other characters' genetics, let's discuss how we
+will model this. To take a simplified view, we will simply look at a percentage
+of how many genes came from a specific ancestor. For example, if character A has
+parents B and C, we will model that as
+
+$$A=\frac{1}{2}B+\frac{1}{2}C$$
+
+meaning A's genetic makeup is half of B's and half of C's. The math works out
+because if A goes on to have a child D with parent E. We can write
+
+$$D=\frac{1}{2}A+\frac{1}{2}E$$
+
+and perform the subsitution to get
+
+$$D=\frac{1}{4}B+\frac{1}{4}C+\frac{1}{2}E$$
+
+which is accurate, at least in the same sense that people will say "I'm one
+quarter German," meaning one of their grandparents is from Germany. This does
+have a limitation in that the view you get depends on which substitutions you
+choose to do. For example, do we stop at \\(B\\) and \\(C\\) or do we substitute
+their parents? Luckily for our specific problem, we have a natural stopping
+point: anyone with fixed genetics. If we could express each of the time loop
+characters only in terms of those with fixed genetics, we have determined
+everyone's genetics. We could go further back, but at that point it's the same
+question as "Are you really one quarter German? Didn't your grandfather have a
+Polish father?"
+
+The result of this modeling makes it a little hard to interpret our results in
+the usual family terms. But with the time loop turning people into their own
+grandparents, labels like "cousin" and "sibling" start to become a little
+meaningless, so we aren't going to worry about that too much.
+
+## The loop
+
+The rest of the characters are not so easy to work out because not all of their
+parents have obviously fixed genetics. Let's start with the simple example of
+Charlotte and Elisabeth. Both are mother and daughter of the other, so how do we
+work it out? There are two perspectives:
+
+* The loop is iterative, so Charlotte in one instance of the loop may be
+  slightly genetically different from the Charlotte who was her grandmother
+* The loop is infinite, so all Charlottes are identical because there is no
+  beginning iteration, so she has always existed the same way stuck in the same
+  loop
+
+If the first is true, we should model it as
+
+$$C_n = \frac{1}{2}E_{n-1}+\frac{1}{2}N$$
+
+because Charlotte in one iteration of the loop was born of the Elisabeth and
+Noah from the previous iteration (but Noah's genes are fixed, so he doesn't get
+a subscript). Whereas if the second is true, we should model it as
+
+$$C = \frac{1}{2}E+\frac{1}{2}N$$
+
+because all versions of these characters are the same in each iteration. Luckily
+for us, it barely matters. If you solve it using the first approach, the people
+with fixed genetics (i.e. not part of the loop) always dominate the result and
+you end up with a vanishingly small portion of genes coming from inside the loop
+which gets smaller and smaller with each iteration. This makes intuitive sense
+because the fixed genes are identical and each time you go through the loop they
+get mixed back in. We want to solve in terms of these fixed gene people anyway,
+so the result will be essentially the same. The fact that the dominant portion
+is _always_ the same result you get for the second approach I leave as an
+exercise for the reader.
+
+I opted for using the second approach, because it involves solving linear
+equations as opposed to a recurrence formula. The simplest way to do this, I
+found, was to create a matrix and do normal row reduction. Continuing the
+Charlotte/Elisabeth example, we translate our formulae
+
+$$
+C = \frac{1}{2}E+\frac{1}{2}N\\
+E = \frac{1}{2}C+\frac{1}{2}P
+$$
+
+into a matrix
+
+$$
+\begin{pmatrix}
+  & C & E & N & P \\
+C & 1 & \frac{-1}{2} & \frac{-1}{2} & 0 \\
+E & \frac{-1}{2} & 1 &  0 & \frac{-1}{2}
+\end{pmatrix}
+$$
+
+(forgive the row/column headers being inside the brackets, I can't figure out
+how to make them outside). This is just translating our formulae after doing
+some rearrangement so that we always get a diagonal of ones and all of the terms
+are moved over so each can \\(=0\\). Notice also how I put all of the columns
+for people with fixed genes on the far right, that way when we reduce we should
+be able to rewrite all of the time loop genes in terms of fixed genes.
+
+Performing the row reduction, we get the result
+
+$$
+\begin{pmatrix}
+  & C & E & N & P \\
+C & 1 & 0 & \frac{-2}{3} & \frac{-1}{3} \\
+E & 0 & 1 & \frac{-1}{3} & \frac{-2}{3}
+\end{pmatrix}
+$$
+
+Translating back into formulae
+
+$$
+C = \frac{2}{3}N+\frac{1}{3}P\\
+E = \frac{1}{3}N+\frac{2}{3}P
+$$
+
+In other words, one third of Charlotte's genes come from Peter and the rest are
+from Noah, and Elisabeth is the exact opposite! They're... one third siblings
+from a gay couple that never had sex? Genetics get weird in a time loop.
+
+## The rest
+
+The rest of the time loop characters are more complex, because their loop has
+more steps, but the same technique works at the larger scale. First we trace out
+all of their parentage, stopping whenever we get to someone with fixed genes.
+Then we construct a matrix. I'm not going to bother reproducing it here because
+it's 8&times;13: the characters involved in the loop are ∞ (the creepy guy(s)),
+Mikkel (only the normal one, the mirror one doesn't have kids), Jonas, Martha
+(the mirror version, the original dies), Ulrich (and his mirror), and Tronte
+(Ulrich's dad and his mirror). Surprisingly the only fixed genes we need as
+input to this loop are Katharina, Jana, Hannah, and Agnes (and her mirror).
+
+I coded this up in Ruby so my input was this:
+
+```ruby
+# array of [person, parent, parent]
+people = [
+  # fixed genes, we don't care who their parents are
+  ['Katharina Nielsen', '?', '?'],
+  ['Hannah Kahnwald', '?', '?'],
+  ['Jana Nielsen', '?', '?'],
+  ['Peter Doppler', '?', '?'],
+  ['Agnes Nielsen', '?', '?'],
+  ['Agnes Nielsen (Mirror)', '?', '?'],
+  ['Hanno Tauber', '?', '?'],
+  ['Hanno Tauber (Mirror)', '?', '?'],
+  
+  # in-loop
+  ['Jonas Kahnwald', 'Mikkel Nielsen', 'Hannah Kahnwald'],
+  ['Ulrich Nielsen', 'Jana Nielsen', 'Tronte Nielsen'],
+  ['Mikkel Nielsen', 'Katharina Nielsen', 'Ulrich Nielsen'],
+  ['Martha Nielsen', 'Katharina Nielsen', 'Ulrich Nielsen'],
+  ['Magnus Nielsen', 'Katharina Nielsen', 'Ulrich Nielsen'],
+  ['Tronte Nielsen', 'Agnes Nielsen', '∞'],
+  ['Charlotte Doppler', 'Elisabeth Doppler', 'Hanno Tauber'],
+  ['Elisabeth Doppler', 'Charlotte Doppler', 'Peter Doppler'],
+  
+  # mirror versions of in-loop people
+  ['Ulrich Nielsen (Mirror)', 'Jana Nielsen', 'Tronte Nielsen (Mirror)'],
+  ['Mikkel Nielsen (Mirror)', 'Katharina Nielsen', 'Ulrich Nielsen (Mirror)'],
+  ['Martha Nielsen (Mirror)', 'Katharina Nielsen', 'Ulrich Nielsen (Mirror)'],
+  ['Magnus Nielsen (Mirror)', 'Katharina Nielsen', 'Ulrich Nielsen (Mirror)'],
+  ['Tronte Nielsen (Mirror)', 'Agnes Nielsen (Mirror)', '∞'],
+  ['Charlotte Doppler (Mirror)', 'Elisabeth Doppler (Mirror)', 'Hanno Tauber (Mirror)'],
+  ['Elisabeth Doppler (Mirror)', 'Charlotte Doppler (Mirror)', 'Peter Doppler'],
+  
+  # the link!
+  ['∞', 'Jonas Kahnwald', 'Martha Nielsen (Mirror)'],
+]
+```
+
+From that you can derive the whole family graph or the matrix or what have you.
+Then the solution is simple linear algebra.
+
+The result is... weird. We had one third siblings before, but all of these
+people are related by 29ths or some multiple. For example, Mikkel is 16/29
+Katharina, 8/29 Jana, 1/29 Hannah, 15/116 Agnes, and 1/116 the mirror version of
+Agnes.
+
+The numbers aren't very illuminating at this point, so let's visualize all of
+the loop characters:
+
+<svg viewBox="0 0 3561 2489" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="clip0"><rect x="2456" y="123" width="3561" height="2489"/></clipPath><clipPath id="clip1"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip2"><rect x="2694" y="309" width="3274" height="1875"/></clipPath><clipPath id="clip3"><rect x="2694" y="309" width="3274" height="1875"/></clipPath><clipPath id="clip4"><rect x="2694" y="309" width="3274" height="1875"/></clipPath><clipPath id="clip5"><rect x="2694" y="309" width="3274" height="1875"/></clipPath><clipPath id="clip6"><rect x="2694" y="309" width="3274" height="1875"/></clipPath><clipPath id="clip7"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip8"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip9"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip10"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip11"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip12"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip13"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip14"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip15"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip16"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip17"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip18"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip19"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip20"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip21"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip22"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip23"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip24"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip25"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip26"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip27"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip28"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip29"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip30"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip31"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip32"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip33"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip34"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip35"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip36"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip37"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip38"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip39"><rect x="2461" y="128" width="3554" height="2480"/></clipPath><clipPath id="clip40"><rect x="2461" y="128" width="3554" height="2480"/></clipPath></defs><g clip-path="url(#clip0)" transform="translate(-2456 -123)"><rect x="2462" y="128" width="3553" height="2480" fill="#FFFFFF" fill-opacity="1"/><g clip-path="url(#clip1)"><path d="M2694.5 1994.57 5965.5 1994.57M2694.5 1807.56 5965.5 1807.56M2694.5 1619.55 5965.5 1619.55M2694.5 1432.55 5965.5 1432.55M2694.5 1245.54 5965.5 1245.54M2694.5 1058.53 5965.5 1058.53M2694.5 871.529 5965.5 871.529M2694.5 684.523 5965.5 684.523M2694.5 496.516 5965.5 496.516M2694.5 309.5 5965.5 309.5" stroke="#D9D9D9" stroke-width="3.4375" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill="none" fill-rule="nonzero"/></g><g clip-path="url(#clip2)"><path d="M2817.09 1407.05 2981.1 1407.05 2981.1 2182 2817.09 2182ZM3226.11 1665.05 3389.11 1665.05 3389.11 2182 3226.11 2182ZM3635.12 1149.04 3798.12 1149.04 3798.12 2182 3635.12 2182ZM4044.13 1149.04 4207.14 1149.04 4207.14 2182 4044.13 2182ZM4452.15 1988.07 4616.15 1988.07 4616.15 2182 4452.15 2182ZM4861.16 1988.07 5025.17 1988.07 5025.17 2182 4861.16 2182ZM5270.17 1794.06 5433.18 1794.06 5433.18 2182 5270.17 2182ZM5679.19 1794.06 5842.19 1794.06 5842.19 2182 5679.19 2182Z" fill="#4472C4" fill-rule="nonzero" fill-opacity="1"/></g><g clip-path="url(#clip3)"><path d="M2817.09 1020.03 2981.1 1020.03 2981.1 1407.05 2817.09 1407.05ZM3226.11 1407.05 3389.11 1407.05 3389.11 1665.05 3226.11 1665.05ZM3635.12 633.021 3798.12 633.021 3798.12 1149.04 3635.12 1149.04ZM4044.13 633.021 4207.14 633.021 4207.14 1149.04 4044.13 1149.04ZM4452.15 955.031 4616.15 955.031 4616.15 1988.07 4452.15 1988.07ZM4861.16 955.031 5025.17 955.031 5025.17 1988.07 4861.16 1988.07ZM5270.17 1601.05 5433.18 1601.05 5433.18 1794.06 5270.17 1794.06ZM5679.19 1601.05 5842.19 1601.05 5842.19 1794.06 5679.19 1794.06Z" fill="#ED7D31" fill-rule="nonzero" fill-opacity="1"/></g><g clip-path="url(#clip4)"><path d="M2817.09 503.017 2981.1 503.017 2981.1 1020.03 2817.09 1020.03ZM3226.11 439.014 3389.11 439.014 3389.11 1407.05 3226.11 1407.05ZM3635.12 568.019 3798.12 568.019 3798.12 633.021 3635.12 633.021ZM4044.13 568.019 4207.14 568.019 4207.14 633.021 4044.13 633.021ZM4452.15 826.027 4616.15 826.027 4616.15 955.031 4452.15 955.031ZM4861.16 826.027 5025.17 826.027 5025.17 955.031 4861.16 955.031ZM5270.17 1342.04 5433.18 1342.04 5433.18 1601.05 5270.17 1601.05ZM5679.19 1342.04 5842.19 1342.04 5842.19 1601.05 5679.19 1601.05Z" fill="#A5A5A5" fill-rule="nonzero" fill-opacity="1"/></g><g clip-path="url(#clip5)"><path d="M2817.09 439.014 2981.1 439.014 2981.1 503.017 2817.09 503.017ZM3226.11 318.01 3389.11 318.01 3389.11 439.014 3226.11 439.014ZM3635.12 326.011 3798.12 326.011 3798.12 568.019 3635.12 568.019ZM4044.13 560.018 4207.14 560.018 4207.14 568.019 4044.13 568.019ZM4452.15 342.011 4616.15 342.011 4616.15 826.027 4452.15 826.027ZM4861.16 810.027 5025.17 810.027 5025.17 826.027 4861.16 826.027ZM5270.17 374.012 5433.18 374.012 5433.18 1342.04 5270.17 1342.04ZM5679.19 1310.04 5842.19 1310.04 5842.19 1342.04 5679.19 1342.04Z" fill="#FFC000" fill-rule="nonzero" fill-opacity="1"/></g><g clip-path="url(#clip6)"><path d="M2817.09 310 2981.1 310 2981.1 439.014 2817.09 439.014ZM3226.11 310 3389.11 310 3389.11 318.01 3226.11 318.01ZM3635.12 310 3798.12 310 3798.12 326.011 3635.12 326.011ZM4044.13 310 4207.14 310 4207.14 560.018 4044.13 560.018ZM4452.15 310 4616.15 310 4616.15 342.011 4452.15 342.011ZM4861.16 310 5025.17 310 5025.17 810.027 4861.16 810.027ZM5270.17 310 5433.18 310 5433.18 374.012 5270.17 374.012ZM5679.19 310 5842.19 310 5842.19 1310.04 5679.19 1310.04Z" fill="#5B9BD5" fill-rule="nonzero" fill-opacity="1"/></g><g clip-path="url(#clip7)"><path d="M2694.5 2181.5 5965.5 2181.5" stroke="#D9D9D9" stroke-width="3.4375" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill="none" fill-rule="evenodd"/></g><g clip-path="url(#clip8)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2556.72 2198)">0%</text></g><g clip-path="url(#clip9)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 2011)">10%</text></g><g clip-path="url(#clip10)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 1824)">20%</text></g><g clip-path="url(#clip11)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 1637)">30%</text></g><g clip-path="url(#clip12)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 1450)">40%</text></g><g clip-path="url(#clip13)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 1262)">50%</text></g><g clip-path="url(#clip14)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 1075)">60%</text></g><g clip-path="url(#clip15)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 888)">70%</text></g><g clip-path="url(#clip16)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 701)">80%</text></g><g clip-path="url(#clip17)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2524.2 514)">90%</text></g><g clip-path="url(#clip18)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2491.68 327)">100%</text></g><g clip-path="url(#clip19)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 2871.67 2283)">∞</text></g><g clip-path="url(#clip20)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3235.92 2283)">Jonas</text></g><g clip-path="url(#clip21)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3629.35 2283)">Mikkel</text></g><g clip-path="url(#clip22)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3544.85 2362)">(and siblings)</text></g><g clip-path="url(#clip23)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4028.5 2283)">Martha</text></g><g clip-path="url(#clip24)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3966.11 2362)">(Mirror, and</text></g><g clip-path="url(#clip25)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4019.72 2440)">siblings)</text></g><g clip-path="url(#clip26)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4457.34 2283)">Ulrich</text></g><g clip-path="url(#clip27)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4754.16 2283)">Ulrich (Mirror)</text></g><g clip-path="url(#clip28)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 5264.57 2283)">Tronte</text></g><g clip-path="url(#clip29)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 5561.39 2283)">Tronte (Mirror)</text></g><g clip-path="url(#clip30)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="64" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3777.21 224)">Genetic Makeup of Dark Characters</text></g><g clip-path="url(#clip31)"><rect x="3547" y="2519" width="30" height="30" fill="#4472C4" fill-opacity="1"/></g><g clip-path="url(#clip32)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="55" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3590.47 2548)">Katharina</text></g><g clip-path="url(#clip33)"><rect x="3865" y="2519" width="30" height="30" fill="#ED7D31" fill-opacity="1"/></g><g clip-path="url(#clip34)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="55" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 3908.34 2548)">Jana</text></g><g clip-path="url(#clip35)"><rect x="4066" y="2519" width="30.0002" height="30" fill="#A5A5A5" fill-opacity="1"/></g><g clip-path="url(#clip36)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="55" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4109.67 2548)">Hannah</text></g><g clip-path="url(#clip37)"><rect x="4342" y="2519" width="30.0005" height="30" fill="#FFC000" fill-opacity="1"/></g><g clip-path="url(#clip38)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="55" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4385.53 2548)">Agnes</text></g><g clip-path="url(#clip39)"><rect x="4580" y="2519" width="30" height="30" fill="#5B9BD5" fill-opacity="1"/></g><g clip-path="url(#clip40)"><text fill="#595959" fill-opacity="1" font-family="Calibri,Calibri_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="400" font-stretch="normal" font-size="55" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 4623.23 2548)">Agnes (Mirror)</text></g><rect x="2462.5" y="128.5" width="3553" height="2480" stroke="#D9D9D9" stroke-width="3.4375" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill="none"/></g></svg>
+
+Some observations:
+
+1. Ulrich and Tronte are not true siblings with their mirrors like Silja and
+   Agnes. But the difference is _only_ Agnes; normal Ulrich has a significant
+   number of genes from normal Agnes, mirror Ulrich has a significant number
+   from mirror Agnes. Since the mirror Agneses are siblings, I guess that makes
+   the Ulrichs/Trontes mirror second cousins?
+2. Mikkel and mirror Martha are also mirror cousins of some kind, which makes
+   sense because they would be siblings if not for being from parallel
+   universes. Note that I labeled them with "and siblings" on the chart because,
+   as mentioned before, siblings look identical. So normal Martha would have the
+   same bar as Mikkel and thus also be a cousin to her mirror version.
+3. You can see for all of the mirror cousins there is a slight asymmetry. This
+   is not a rendering error. For example, Ulrich is 1/58 mirror Agnes, but
+   mirror Ulrich is only 1/116 normal Agnes! I believe this is because of the
+   asymmetry around ∞'s parents being from both universes.
+4. You can infer relationships from this chart by looking at the size of each
+   bar: 50% means parent, 25% grandparent, etc. For example Jonas's mom is
+   clearly Hannah, Katharina is his grandmother, Jana is his great grandmother,
+   and Agnes is his great great grandmother.
+5. It seems that in general the consequence of the time loop is that all of your
+   in-loop ancestors disappear. This makes sense, because ultimately all of your
+   genes have to originally come from somewhere outside of the loop. It seems
+   oddly coincidental that of the two loops (this one and the Dopplers'), one
+   loop has all male ancestors in the loop and the other has all female. I feel
+   like that must be symbolic in some way but if there's a deeper point I don't
+   get it.
+6. ∞ is appropriately the only truly weird one. From the chart his mother should
+   be Katharina, but she definitely isn't because she's his grandmother. That
+   screws up Jana and Hannah who look like they  might be grandparents but are
+   actually his great grandparents. And then because their numbers are so off
+   you end up with hardly space left for the Agneses, who together make up only
+   3/29 of his genes. I really don't know what to do with this guy.
+
+That's all I got. If you ignored my warning and read this without watching the
+show, check it out anyway! It's pretty interesting and maybe you'll have a
+different viewing experience now that you have a crib sheet.
+
+What do you think? Did I totally screw up the math? Is this not at all how
+genetics work?
