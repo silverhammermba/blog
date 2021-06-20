@@ -144,6 +144,27 @@ Objective‑C, then:
     building, like errors in framework dependencies. Xcode > Preferences >
     General > "Continue building after errors" can help here
 
+## Can't call Objective-C method from Swift
+
+There is only one exception I know of to Objective-C methods being automatically
+visible to Swift. If your Objective-C method involves Swift enums from the same
+target, you must forward-declare them (see above). Unfortunately this creates an
+[incomplete type definition][partial] in the header.
+
+When the compiler tries to use that header to create the Swift interface (which
+happens before the Swift is compiled), it sees only a method using an incomplete
+type, which it cannot translate to Swift. Thus the Objective-C method will be
+omitted from the generated Swift interface.
+
+There are several workarounds to this:
+
+* move the enum declaration to a public Objective-C header
+* move the method using the enum to a Swift extension
+* move the enum to a separate framework such that it can be built independently
+  and imported into both Swift and Objective-C
+
+[partial]: https://stackoverflow.com/questions/66749860/objective-c-method-not-visible-in-swift-when-using-swift-enum/66823254#66823254
+
 ## Swift header not found
 
 The -Swift header is only created if Swift files are in the framework
