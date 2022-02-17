@@ -28,7 +28,7 @@ and out of the way as quickly as possible.
 This is where Gradle immediately fails, and fails hard. Gradle is incredibly
 complex. I have yet to meet a single person, including multiple Java developers,
 who admit to being comfortable working with Gradle. Even the consultants my
-company hired to help us work on our Android up won't call themselves Gradle
+company hired to help us work on our Android app won't call themselves Gradle
 experts. Everyone I know tries to deal with this tool as little as possible and,
 once they get it working, hesitate to ever touch it again for fear of horribly
 breaking something.
@@ -125,7 +125,7 @@ Honestly? Nothing. Gradle is the standard if you're working with the JVM. If
 you're not working with the JVM, please don't use Gradle. If you already are
 using it outside the JVM I can only assume that some senior engineer at your
 company drank the Java Kool-Aid years ago and has been living in the [Kingdom
-of Nounds][kon] for so long that they have Stockholm Syndrome.
+of Nouns][kon] for so long that they have Stockholm Syndrome.
 
 [kon]: https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html)
 
