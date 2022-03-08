@@ -1,0 +1,135 @@
+---
+layout: post
+title: "Gradle is a dumpster fire"
+date: 2022-02-16
+categories: etc
+---
+
+I hate using Gradle. Of all of the programming tools I have used in the past 10
+years, it is the one that makes me most unhappy. Let me tell you how much
+it sucks.
+
+## Gradle is a build tool
+
+Unlike programming languages--which deliver tangible value in the form of
+programs--Gradle's sole purpose is building other programs. Now don't get me
+wrong; build tools are very important. Obviously code would be worthless if we
+couldn't build it. But by definition, a build tool's importance is secondary.
+When I interact with a build tool my level of concern for the build tool itself
+is exactly 0. 100% of my concern is on the thing I am actually building.
+
+Because that's the whole point isn't it? Again, the build tool's sole purpose is
+to build my code. So I only care about the build tool insofar as it helps me to
+achieve the desired output of my coding efforts. So when you design a build
+tool, you are on _very_ thin ice, because the person interacting with your
+product already does not want to be dealing with it. They want to get it done
+and out of the way as quickly as possible.
+
+This is where Gradle immediately fails, and fails hard. Gradle is incredibly
+complex. I have yet to meet a single person, including multiple Java developers,
+who admit to being comfortable working with Gradle. Even the consultants my
+company hired to help us work on our Android app won't call themselves Gradle
+experts. Everyone I know tries to deal with this tool as little as possible and,
+once they get it working, hesitate to ever touch it again for fear of horribly
+breaking something.
+
+## Gradle doesn't know what it is
+
+A lot of that complexity comes from the fact that Gradle is trying to be the
+ultimate build tool, capable of building all things under any circumstances,
+satisfying all needs anyone could possibly have of any build tool. Consequently,
+the project seems to have no clear vision, and is constantly breaking itself in
+fundamental ways. Rather than drawing clear lines and saying "This is what the
+build tool is responsible for, this is how it should work," Gradle is constantly
+adding more features to its toolbox, radically reinventing itself on a regular
+basis.
+
+Ironically, despite these aspirations, from what I can tell 99.9% of people only
+use Gradle for JVM-based projects like Java, Scala, or Kotlin. I'm sure that
+theoretically it could handle almost any task but every other area of the
+industry has better, more established build tools that Gradle has no hope of
+replacing. So it doesn't seem so far-fetched to me that Gradle could specialize
+and drastically simplify itself rather than constantly chasing this nebulous
+target of build system perfection.
+
+It has introduced breaking changes on a nearly annual basis since 2012! How have
+we not figured out how to build JVM apps yet? My theory is that it's a vicious
+cycle with that lack of vision. Since Gradle tries to do everything, all it
+takes is some crazy engineer to find a corner case it can't handle and now
+that's a bug. Gradle _must_ find some way to handle that corner case. And it
+must do so in the most general way possible! Even if it means breaking a bunch
+of stuff.
+
+## Gradle is built out of workarounds
+
+Case in point, if you have an existing project that you want to set up with
+Gradle, here's how you do it:
+
+1. Install some version of Gradle on your computer. It doesn't matter what
+   version
+2. Use that version of Gradle to install a completely separate product: gradle
+   wrapper (AKA `gradlew`)
+3. Use `gradlew` to actually install the specific version of Gradle you need
+   (since likely only one version will work for your project as-is)
+4. Commit `gradlew` to your source code repository!!! That's about 70KB of
+   shell scripts and JAR in your source code because this is the only way to
+   ensure that other people who need your code can reliably build it.
+
+It's laughable, to be honest, that the Gradle developers saw that they kept
+breaking everyone's build with each release and this is the solution they came
+up with. Who cares about designing for stability when you can so easily work
+around it?
+
+Another example: Gradle is slooow. Like, multiple seconds of delay just to start
+a build even on a cutting edge M1 Macbook Pro. How to fix it? Daemonize the
+entire build of course! That way it's only slow once, and later builds can reuse
+the same process. Ignore the fact that it seems like every build ends up killing
+the daemon anyway. Ignore the fact that this means certain behaviors like
+customizing Gradle with environment variables now become nondeterministic (will
+you get a fresh daemon? If not, how will the daemon it picks be configured?).
+
+These examples aren't weird corner cases. These are the shaky bedrock upon which
+Gradle is built.
+
+## Gradle is Turing complete
+
+Modern Gradle is configured in Kotlin, a full fledged programming language (even
+before that it used Groovy, also a programming language). Remember what I said
+earlier about build tools staying out of your way? Massive alarm bells should be
+going off for you right now. That's right, it's 4:30PM on a Friday and you just
+want your f$#@%ng Java code to compile and Gradle's like "Oh here you go, here
+are all the tools you need to _implement an operating system from scratch_."
+It is not fun when build errors can turn into debugging an entirely separate
+program in your codebase.
+
+Even worse than that, Gradle isn't just a bunch of Kotlin functions that you
+call. That would be too easy. No, it actually defines an entire Domain-Specific
+Language using Kotlin. So even if you are a bona fide Kotlin expert, congrats
+you now understand about 0.1% of Gradle. Well how big could the DSL possibly be?
+Don't worry, Gradle has a plugin system so its size can be unbounded!
+
+Going back to the lack of vision, it's not like there's even one clear way to
+perform any given task. In order to satisfy any possible whim, Gradle helpfully
+provides three or four completely different ways to accomplish each task. So
+good luck comparing your build config to someone else's online to try to learn
+anything. In a way this should be completely unsurprising. Programming is, by
+definition, extremely flexible. Patterns, anti-patterns, and best practices are
+established over long, hard years of trial-and-error. Gradle, being its own
+programming language, is the same except that every time you engage in that
+learning process it feels like a massive waste of time because, again, _it's
+just a build tool_.
+
+## What can be done?
+
+Honestly? Nothing. Gradle is the standard if you're working with the JVM. If
+you're not working with the JVM, please don't use Gradle. If you already are
+using it outside the JVM I can only assume that some senior engineer at your
+company drank the Java Kool-Aid years ago and has been living in the [Kingdom
+of Nouns][kon] for so long that they have Stockholm Syndrome.
+
+[kon]: https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html)
+
+I would love to be wrong about this. I would love it if my company was in some
+isolated crazy bubble where all of the obvious beauty of Gradle is somehow
+obscured. Please, please point out what I am missing because I have to configure
+Gradle at work and every time I do I become depressed.
