@@ -135,3 +135,31 @@ would do better to apply them in areas where our application is currently
 difficult to maintain. Unfortunately, simply accepting Martin's architectural
 vision is insufficient to make it clear what the end goal looks like for us, nor
 what the path to it should be.
+
+## And now for something completely different
+
+Independent of all of those criticisms, there is another matter that I find very
+difficult to understand about the clean architecture. The core of the
+architecture is supposed to be your "domain". Martin references this repeatedly,
+in many different ways:
+
+* The domain contains the most stable concepts
+* The domain contains the highest level concepts
+* The domain contains the most abstract concepts
+* The domain contains your core money-making concepts
+* The domain contains your core business logic
+* The domain contains the entities of your application
+
+I think I understand what he is going for here, but in practice I find it almost
+impossible to come up with something in my application that satisfies all of
+these definitions. Or I have the opposite problem, that I can think of several
+concepts that fit, but they are mututally exclusive in the sense that clean
+architecture does not allow for dependency cycles, so you must always invert one
+depedency and add an architectural boundary.
+
+The "entity" definition is particularly tricky, because when I think about all
+of the other criteria, I usually think not about entities but about _actions_.
+I.e. our most stable, high-level, abstract, valuable, core concepts are the
+actions that our application allows you to perform. Turning those actions into
+entities themselves is very unintuitive for me and I don't think that's what
+Martin is arguing for either, because none of his examples fit that pattern.
