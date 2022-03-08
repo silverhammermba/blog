@@ -52,13 +52,20 @@ replacing. So it doesn't seem so far-fetched to me that Gradle could specialize
 and drastically simplify itself rather than constantly chasing this nebulous
 target of build system perfection.
 
-It has introduced breaking changes on a nearly annual basis since 2012! How have
-we not figured out how to build JVM apps yet? My theory is that it's a vicious
-cycle with that lack of vision. Since Gradle tries to do everything, all it
-takes is some crazy engineer to find a corner case it can't handle and now
-that's a bug. Gradle _must_ find some way to handle that corner case. And it
-must do so in the most general way possible! Even if it means breaking a bunch
-of stuff.
+Even more ironically, for being largely a Java-specific tool, Gradle can't solve
+fundamental challenges like managing project-specific JDK versions. In my
+experience building a project with the wrong JDK results in an extremely obscure
+compiler error from gradle since it has decided _not_ to handle this one crucial
+aspect of the build process. This feels like an obvious blind spot that
+specialization would fix.
+
+As more proof of its over-generality, it has introduced breaking changes on a
+nearly annual basis since 2012! How have we not figured out how to build JVM
+apps yet? My theory is that it's a vicious cycle with that lack of vision. Since
+Gradle tries to do everything, all it takes is some crazy engineer to find a
+corner case it can't handle and now that's a bug. Gradle _must_ find some way to
+handle that corner case. And it must do so in the most general way possible!
+Even if it means breaking a bunch of stuff.
 
 ## Gradle is built out of workarounds
 
