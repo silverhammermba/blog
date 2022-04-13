@@ -1,0 +1,20 @@
+---
+layout: post
+title: "Software Designs"
+date: 2022-04-13
+categories: etc
+---
+
+> No plan of operations extends with any certainty beyond the first encounter
+> with the main enemy forces.
+>
+> _Prussian Field Marshal Helmuth von Moltke the Elder_
+
+This is often paraphrased as "no plan survives contact with the enemy". Wise
+words.
+
+I'd like to propose a variant of this saying: no software design survives first
+contact with the compiler. Don't spend too much time whiteboarding, writing UML,
+etc. Because as soon as you see how the code actually works, how it actually
+feels to test it and run it, there is no certainty that your software design
+will continue to make sense without modification.
