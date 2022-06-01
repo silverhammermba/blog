@@ -52,33 +52,33 @@ you're ready, proceed.
 
 ## The Paradox
 
-I hope that the first example seemed **very** unintuitive to you, because it's
-wrong. The key point that Engelstein misunderstands is that the children are
-_distinguishable_. Since you have met one of the children at the park, you can
-imagine labeling that as the "park" child and the other one as the "home" child.
-Going through the possible configurations we have:
+I don't know about you, but I find the first example extremely unintuitive, if
+not totally wrong. In my view, the key point that Engelstein omits is that the
+children are _distinguishable_. Since you have met one of the children at the
+park, you can imagine labeling that as the "park" child and the other one as the
+"home" child. Going through the possible configurations we have:
 
 $$\text{boy}_{\text{park}}/\text{boy}_{\text{home}},\text{boy}_{\text{park}}/\text{girl}_{\text{home}},\text{girl}_{\text{park}}/\text{boy}_{\text{home}},\text{girl}_{\text{park}}/\text{girl}_{\text{home}}$$
 
 By discovering that the child in the park is a boy, we are not left with three
 possibilities as Engelstein argues, but only two, one of which involves two
-boys. Therefore the intuitive answer of 50% is actually correct. Engelstein's
+boys. So in my view the intuitive answer of 50% is actually correct. Engelstein's
 summary of "at least one is a boy" clashes with his earlier statement that we
 learned that a specific child is a boy.
 
-So what caused the confusion? There is actually a better phrasing of this
-problem which reveals a proper paradox. Let's imagine that you and I are playing
-a game with the following steps:
+So why did Engelstein think it was 1 in 3? Is there even a paradox here? First
+we should restate the example to remove some ambiguitiy. Let's imagine that you
+and I are playing a game with the following steps:
 
 1. I flip two fair coins and then hide the coins behind a screen. The random
    result is fixed but only I can see it
 2. I may reveal some information about the coins to you
 3. I reveal both coins and you win if both coins are Heads
 
-That's it. Consider how your chance of winning changes throughout the steps
-of the game. After step 1 your chance will always be the same: two fair coins
-were flipped, so there are four possibilities, so there is a 1 in 4 chance that
-both are Heads.
+Now consider how your chance of winning changes throughout the steps of the
+game. After step 1 your chance will always be the same: two fair coins were
+flipped, so there are four possibilities, so there is a 1 in 4 chance that both
+are Heads.
 
 HH, HT, TH, TT
 
@@ -180,14 +180,13 @@ $$\text{H}_{\text{left}}/\text{H}_{\text{right}},\text{H}_{\text{left}}/\text{T}
 
 and you have no way to distinguish between them. The chance of winning has
 dropped to 1 in 3. Unfortunately, from your perspective, both procedures look
-nearly identical. The main difference would be the number of games in which I
-show nothing, but this is complicated by the fact that I can switch between
-these procedures at will. If I start with the first procedure I can sucker you
-in by making you think the game is rigged in your favor. When I switch
-strategies, your expected winnings flip to −$2 and hopefully for me your greed
-will cost you all of your profits and then some. I could even be sneakier and
-switch between these strategies randomly, slightly favoring the one that pays me
-more.
+nearly identical. The only difference would be the frequency of me showing
+nothing, but this is complicated by the fact that I can switch between these
+procedures at will. If I start with the first procedure I can sucker you in by
+making you think the game is rigged in your favor. When I switch strategies,
+your expected winnings flip to −$2 and hopefully for me your greed will cost you
+all of your profits and then some. I could even be sneakier and switch between
+these strategies randomly, slightly favoring the one that pays me more.
 
 If you approach this game naively, you will always lose in the long run. Why?
 Because, like Engelstein, you will assume that the specific way in which you
