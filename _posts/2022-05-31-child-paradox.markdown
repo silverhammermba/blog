@@ -232,7 +232,7 @@ But what if I say that I have the Ace of Spades? How do we arrive at 56% chance
 of two or more Spades? That is the probability we get if we assume that I _only_
 tell you when I have the Ace of Spades; specifically, if I have other Aces and
 no Ace of Spades _I say nothing_. Similar to the Two Child Paradox this feels
-like a very strange assumption to make. If we're interested in findings Aces,
+like a very strange assumption to make. If we're interested in finding Aces,
 why wouldn't I tell you about the others when I have them? This means that there
 would be situations where I have two or more Aces (none of them Spades) but I
 don't reveal any information. A much more reasonable assumption here is if we
