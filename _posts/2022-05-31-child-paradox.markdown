@@ -1,0 +1,245 @@
+---
+layout: post
+title: "The Two Child Paradox"
+date: 2022-05-31
+categories: etc
+---
+
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+I recently read [GameTek][gt] by Geoffrey Engelstein, which includes several
+interesting examples of how to improve your intuition when it comes to the
+design and the playing of games. However two of these examples are at best
+_extremely misleading_ and at worst completely incorrect. However the way in
+which they are wrong is fascinating and prompted several hours of thought and
+discussion on my part, so I'd like to share them with you.
+
+[gt]: https://www.amazon.com/GameTek/dp/1460757378
+
+## The Premises
+
+Engelstein presents two similar examples in the book, which I will reproduce
+here. First, at the end of Chapter 6, "Feeling the Loss", we have a presentation
+of a classic paradox in probability.
+
+> You're talking to woman at a park and she say she has two children. Suddenly a
+> boy runs up and grabs her hand and you ask if this is her son. She replies
+> that he is.
+>
+> What are the chances that her other child is a boy?
+>
+> Most people say 50 per cent: the fact that one is a boy has no bearing on the
+> gender of the other child. But this is not correct. There are four possible
+> family arrangements that have two children: boy/boy, boy/girl, girl/boy and
+> girl/girl. When I tell you that at least one is a boy, that eliminates one
+> possible family: girl/girl. There are three combinations left: boy/boy,
+> boy/girl, and girl/boy. Each is equally likely, but in only one out of three
+> (and thus a ⅓ chance) is the other child a boy.
+
+Then at the end of Chapter 14, "Tic-Tac-Toe and Entangled Pairs", we have this
+other situation which might sound different but is actually intimately connected
+to the first.
+
+> Let's say four people are playing _Bridge_. One of them says, 'I have an Ace,'
+> and we know she is telling the truth. The chance that she's holding more than
+> one Ace is about 37 per cent. Later the same player says, again truthfully, 'I
+> have the Ace of Spades.' Strangely, the chance that she has more than one Ace
+> is now 56 per cent.
+
+Take a moment to ponder these two examples. They probably feel unintuitive, but
+all you need to do at this point is understand the premise of each one. When
+you're ready, proceed.
+
+## The Paradox
+
+I hope that the first example seemed **very** unintuitive to you, because it's
+wrong. The key point that Engelstein misunderstands is that the children are
+_distinguishable_. Since you have met one of the children at the park, you can
+imagine labeling that as the "park" child and the other one as the "home" child.
+Now going through the possible configurations we have:
+
+$$\text{boy}_{\text{park}}/\text{boy}_{\text{home}},\text{boy}_{\text{park}}/\text{girl}_{\text{home}},\text{girl}_{\text{park}}/\text{boy}_{\text{home}},\text{girl}_{\text{park}}/\text{girl}_{\text{home}}$$
+
+By discovering that the child in the park is a boy, we are not left with three
+possibilities as Engelstein argues, but only two, one of which involves two
+boys. Therefore the intuitive answer of 50% is actually correct. Engelstein's
+summary of "at least one is a boy" clashes with his earlier statement that we
+learned that a specific child is a boy.
+
+So what caused the confusion? There is actually a better phrasing of this
+problem which reveals a proper paradox. Let's imagine that you and I are playing
+a game with the following steps:
+
+1. I flip two fair coins and then hide the coins behind a screen. The random
+   result is fixed but only I can see it
+2. I may reveal some information about the coins to you
+3. I reveal both coins and you win if both coins are Heads
+
+That's it. Now consider how your chance of winning changes throughout the steps
+of the game. After step 1 your chance will always be the same: two fair coins
+were flipped, so there are four possibilities, so there is a 1 in 4 chance that
+both are Heads.
+
+Suppose in step 2 that I look at the coins and tell you that at least one of
+them is Heads. Now what is your chance of winning? This is the situation that
+Engelstein was trying for earlier: this is equivalent to me saying that it is
+not the case that both coins are Tails, in other words I have only eliminated
+one of the four possibilities. So by Engelstein's argument, you have a 1 in 3
+chance of winning.
+
+Now suppose instead that in step 2 I pick up one coin from behind the screen and
+show you that it is Heads. Now we can apply _my_ previous argument: the coins
+are distinguishable (we have the revealed coin and the hidden coin) thus there
+are only two remaining possibilities and so the chance of winning is 1 in 2.
+
+Now the paradox: why is there a difference between these situations? In the
+first case, where at least one coin was Heads, certainly I could have also
+picked up a coin and showed you that it was Heads. Why does it matter if I
+actually show you or not? It's as if, by introducing completely redundant
+information (physically showing you a Head rather than saying it), your chances
+of winning are magically increased!
+
+Here is where the two examples from earlier connect. In the Bridge example, I
+first say "I have an Ace", then by introducing completely redundant information
+and saying it's specifically the Ace of Spades, the chances of having more than
+one Ace magically increase! Why does the redundant information help? Certainly
+when I say I have an Ace you can imagine me showing you that it is one of the
+specific Aces.
+
+So what's going on? Is Engelstein's argument correct, or is mine? Or is
+something else going on entirely?
+
+## The Game
+
+To help you understand how to resolve this, we need to put some money on the
+line. Now you have to pay to play, but there is a prize for winning:
+
+1. I flip two fair coins and then hide the coins behind a screen. The random
+   result is fixed but only I can see it
+2. I may reveal some information about the coins to you and state both the prize
+   for winning $W and the cost of entry $C
+3. If you pay, I reveal both coins and you win if both coins are Heads
+
+The question is if the game is worth playing; based on the information I
+revealed, the prize money, and the cost of entry, do you expect to make money by
+playing? For example, if you can calculate that the probability of two Heads
+based on the information revealed is 50%, the prize is $24, and the cost of
+playing is $10, then
+
+$$\text{expected winnings}=P(\text{win})\times($24-$10)-P(\text{lose})\times($10)=0.5\times $24-$10=$2$$
+
+In other words, you expect to make $2 per play on average (assuming you have a
+big enough budget to play the game repeatedly and overcome some early bad luck).
+As you can see from this example, it is crucial that you are able to calculate
+the probability of winning in order to make a profit in this game. So imagine
+you find me at the carnival offering that exact situation: the prize is $24, the
+cost $10, and I'm showing you that a coin is Heads. Do you play?
+
+Well assuming you found my argument from earlier convincing, your chances of
+winning are 1 in 2. Based on the previous calculation, you will make a profit!
+So you play and indeed you win! So you keep playing, following the exact same
+strategy: when I show you Heads you pay and, to keep things simple, when I don't
+show you Heads you decline to pay and simply wait for me to flip the coins
+again. With this strategy you make a small but reliable profit ($2 per game on
+average); you're going to bleed me dry if it takes all day!
+
+Then something changes. Suddenly your strategy starts losing. Convinced it must
+simply be an unlucky streak, you play on, but eventually I completely drain your
+funds and you walk away with empty pockets. What happened?
+
+Imagine you're in my shoes and you need to run this game and you'll quickly see
+what is missing from the picture: when do you decide to show the player a coin?
+For example, I could follow a procedure like this:
+
+1. Flip the coins and place one on the left and one on the right
+2. If the left coin is Heads, show them that coin
+3. Otherwise, show them nothing.
+
+In this case, the 1 in 2 calculation is correct: whenever I show you a coin, the
+only remaining possibilities are Heads/Tails and Heads/Heads. So playing is
+always profitable.
+
+But what if instead I follow this procedure:
+
+1. Flip the coins and place one on the left and one on the right
+2. If the left coin is Heads, show them that coin
+3. Otherwise, if the right coin is Heads, show them that coin
+4. Otherwise, show them nothing.
+
+Now whenever I show you a coin, it could be Heads/Tails, Tails/Heads, or
+Heads/Heads and you have no way to distinguish between them. The chance of
+winning has dropped to 1 in 3. Unfortunately, from your perspective, both
+procedures look nearly identical. The main difference would be the number of
+games in which I show nothing, but this is complicated by the fact that I can
+switch between these procedures at will as I did in my last example. If I start
+with the first procedure I can sucker you in by making you think the game is
+rigged in your favor. When I switch strategies, your expected winnings flip to
+−$2 and hopefully for me your greed will cost you all of your profits and then
+some. I could even be sneakier and switch between these strategies randomly,
+slightly favoring the one that pays me more.
+
+So this is the resolution of the paradox: it is _not_ the case that revealing
+redundant information can increase the chances of an event, rather it is
+possible to phrase a probability problem in an ambiguous way such that most
+people will make seemingly obvious (but unsupported) assumptions about it and
+thus come to incorrect conclusions.
+
+## The Specifics
+
+Going back to the original Two Child Paradox. What were the unsupported
+assumptions we made in order to arrive at the paradox in the first place?
+
+To arrive at the answer of 1 in 2 for the chances of the other child being a
+boy, we must assume that the gender of the child we met has no bearing on why we
+met them at the park. If that same child were a girl, we are assuming they would
+have still been brought to the park. This makes the gender irrelevant, since if
+they brought a boy, we have boy/girl or boy/boy (1 in 2) and if they brought a
+girl we have girl/boy or girl/girl (1 in 2). This seems like a reasonable
+assumption to me, however it _is not stated_ in the problem.
+
+To arrive at the answer of 1 in 3, we must assume some strange parental
+behavior, namely that only boys are brought to parks. In that case, the fact
+that we have met a boy at a park means that this could be a family with two
+boys, or boy/girl, or girl/boy since all of these equally likely scenarios would
+result in us meeting a boy. Again this seems like a strange assumption, but it
+is also not stated and thus cannot be excluded.
+
+Back to Bridge. How do you arrive at the probabilities that Engelstein gave? If
+I say "I have an Ace" what is the probability that I have two or more Aces? In
+order to answer this we need to state our assumptions, namely, why did I say I
+have an Ace? If we assume that whenever I have any Aces I always say "I have an
+Ace" then indeed you arrive at about 37% chance of me having two or more. This
+seems like a reasonable assumption to make.
+
+But what if I say that I have the Ace of Spades? How do we arrive at 56% chance
+of two or more Spades? That is the case if we assume that I _only_ tell you when
+I have the Ace of Spades, specifically, if I have any other Aces _I say
+nothing_. Similar to the Two Child Paradox this feels like a very strange
+assumption to make. If we're interested in findings Aces, why wouldn't I tell
+you about the others when I have them? A much more reasonable assumption here is
+if we assume that when I have _any_ Aces I tell you the suit of one of them.
+It's not hard to see that now I will tell you about an Ace (and its suit)
+whenever I have any Aces, in other words we're back in the first situation. So
+now even though I am revealing additional information (the suit), the
+probability of having two or more Aces is still 37%, which is the intuitive
+result.
+
+## The Conclusion
+
+If you only remember one thing from this, it should be to be careful in your
+assumptions when turning word problems into math problems since they can
+completely change your answer.
+
+And as far as games go, unfortunately I think what this discussion debunks is
+Engelstein's implication that there are magical situations where you suddenly
+get more information from nothing. In any game like this where one player is
+revealing information and the other needs to determine what the implications of
+that information are, you should always consider, "Why did that person choose to
+reveal that information?" Were they free to choose it? Did the rules of the game
+restrict their choice of information or force something specific to be revealed?
+I've found that most game players already intuitively do this and in fact most
+hidden information games rely on players figuring this out on their own.
+
+So while these paradoxes are interesting in how they expose our predisposition
+to making assumptions, it seems unlikely to me that they would realistically
+come up in a game.
