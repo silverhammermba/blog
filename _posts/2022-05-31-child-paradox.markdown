@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Two Child Paradox"
+title: "A Paradoxical Error"
 date: 2022-05-31
 categories: etc
 ---
@@ -9,10 +9,10 @@ categories: etc
 
 I recently read [GameTek][gt] by Geoffrey Engelstein, which includes several
 interesting examples of how to improve your intuition when it comes to the
-design and the playing of games. Two of these examples are at best _extremely
-misleading_ and at worst completely incorrect. However the way in which they are
-wrong is fascinating and prompted several hours of thought and discussion on my
-part, so I'd like to share them with you.
+design and the playing of games. Unfortunately, two of these examples are at
+best _extremely misleading_ and at worst completely incorrect. However the way
+in which they are wrong is fascinating and prompted several hours of thought and
+discussion on my part, so I'd like to share them with you.
 
 [gt]: https://www.amazon.com/GameTek/dp/1460757378
 
@@ -20,7 +20,7 @@ part, so I'd like to share them with you.
 
 Engelstein presents two similar examples in the book, which I will reproduce
 here. First, at the end of Chapter 6, "Feeling the Loss", we have a presentation
-of a classic paradox in probability.
+of a classic paradox in probability called The Two Child Paradox.
 
 > You're talking to woman at a park and she say she has two children. Suddenly a
 > boy runs up and grabs her hand and you ask if this is her son. She replies
@@ -189,11 +189,11 @@ will cost you all of your profits and then some. I could even be sneakier and
 switch between these strategies randomly, slightly favoring the one that pays me
 more.
 
-If you approach this game naively, you will always lose. Why? Because, like
-Engelstein, you will assume that the specific way in which you were given
-information reveals something additional about the nature of _why_ that
-information was revealed; specifically, that me showing a Head versus saying
-"There is at least one heads," implies something about the choice _I_ made. In
+If you approach this game naively, you will always lose in the long run. Why?
+Because, like Engelstein, you will assume that the specific way in which you
+were given information reveals something additional about the nature of _why_
+that information was revealed; specifically, that me showing Heads versus saying
+"There is at least one Heads," implies something about the choice _I_ made. In
 general, there may be no connection between these things.
 
 So this is the resolution of the paradox: it is _not_ the case that revealing
@@ -202,7 +202,7 @@ to phrase a probability problem in an ambiguous way such that most people will
 make seemingly obvious (but unsupported) assumptions about it and thus come to
 incorrect conclusions.
 
-## The Specifics
+## The Resolution
 
 Going back to the original Two Child Paradox. What were the unsupported
 assumptions we made in order to arrive at the paradox in the first place?
@@ -230,7 +230,7 @@ Ace" then indeed you arrive at about 37% chance of me having two or more. This
 seems like a reasonable assumption to make.
 
 But what if I say that I have the Ace of Spades? How do we arrive at 56% chance
-of two or more Spades? That is the probability we git if we assume that I _only_
+of two or more Spades? That is the probability we get if we assume that I _only_
 tell you when I have the Ace of Spades; specifically, if I have other Aces and
 no Ace of Spades _I say nothing_. Similar to the Two Child Paradox this feels
 like a very strange assumption to make. If we're interested in findings Aces,
@@ -243,28 +243,13 @@ any Aces, in other words we're back in the first situation. So now even though I
 am revealing additional information (the suit), the probability of having two or
 more Aces is still 37%, which is the intuitive result.
 
-## The Conclusion
+## My Conclusion
 
-If you only remember one thing from this, it should be to be careful in your
+If you only remember one thing from this, it is to be careful in your
 assumptions when turning word problems into math problems since they can
-completely change your answer.
-
-And as far as games go, unfortunately I think what this discussion debunks is
-Engelstein's implication that there are situations where you can make additional
-deductions from seemingly redundant or independent information. Both of the
-unintuitive examples he gives are unintuitive because they make unintuitive
-assumptions. If you make the more natural assumptions, in my opinion, you get
-the intuitive answers and no paradox appears.
-
-From my experiences playing hidden information games, I find that most players
-do intuitively understand that distinguishing between truly redundant and
-seemingly redundant information is important. They may start off ignoring
-crucial information and making poor assumptions about the information they
-learn, but over time they start asking the important questions. Why
-did that person choose to reveal that information? Were they free to choose it?
-Did the rules of the game restrict their choice of information or force
-something specific to be revealed?
-
-So while these paradoxes are interesting in how they expose our predisposition
-to making assumptions, it seems unlikely to me that they would realistically
-come up in a game.
+completely change your answer. Engelstein mostly does a good job in his book of
+debunking common false assumptions such as the idea of "hot streaks" in
+gambling, but he ironically talks himself back into such bad assumptions with
+these two examples. Both answers he gives are unintuitive because they make
+unintuitive assumptions. If you make the more natural assumptions&mdash;in my
+opinion&mdash;you get the intuitive answers and no paradox appears.
