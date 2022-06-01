@@ -9,10 +9,10 @@ categories: etc
 
 I recently read [GameTek][gt] by Geoffrey Engelstein, which includes several
 interesting examples of how to improve your intuition when it comes to the
-design and the playing of games. However two of these examples are at best
-_extremely misleading_ and at worst completely incorrect. However the way in
-which they are wrong is fascinating and prompted several hours of thought and
-discussion on my part, so I'd like to share them with you.
+design and the playing of games. Two of these examples are at best _extremely
+misleading_ and at worst completely incorrect. However the way in which they are
+wrong is fascinating and prompted several hours of thought and discussion on my
+part, so I'd like to share them with you.
 
 [gt]: https://www.amazon.com/GameTek/dp/1460757378
 
@@ -56,7 +56,7 @@ I hope that the first example seemed **very** unintuitive to you, because it's
 wrong. The key point that Engelstein misunderstands is that the children are
 _distinguishable_. Since you have met one of the children at the park, you can
 imagine labeling that as the "park" child and the other one as the "home" child.
-Now going through the possible configurations we have:
+Going through the possible configurations we have:
 
 $$\text{boy}_{\text{park}}/\text{boy}_{\text{home}},\text{boy}_{\text{park}}/\text{girl}_{\text{home}},\text{girl}_{\text{park}}/\text{boy}_{\text{home}},\text{girl}_{\text{park}}/\text{girl}_{\text{home}}$$
 
@@ -75,22 +75,27 @@ a game with the following steps:
 2. I may reveal some information about the coins to you
 3. I reveal both coins and you win if both coins are Heads
 
-That's it. Now consider how your chance of winning changes throughout the steps
+That's it. Consider how your chance of winning changes throughout the steps
 of the game. After step 1 your chance will always be the same: two fair coins
 were flipped, so there are four possibilities, so there is a 1 in 4 chance that
 both are Heads.
 
+HH, HT, TH, TT
+
 Suppose in step 2 that I look at the coins and tell you that at least one of
-them is Heads. Now what is your chance of winning? This is the situation that
+them is Heads. What is your chance of winning? This is the situation that
 Engelstein was trying for earlier: this is equivalent to me saying that it is
-not the case that both coins are Tails, in other words I have only eliminated
+not the case that both coins are Tails; in other words, I have only eliminated
 one of the four possibilities. So by Engelstein's argument, you have a 1 in 3
 chance of winning.
 
-Now suppose instead that in step 2 I pick up one coin from behind the screen and
-show you that it is Heads. Now we can apply _my_ previous argument: the coins
-are distinguishable (we have the revealed coin and the hidden coin) thus there
-are only two remaining possibilities and so the chance of winning is 1 in 2.
+Instead, suppose that in step 2 I pick up one coin from behind the screen and
+show you that it is Heads. In this case, we can apply _my_ previous argument:
+the coins are distinguishable (we have the revealed coin and the hidden coin)
+thus there are only two remaining possibilities and so the chance of winning is
+1 in 2.
+
+$$\text{H}_{\text{revealed}}/\text{H}_{\text{hidden}},\text{H}_{\text{revealed}}/\text{T}_{\text{hidden}},\color{red}{\text{T}_{\text{revealed}}/\text{H}_{\text{hidden}},\text{T}_{\text{revealed}}/\text{T}_{\text{hidden}}}$$
 
 Now the paradox: why is there a difference between these situations? In the
 first case, where at least one coin was Heads, certainly I could have also
@@ -135,13 +140,13 @@ the probability of winning in order to make a profit in this game. So imagine
 you find me at the carnival offering that exact situation: the prize is $24, the
 cost $10, and I'm showing you that a coin is Heads. Do you play?
 
-Well assuming you found my argument from earlier convincing, your chances of
-winning are 1 in 2. Based on the previous calculation, you will make a profit!
-So you play and indeed you win! So you keep playing, following the exact same
-strategy: when I show you Heads you pay and, to keep things simple, when I don't
-show you Heads you decline to pay and simply wait for me to flip the coins
-again. With this strategy you make a small but reliable profit ($2 per game on
-average); you're going to bleed me dry if it takes all day!
+Assuming you found my argument from earlier convincing, your chances of winning
+are 1 in 2. Based on the previous calculation, you will make a profit! So you
+play and indeed you win! So you keep playing, following the exact same strategy:
+when I show you Heads you pay and, to keep things simple, when I don't show you
+Heads you decline to pay and simply wait for me to flip the coins again. With
+this strategy you make a small but reliable profit ($2 per game on average);
+you're going to bleed me dry if it takes all day!
 
 Then something changes. Suddenly your strategy starts losing. Convinced it must
 simply be an unlucky streak, you play on, but eventually I completely drain your
@@ -156,8 +161,11 @@ For example, I could follow a procedure like this:
 3. Otherwise, show them nothing.
 
 In this case, the 1 in 2 calculation is correct: whenever I show you a coin, the
-only remaining possibilities are Heads/Tails and Heads/Heads. So playing is
-always profitable.
+only remaining possibilities are
+
+$$\text{H}_{\text{left}}/\text{H}_{\text{right}},\text{H}_{\text{left}}/\text{T}_{\text{right}}$$
+
+So playing is always profitable.
 
 But what if instead I follow this procedure:
 
@@ -166,23 +174,33 @@ But what if instead I follow this procedure:
 3. Otherwise, if the right coin is Heads, show them that coin
 4. Otherwise, show them nothing.
 
-Now whenever I show you a coin, it could be Heads/Tails, Tails/Heads, or
-Heads/Heads and you have no way to distinguish between them. The chance of
-winning has dropped to 1 in 3. Unfortunately, from your perspective, both
-procedures look nearly identical. The main difference would be the number of
-games in which I show nothing, but this is complicated by the fact that I can
-switch between these procedures at will as I did in my last example. If I start
-with the first procedure I can sucker you in by making you think the game is
-rigged in your favor. When I switch strategies, your expected winnings flip to
-−$2 and hopefully for me your greed will cost you all of your profits and then
-some. I could even be sneakier and switch between these strategies randomly,
-slightly favoring the one that pays me more.
+Now whenever I show you a coin, it could be
+
+$$\text{H}_{\text{left}}/\text{H}_{\text{right}},\text{H}_{\text{left}}/\text{T}_{\text{right}},\text{T}_{\text{left}}/\text{H}_{\text{right}}$$
+
+and you have no way to distinguish between them. The chance of winning has
+dropped to 1 in 3. Unfortunately, from your perspective, both procedures look
+nearly identical. The main difference would be the number of games in which I
+show nothing, but this is complicated by the fact that I can switch between
+these procedures at will. If I start with the first procedure I can sucker you
+in by making you think the game is rigged in your favor. When I switch
+strategies, your expected winnings flip to −$2 and hopefully for me your greed
+will cost you all of your profits and then some. I could even be sneakier and
+switch between these strategies randomly, slightly favoring the one that pays me
+more.
+
+If you approach this game naively, you will always lose. Why? Because, like
+Engelstein, you will assume that the specific way in which you were given
+information reveals something additional about the nature of _why_ that
+information was revealed; specifically, that me showing a Head versus saying
+"There is at least one heads," implies something about the choice _I_ made. In
+general, there may be no connection between these things.
 
 So this is the resolution of the paradox: it is _not_ the case that revealing
-redundant information can increase the chances of an event, rather it is
-possible to phrase a probability problem in an ambiguous way such that most
-people will make seemingly obvious (but unsupported) assumptions about it and
-thus come to incorrect conclusions.
+redundant information can change the chances of an event, rather it is possible
+to phrase a probability problem in an ambiguous way such that most people will
+make seemingly obvious (but unsupported) assumptions about it and thus come to
+incorrect conclusions.
 
 ## The Specifics
 
@@ -212,17 +230,18 @@ Ace" then indeed you arrive at about 37% chance of me having two or more. This
 seems like a reasonable assumption to make.
 
 But what if I say that I have the Ace of Spades? How do we arrive at 56% chance
-of two or more Spades? That is the case if we assume that I _only_ tell you when
-I have the Ace of Spades, specifically, if I have any other Aces _I say
-nothing_. Similar to the Two Child Paradox this feels like a very strange
-assumption to make. If we're interested in findings Aces, why wouldn't I tell
-you about the others when I have them? A much more reasonable assumption here is
-if we assume that when I have _any_ Aces I tell you the suit of one of them.
-It's not hard to see that now I will tell you about an Ace (and its suit)
-whenever I have any Aces, in other words we're back in the first situation. So
-now even though I am revealing additional information (the suit), the
-probability of having two or more Aces is still 37%, which is the intuitive
-result.
+of two or more Spades? That is the probability we git if we assume that I _only_
+tell you when I have the Ace of Spades; specifically, if I have other Aces and
+no Ace of Spades _I say nothing_. Similar to the Two Child Paradox this feels
+like a very strange assumption to make. If we're interested in findings Aces,
+why wouldn't I tell you about the others when I have them? This means that there
+would be situations where I have two or more Aces (none of them Spades) but I
+don't reveal any information. A much more reasonable assumption here is if we
+assume that when I have _any_ Aces I tell you the suit of one of them. It's not
+hard to see that now I will tell you about an Ace (and its suit) whenever I have
+any Aces, in other words we're back in the first situation. So now even though I
+am revealing additional information (the suit), the probability of having two or
+more Aces is still 37%, which is the intuitive result.
 
 ## The Conclusion
 
@@ -231,14 +250,20 @@ assumptions when turning word problems into math problems since they can
 completely change your answer.
 
 And as far as games go, unfortunately I think what this discussion debunks is
-Engelstein's implication that there are magical situations where you suddenly
-get more information from nothing. In any game like this where one player is
-revealing information and the other needs to determine what the implications of
-that information are, you should always consider, "Why did that person choose to
-reveal that information?" Were they free to choose it? Did the rules of the game
-restrict their choice of information or force something specific to be revealed?
-I've found that most game players already intuitively do this and in fact most
-hidden information games rely on players figuring this out on their own.
+Engelstein's implication that there are situations where you can make additional
+deductions from seemingly redundant or independent information. Both of the
+unintuitive examples he gives are unintuitive because they make unintuitive
+assumptions. If you make the more natural assumptions, in my opinion, you get
+the intuitive answers and no paradox appears.
+
+From my experiences playing hidden information games, I find that most players
+do intuitively understand that distinguishing between truly redundant and
+seemingly redundant information is important. They may start off ignoring
+crucial information and making poor assumptions about the information they
+learn, but over time they start asking the important questions. Why
+did that person choose to reveal that information? Were they free to choose it?
+Did the rules of the game restrict their choice of information or force
+something specific to be revealed?
 
 So while these paradoxes are interesting in how they expose our predisposition
 to making assumptions, it seems unlikely to me that they would realistically
