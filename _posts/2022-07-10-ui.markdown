@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Every programmer should care about UI design"
+date: 2022-07-10
 categories: misc
 ---
 
@@ -20,7 +21,7 @@ code is a UI, and when they don't treat it like a UI they end up with a shitty
 one.
 
 Everyone can recognize bad UI when they use it, and working on bad code has
-almost identical problems:
+the same problems:
 
 * Isn't it frustrating when you have to click through 6 different things to get
   to the one part of the app you actually care about? Isn't it frustrating when
@@ -224,8 +225,22 @@ mutable state of logging is if we wanted logs from different components to end
 up in completely different log files, which seems like a very unlikely
 hypothetical.
 
-## Conclusion
+Unfortunately, I have rarely seen this kind of evaluation occur when deciding
+what to include in a software design.
 
-When you design your software, start with the users: the people on your team!
-How will they use the software? Remember that in this context "use" means:
-reading the code, extending the code, bug fixing the code.
+## Practical use
+
+Practically, using PIDD in your software designs doesn't require any major
+changes to your development process. Usually I use it behind the scenes to
+inform my software designs and to justify design decisions. So while I still
+include the usual UML diagrams and flowcharts and such since those are useful
+tools for communicating about the design, they are not what I start with. I
+start with PIDD in the form of a very rough proof-of-concept, iterating on that
+several times until I find something that feels great to interact with as a
+programmer. Only afterwards do I start on my formal software design. But that's
+just how I do it, probably there are other viable ways to make your designs
+programmer-interface-centric.
+
+The important thing is that when you design your software, start with the users:
+the people on your team! How will they use the software? Remember that in this
+context "use" means: reading the code, extending the code, bug fixing the code.
