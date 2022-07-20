@@ -168,7 +168,7 @@ directly addresses your immediate needs.
 
 I have also met a lot of programmers who frequently use the singleton pattern.
 When I ask why they are using singletons in their design they usually answer,
-"This makes it very eays to use my code," or "We only need one instance of this
+"This makes it very easy to use my code," or "We only need one instance of this
 object." These justifications sound like they are in line with my previous
 arguments: taking into account ease of use is very considerate of our users and
 the singleton pattern is restrictive about instance creation so we're also
