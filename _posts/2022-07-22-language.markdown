@@ -1,0 +1,232 @@
+---
+layout: post
+title: "Required features in your new programming language"
+date: 2022-07-22
+categories: misc
+---
+
+Making cool new programming languages is all the rage these days. I honestly
+love this since it shows that people are still trying to think about new ways
+for humans interact with computers at a low level. However, many of the
+designers of these new languages don't seem to realize that the bar for language
+designs is higher than it used to be. We're way past the limited designs of
+established languages like C, C++, and Java; we know that programming languages
+can be much more helpful, safe, and expressive than those older languages and it
+saddens me to see someone make a brand new language with the same artificial
+limitations that we know of.
+
+I'm not saying that we shouldn't use C, C++, and Java anymore, I'm saying that
+those languages already exist! Why make a new language if it doesn't materially
+improve on the status quo? So here is a list of features that I consider to be
+essential for a new language if you want it to be taken seriously. In my opinion
+the only good reason to omit any of these in your new language is
+
+* you're making a toy language just for fun, or
+* you're making a niche language that you don't intend people to use for
+  general-purpose programming
+
+### Project structure == directory structure
+
+In older languages, you can throw your source code files basically anywhere
+because in order to compile those files into a working program, you need some
+metadata separate from those files which explains how they should be combined.
+That metadata could be some kind of project definition file, explicitly listing
+the source files and how they relate to each other, or the metadata could be
+some kind of build script that explicitly describes how the compiler will be
+invoked and with which files.
+
+This is insanity. I have never seen a project that actually _requires_ this
+degree of flexibility. Practically, every language involving this becomes a
+headache to manage because you have to manually keep the metadata in sync at all
+times, and you get a whole host of novel bugs simply related to the metadata
+being wrong as opposed to the actual source code.
+
+Any new language should have a single, standard project structure. That project
+structure must be directly expressed through the directory structure of the
+source code. If a project metadata file is allowed, at most it can specify a
+custom location for that directory structure; it cannot do things like including
+extra source files from nonstandard locations, or exempting source files which
+are in standard locations. The goal is that anyone should be able to view the
+directory structure of a project and immediately understand roughly how that
+project works.
+
+### Package manager
+
+We live in the age of Open Source. There is no excuse for copy-pasting other
+people's code into your project anymore. Any new language should have a built-in
+official package manager with the following features:
+
+* Creating, publishing, and downloading packages
+* License information is required when publishing and included when downloading
+* Projects list package dependencies with their required versions
+* Installed packages are pinned to a specific version until explicitly updated
+  in the project
+* All dependencies of a project (including transitive) can be audited (including
+  version and license)
+
+### Language manager
+
+If your language is new, it will have bugs. You will need to release new
+versions, those versions may introduce incompatibilities. Any new language
+should have an official language version manager such that each project can pin
+itself to a specific language version, and the manager can download whatever
+version is required prior to building.
+
+It should be possible to simultaneously build two projects using two different
+language versions on the same machine i.e. the language version is sandboxed to
+the individual build, as opposed to some global configuration of the machine.
+
+### Turing-incomplete builds
+
+Going hand-in-hand with the previous points, any new compiled language should
+have a single, standard compilation process. Every step of that process may
+include a finite set of options for tweaking it, however no step should allow
+custom code to be run as part of the build.
+
+Again, the goal is that simply by looking at the project structure I should have
+an intuitive understanding of how those files will be built. It should not be
+possible for someone to define a custom, wacky build process that works entirely
+differently. Debugging the build process should at most involve walking through
+the standard set of steps and determining which ones are going wrong, as opposed
+to debugging completely custom build scripts written in a Turing-complete
+language.
+
+If you want to include custom build steps, those must be externally defined
+per-project and must run before the standard build starts. If the users of your
+language start to regularly step outside of the standard build process because
+it is too restrictive, the build process should be expanded just enough to
+handle those use-cases _without_ giving in and allowing Turing-complete builds.
+For example, if users of your language start using custom code generators,
+consider making code generation an official part of your language such that it
+can be standardized.
+
+### Mixed paradigm
+
+Purity of paradigm is worthless. Pure functional languages like Haskell remain
+extremely niche despite years of advocacy. Virtually all Java successors hack
+top-level functions into the JVM since we know they are simply the best option
+in some cases.
+
+Any new language should be mixed paradigm, allowing at least the creation of
+mutable objects encapsulating both data and methods, as well as first-class
+functions that can exist independent of an enclosing object and which can be
+stored and passed around like an object. 99% of good software design is about
+accurately modeling the problem you are solving. Purity in a language serves
+only to restrict your models, forcing you to use unintuitive representations in
+some cases.
+
+### Everything really is an object
+
+Since your language must be mixed paradigm, for programmer sanity you should
+ensure that everything in your language behaves like an object and can have
+methods attached to it. Yes, that means strings, integers, classes, functions,
+etc. should all allow methods to be defined on them. There should never be cases
+where something in a variable is of some exceptional type that has no class, or
+cannot accept method calls. Methods should be definable as scoped extensions to
+existing classes, so that you can add methods to objects that you do not have
+control over (if you think it makes more sense than defining a function separate
+from the object).
+
+Conversely, everything that _looks_ like a method call should be a method call.
+Constructors should not be a special case, they should be a method call on the
+class object. Calling a top-level function should be syntactic sugar for a
+method call on the function object e.g. `.invoke()`.
+
+If your language is compiled, it should similarly allow interfaces to apply to
+all of these constructs. If you want to define a class that works like a
+function, you should be able to make that class and function conform to the same
+interface such that they can be used interchangeably.
+
+Although I am demanding this, I do acknowledge that this is an extremely
+difficult requirement for any language design. In fact I don't know of any
+language that does this perfectly, since you often end up with increasingly
+abstract levels of design logic that are hard to reason about. However, any new
+language should strive to achieve this as much as is practically possible and
+ensure that any remaining corner cases are well-understood and seem to be
+acceptable compromises with easy workarounds.
+
+### Testing framework
+
+Automated tests are essential for software quality. Any new language should have
+an official built-in testing framework that supports automated unit and
+integration tests. Test code should be part of the standard project structure
+with a clear relationship with the source code. If the users of your language
+start to regularly rely on nonstandard testing tools, you should expand the
+official test framework to handle those use-cases.
+
+Test output should have the option of being human-readable or being in a
+standard machine-parsable format such that CI tools can integrate with the
+language.
+
+### Regex
+
+Any new language should have first-class support for regular expressions both as
+a built-in type and a literal in source code. If statically typed, regex
+literals should be evaluated for correctness at compile time.
+
+### Pick one: dynamic or inferred
+
+Any new language must run in one of these two ways:
+
+1. _Fully dynamic_, meaning the language has an `eval()` function that accepts a
+   string at runtime and evaluates it as source code. The language is fully
+   metaprogrammable, allowing all programmer actions to be executed at
+   runtime.
+2. Statically type-inferred, meaning that by default all types are checked at
+   compile time and can be specified in just enough source locations that the
+   compiler can verify through inference that types are being used correctly.
+   Runtime type-checking (such as downcasting) is allowed, but must always be
+   explicitly differentiated from static checking in the source code
+
+### Sum types
+
+If your language is statically typed, it must have first-class support for [sum
+types][tag] as well as pattern matching for those types to ensure that all cases
+of the type are handled whenever one is used.
+
+Nullability in the language must be represented as a sum type with two cases:
+null and non-null. The compiler should be able to enforce that either a variable
+can never contain null or it can contain null and must be handled with pattern
+matching.
+
+[tag]: https://en.wikipedia.org/wiki/Tagged_union
+
+### Explicit exceptions
+
+If your language is statically typed, any function that throws an exception must
+have a distinct type from any function that does not throw. Calling a function
+that can throw must either require pattern matching to handle the exception or
+making the caller throw.
+
+### Explicit mutability
+
+If your language is statically typed, variables and types must be explicitly
+marked as mutable or immutable. The compiler verifies that immutable variables
+are never reassigned and that objects with an immutable type are never modified.
+
+Ideally, immutable types can be given value semantics, meaning that objects of
+that type with the same value are considered to be identical.
+
+## The future
+
+There's always room for improvement, and while I don't think we've figured out
+the following areas enough to say that they are essential to language design, I
+would love to see new languages play around with them to find some new ideal.
+
+### Explicit side-effects
+
+If your language is statically typed, any function/method that modifies one of
+its inputs or changes some global state of the program should be explicitly
+marked as causing side-effects (distinguishing them from "pure"
+functions/methods). The compiler should enforce that pure functions cannot call
+impure ones.
+
+### Async programming
+
+It has been interested watching asynchronous programming evolve over the years.
+We've gone from explicit multithreading, to green threads, to callback hell, and
+now to modern concepts like coroutines. It is hard to say where this will settle
+down, but my gut tells me we haven't reached the end of this journey. Ideally we
+don't end up in [colored function][color] hell.
+
+[color]: https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/
