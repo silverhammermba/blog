@@ -95,6 +95,16 @@ the daemon anyway. Ignore the fact that this means certain behaviors like
 customizing Gradle with environment variables now become nondeterministic (will
 you get a fresh daemon? If not, how will the daemon it picks be configured?).
 
+When you see a build failure like this
+
+    Task failed with an exception.
+    -----------
+    * What went wrong:
+    Failed to notify build listener.
+    > Metaspace
+
+You lose all hope in the design of that build tool.
+
 These examples aren't weird corner cases. These are the shaky bedrock upon which
 Gradle is built.
 
