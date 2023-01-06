@@ -5,6 +5,16 @@ date: 2022-02-16
 categories: etc
 ---
 
+#### Edit: 2022-01-06
+
+Almost a year later, I finally took the time to properly learn Gradle. I have
+since [updated my opinion on it][suck], though I leave this post to reflect the
+experience of someone unfamiliar with Gradle trying to use it.
+
+[suck]: {% post_url 2023-01-6-gradle %}
+
+# Original post
+
 I hate using Gradle. Of all of the programming tools I have used in the past 10
 years, it is the one that makes me most unhappy. Let me tell you how much
 it sucks.
