@@ -335,4 +335,4 @@ automated deployments, that I wouldn't dare replace with hacked-together shell
 scripts. We still have a Fastfile sitting around in our repo, we just don't use
 it as often anymore.
 
-[fast]: {{ site.baseurl }}/{% post_url 2018-08-13-osx-jenkins %}
+[fast]: {{ site.baseurl }}{% post_url 2018-08-13-osx-jenkins %}

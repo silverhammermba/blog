@@ -11,7 +11,7 @@ Almost a year later, I finally took the time to properly learn Gradle. I have
 since [updated my opinion on it][suck], though I leave this post to reflect the
 experience of someone unfamiliar with Gradle trying to use it.
 
-[suck]: {% post_url 2023-01-6-gradle %}
+[suck]: {{ site.baseurl }}{% post_url 2023-01-6-gradle %}
 
 # Original post
 
