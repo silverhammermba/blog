@@ -12,7 +12,7 @@ working with it. But luckily, my company encourages learning and experimentation
 so I was given an entire week--40 whole working hours--to do nothing but learn
 Gradle. So I did. And I still hate it, but for different reasons.
 
-[complain]: {% post_url 2022-02-16-gradle %}
+[complain]: {{ site.baseurl }}{% post_url 2022-02-16-gradle %}
 
 ## How to learn Gradle
 
