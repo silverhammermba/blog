@@ -15,7 +15,7 @@ questions.
    shouldn't be writing Java but sometimes you gotta. Just the major version is
    enough. We'll call this your **Java version**.
 3. What's the oldest [Android][android] version you want your app to run on?
-   Great. I don't care. Instead find the oldest _Android API level__ you want
+   Great. I don't care. Instead find the oldest _Android API level_ you want
    your app to run on (e.g. Android 13 is API level 33). We'll call this your
    **minimum Android version**.
 4. What's the newest Android version you're actually going to test your app on?
