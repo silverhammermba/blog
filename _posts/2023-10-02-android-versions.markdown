@@ -66,10 +66,16 @@ android {
 
 I love how these are totally different types in the script.
 
-If you're trying to use a really new version of Java, you may run into
-compatibility issues with older versions of Android. Technically you can fix
-that by lowering `targetCompatibility` and `jvmTarget` but I don't have any
-personal experience with doing that.
+These versions should always match! If you need to use a different Java version
+for some of your code you need to split it into a separate gradle project so it
+gets its own build script and can get its own versions.
+
+Note that this only affects how you write and build your Java code. Because of
+Android's [desugaring][desugar] process, your app can still run on Android
+versions with older JVMs. The compiler will let you know if you pick a version
+that's too new.
+
+[desugar]: https://developer.android.com/studio/write/java8-support
 
 ### Android
 
@@ -79,19 +85,17 @@ Your **minimum and target Android versions** also go in the build script:
 android {
     defaultConfig {
         minSdk = 69
-        targetSdk = 69
+        targetSdk = 69 // can be greater than minSdk
     }
 }
 ```
-
-These numbers _do not need to match_ despite the example above doing so.
 
 ## The rest
 
 Now you need to pick a bunch of other versions, all constrained ultimately by
 the answers you chose above.
 
-### Android Compile SDK version
+### Android Compile SDK
 
 When you compile your Android app, it will compile it against a certain version
 of the API. This should be **greater than or equal to your target Android
