@@ -105,7 +105,7 @@ larger version gives you access to the newer APIs earlier, letting you decouple
 your development cycle slightly from Android's release cycle.
 
 Whatever version you choose, you must specify it in your gradle build script.
-While you're at, you also get an easy one: you need build tools and those can
+While you're at it, you also get an easy one: you need build tools and those can
 pretty much always be the latest version since they're usually backwards
 compatible, so just look up the latest [build tools][buildtools] and specify it.
 You can use older tools, but not older than the compile SDK version.
