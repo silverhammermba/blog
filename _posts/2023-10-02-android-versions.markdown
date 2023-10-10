@@ -169,13 +169,20 @@ possible. Good luck.
 
 The most important things to keep consistent here are Kotlin, Java, AGP, and
 your Android versions. If you get them wrong, you won't necessarily see a
-spectacular failure at build time; your app may fail spectacularly only at
-runtime! Or it may only fail spectacularly when you build a release optimized
-for the Play Store! Be very careful when changing the versions of _any_ of these
-things.
+spectacular failure at build time! It may fail...
+
+* at runtime
+* when running on a particular Android version
+* when building for release
+* any combination of the above
+
+Be very careful when changing the versions of _any_ of these things!
+
+Be sure to test your app thoroughly on your min and target Android versions. It
+can break even when you didn't change them!
 
 The [AGP release notes][agp] are pretty good at capturing possible
-incompabilities.
+incompabilities, but ultimately you just have to try it.
 
 [agp]: https://developer.android.com/build/releases/gradle-plugin
 
