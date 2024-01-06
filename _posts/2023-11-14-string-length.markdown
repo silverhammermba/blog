@@ -37,7 +37,7 @@ need to worry about how the same string can be represented in different ways
 depending on the circumstances. If you have two pieces of software that can each
 input a string that gets saved in the same database, you don't want them
 counting the length in different ways. Then you risk one piece of software being
-able to load strings from the database that it won't let user the write back to
+able to load strings from the database that it won't let the user write back to
 it. That would be annoying.
 
 So why is this not trivial? Because everyone wants to measure string length in
@@ -94,10 +94,10 @@ user interface you probably don't want them.
 Most of them exist purely to support backwards compatibility with cryptic legacy
 systems e.g., `U+009D` "operating system command". Some are useful but have
 better Unicode alternatives. For example the ambiguous "new line" which often
-uses some combination of the control codes `U+000A` and `U+000D` but can better
-represented with `U+2028` "line separator" and `U+2029` "paragraph separator".
-In my applications, I simply strip control codes from the text and calculate the
-string length after.
+uses some combination of the control codes `U+000A` and `U+000D` but can be
+better represented with `U+2028` "line separator" and `U+2029` "paragraph
+separator". In my applications, I simply strip control codes from the text and
+calculate the string length after.
 
 ## How to count Unicode scalar values
 
@@ -141,13 +141,13 @@ str.length // ❌ number of UTF‑16 code points
 ### Python
 
 ```python
-len(str) // 👍
+len(str) # 👍
 ```
 
 ### Ruby
 
 ```ruby
-str.length // 👍
+str.length # 👍
 ```
 
 ### Swift
