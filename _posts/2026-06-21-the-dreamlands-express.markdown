@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Ch 2: The Dreamlands Express"
+title: "Ch 2.5: The Dreamlands Express"
 categories: rpg
 ---
 

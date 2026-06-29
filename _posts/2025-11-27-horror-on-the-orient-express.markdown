@@ -26,7 +26,7 @@ I went with this because this campaign is quite challenging and deadly at times;
 Two players controlling two characters each worked quite well for us, so I do recommend it if you're having a hard time finding 3-4 players willing to commit to such an endeavor.
 
 Strongly encourage your players to create investigators with nuanced backstories, character flaws, and personal hangups.
-This is a good idea in general when role playing, but it will also pay off later in the Dreamlands chapter.
+This is a good idea in general when role playing, but it will also pay off later in the [Dreamlands]({{ site.baseurl }}{% post_url 2026-06-21-the-dreamlands-express %}) chapter.
 
 With that out of the way, here are my chapter reports!
 
