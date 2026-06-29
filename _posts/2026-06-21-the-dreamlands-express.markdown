@@ -88,4 +88,6 @@ Don't assume your players will care about redeeming Karakov at this point, but i
 Get him swarmed by vengeful ghosts and have more sympathetic characters like Zsusza try to help him, forcing the investigators to jump in as well.
 Have him run into the investigator's train car, drawing the cannon fire to them.
 
+And when it's all done, get ready for the mother of all recaps, because my players certainly forgot every single thing that had happened in the real world.
+
 Next: Ch 3: Nocturne
