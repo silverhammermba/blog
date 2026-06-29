@@ -22,13 +22,13 @@ All of the flavor of these kinds of chapters come from the NPCs and the timeline
 Map out the timeline ahead of time and plan out what interesting developments will happen on each day and which NPCs will be involved.
 Print out NPC portraits so your players can keep track of the large cast.
 
-I also highly recommend leaning into a couple key NPC potrayals:
+I also highly recommend leaning into a couple key NPC portrayals:
 
 * Show off Menkaph front and center as a gloating, flashy villain.
   Have him openly terrorize Ellie Myers and sneer at the investigators' meddling.
   Your players will _hate_ him, making his ultimate demise all the better.
 * Have Henri show up in the nick of time, every time.
-  Don't worry about him being too helpful: throw him into combat and have him support whatever zany schemes your players come up with (while maintaing his cool professionalism).
+  Don't worry about him being too helpful: throw him into combat and have him support whatever zany schemes your players come up with (while maintaining his cool professionalism).
   My players fell in love with him and desperately longed for his return throughout the next few chapters, making his [eventual reappearance]({{ site.baseurl }}{% post_url 2026-06-21-the-dreamlands-express %}) all the more sweet.
 
 I otherwise ran this mostly as-written over two sessions.

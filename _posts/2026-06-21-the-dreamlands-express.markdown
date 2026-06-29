@@ -30,7 +30,7 @@ Play up their longings and insecurities, drop some heavy hints early, and have t
 * Mironim-Mer has been living a lie, disguising himself as a Sarrubian out of fear that those closest to him will reject him
 * Madame Bruja is essentially on a mission to commit suicide as a final spite to the sorcerer
 
-The theme for these other dreamers is "giving up on one's dreams".
+The theme for these other dreamers is "giving up on your dreams".
 This lets you introduce some wonderful bittersweet notes later on as the train approaches its terminus.
 This is another train chapter, meaning you need to give your players character portraits to keep track of everyone, as well as a timeline for your own planning.
 
@@ -64,12 +64,28 @@ I generally use movie and video game soundtracks:
 Early on, you want to drop tons of hooks to keep players invested until the murder happens.
 This is pretty easy to do, especially with characters like Blackjack and the Sarnathians, who will be attracted to the investigators whether they like it or not.
 
-I highly recommend **not** suggesting the padded compartment as the place for all odd passengers, as the book suggets.
+I highly recommend **not** suggesting the padded compartment as the place for all odd passengers, as the book suggests.
 If your players come up with this on their own, fine, but I had a lot of fun with my players not doing this.
 Guillaume and the madman ended up getting (and trashing) the ladies' parlor as their private room, much to Henri's chagrin.
 Adding the captured Mironim-Mer and possibly the dismembered Madame Bruja to the list of special accommodations only adds to the fun.
 
 Even with all of the plot threads, there is still a lot of potential down time in this chapter.
-Encourage your players to make the most of it by practicing skills (learn to speak Cat!), trying to make a dream artifact (they Dreaming skill is likely low), or just saying which NPCs they are hanging out with.
+Encourage your players to make the most of it by practicing skills (learn to speak Cat!), trying to make a dream artifact (their Dreaming skill is likely low), or just saying which NPCs they are hanging out with.
+
+## The final battle
+
+This is an amazing scene that you can run mostly as written.
+The one trick is ensuring that your players don't skip it entirely!
+Mine (quite reasonably) asked why they all don't jump into the Gulf of Nodens, avoiding the conflict with the sorcerer.
+I had Henri explain that of course they can do that and they have no obligation to stay, but he fears what will happen to his train afterwards.
+
+Henri suspects the sorcerer will attack the train and possibly destroy it.
+Depending on how much the investigators know about the sorcerer's motivations, this can be even more certain.
+Mine discovered the Lover's Heart pretty early on, so Henri guessed that unless the sorcerer saw it falling into the Gulf of Nodens himself, he would still attack and possibly tear the train apart in looking for it.
+I think players should be free to abandon the train if they really want to, but sticking around for the sake of Henri is a much easier sell.
+
+Don't assume your players will care about redeeming Karakov at this point, but instead feel free to use him as a hazard.
+Get him swarmed by vengeful ghosts and have more sympathetic characters like Zsusza try to help him, forcing the investigators to jump in as well.
+Have him run into the investigator's train car, drawing the cannon fire to them.
 
 Next: Ch 3: Nocturne
