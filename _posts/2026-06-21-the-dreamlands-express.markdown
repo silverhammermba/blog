@@ -90,4 +90,4 @@ Have him run into the investigator's train car, drawing the cannon fire to them.
 
 And when it's all done, get ready for the mother of all recaps, because my players certainly forgot every single thing that had happened in the real world.
 
-Next: Ch 3: Nocturne
+Next: [Ch 3: Nocturne]({{ site.baseurl }}{% post_url 2026-09-03-nocturne.markdown %})

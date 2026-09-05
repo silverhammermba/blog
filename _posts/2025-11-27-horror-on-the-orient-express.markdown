@@ -37,4 +37,5 @@ With that out of the way, here are my chapter reports!
 * [Ch 1: Dancers in an Evening Fog]({{ site.baseurl }}{% post_url 2026-02-15-dancers-in-an-evening-fog %})
 * [Ch 2: Les Fleurs de Mal]({{ site.baseurl }}{% post_url 2026-03-15-les-fleurs-de-mal %})
 * [Ch 2.5: The Dreamlands Express]({{ site.baseurl }}{% post_url 2026-06-21-the-dreamlands-express %})
-* Ch 3: Nocturne
+* [Ch 3: Nocturne]({{ site.baseurl }}{% post_url 2026-09-03-nocturne.markdown %})
+* [Ch 4: Note for Note]({{ site.baseurl }}{% post_url 2026-09-04-note-for-note.markdown %})

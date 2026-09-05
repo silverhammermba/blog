@@ -1,0 +1,40 @@
+---
+layout: post
+title: "Ch 3: Nocturne"
+categories: rpg
+---
+
+This is part of my campaign report for [Horror on the Orient Express]({{ site.baseurl }}{% post_url 2025-11-27-horror-on-the-orient-express %}).
+
+As is typical for me, this chapter took much longer to run than was described on [Reddit](https://www.reddit.com/r/callofcthulhu/comments/1le856x/hotoe_chapter_3_nocturne/).
+This is also the closest my campaign has come to going entirely off the rails!
+
+These are the main issues I ran into:
+
+* Edgar is not particularly trustworthy.
+  It is fairly easy for the investigators to tail him after he leaves his shop and to discover the forgery tools.
+* The "ruse" of distracting the investigators at the 7:30 club is weak.
+  There is nothing keeping the investigators distracted other than Max's company, so why would the Duke expect the investigators to stay at dinner long enough to guarantee he is not interrupted?
+  In particular, why would the investigators not think to confront Edgar directly as the Duke himself is?
+* Risk-averse investigators have literally no reason to encounter the trial in Dream Lausanne.
+  It is a reasonable assumption that Edgar stashed the scroll in the dream version of his house and there is little time pressure stopping investigators from making a very thorough search of the place.
+  Especially once they have the scroll, it truly feels crazy to follow the crowds and to not simply return to the waking world.
+
+Of course all of these things happened in my case.
+Discovering Edgar's planned duplicity, my players split up and while some went to the 7:30 club, the others went straight to his house.
+I tried to have William rebuff them but they attacked him (!!) and forced their way upstairs, managing to quickly grab Edgar's diary from next to his bed before running off into the night.
+
+This ended up creating a huge detour in the story since my investigators ended up staying the night in Lausanne, hoping to apologize and make it up to the Wellingtons the next day, not realizing that they were already dead.
+By they time they made it back to the Wellingtons' the next day, it was an active crime scene, depriving the investigators of the dream drug, the fake scroll, and any idea of what was going on.
+They only discovered the murder after talking to the police, while also attracting scrutiny and barely escaping jail time (they were spotted leaving his house on the night of the murder).
+
+They eventually managed to reach Dream Lausanne by breaking into the Duke's house late on the _second_ night, found the scroll surprisingly quickly, and immediately noped out of there.
+I was bummed to not get to do the trial scene, but I could not think of any satisfying reason why they couldn't just leave.
+Finally, they left Lausanne a full day late.
+This ended up not mattering too much, since you can easily shift things back a day or two in the next chapter as-needed.
+
+I second the recommendation from Reddit to go easy on the investigators when the Duke shows up on the train.
+My players were _furious_ to give up their hard won scroll (despite getting to keep the English translation) and only with some out-of-character discussion did we avoid a TPK.
+I do think players have decent options here, but mine were probably a little too tired and frustrated to think of them.
+
+Next: [Ch 4: Note for Note]({{ site.baseurl }}{% post_url 2026-09-04-note-for-note.markdown %})
