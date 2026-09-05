@@ -25,7 +25,7 @@ Discovering Edgar's planned duplicity, my players split up and while some went t
 I tried to have William rebuff them but they attacked him (!!) and forced their way upstairs, managing to quickly grab Edgar's diary from next to his bed before running off into the night.
 
 This ended up creating a huge detour in the story since my investigators ended up staying the night in Lausanne, hoping to apologize and make it up to the Wellingtons the next day, not realizing that they were already dead.
-By they time they made it back to the Wellingtons' the next day, it was an active crime scene, depriving the investigators of the dream drug, the fake scroll, and any idea of what was going on.
+By the time they made it back to the Wellingtons' the next day, it was an active crime scene, depriving the investigators of the dream drug, the fake scroll, and any idea of what was going on.
 They only discovered the murder after talking to the police, while also attracting scrutiny and barely escaping jail time (they were spotted leaving his house on the night of the murder).
 
 They eventually managed to reach Dream Lausanne by breaking into the Duke's house late on the _second_ night, found the scroll surprisingly quickly, and immediately noped out of there.
@@ -37,4 +37,4 @@ I second the recommendation from Reddit to go easy on the investigators when the
 My players were _furious_ to give up their hard won scroll (despite getting to keep the English translation) and only with some out-of-character discussion did we avoid a TPK.
 I do think players have decent options here, but mine were probably a little too tired and frustrated to think of them.
 
-Next: [Ch 4: Note for Note]({{ site.baseurl }}{% post_url 2026-09-04-note-for-note.markdown %})
+Next: [Ch 4: Note for Note]({{ site.baseurl }}{% post_url 2026-09-04-note-for-note %})
