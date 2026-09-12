@@ -19,7 +19,7 @@ Instead, we spent much of the session painstakingly searching La Scala.
 Luckily(?), the investigators never thought to directly corner and interrogate the props manager, the only person who knows where the Torso is, so they came up empty handed and the opening night scene played out pretty much as the book says.
 
 The only change I made due to the missed connection was having Conti and Faccia show up together to the opera, giving the investigators even more clear clues about what happened since both men have similar strange scars around their throats.
-I suppose it was still an exciting and fun chapter in the end, but my players fairly pointed out that most of their actions during the chapter were irrelevant since they were going to run in the Torso regardless.
+I suppose it was still an exciting and fun chapter in the end, but my players fairly pointed out that most of their actions during the chapter were irrelevant since they were going to run into the Torso regardless.
 On that note, I really wanted to reward their dogged investigation of La Scala with _something_, but the book really doesn't give you anything to go on and the explanation of "The Torso cannot be found" feels very unrealistic.
 The only interesting thing I could come up with was the Torso itself, but if they simply nabbed it before the show and skipped town, I feared it would be an awful anticlimax seeing as literally none of the major NPCs know where it is either.
 
